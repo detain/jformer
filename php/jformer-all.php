@@ -965,7 +965,7 @@ class JFormer {
                     'name' => $this->id . '-iframe',
                     'class' => 'jFormerIFrame',
                     'frameborder' => 0,
-                    'src' => (defined('URLDIR') ? URLDIR : '') . '/jquery/jFormer/jformer.php?iframe=true',
+                    'src' => (defined('URLDIR') ? URLDIR : '') . '/js/jformer-detain-git/php/JFormer.php?iframe=true',
                     //'src' => '/empty.html',
                         //'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
                 ));
@@ -1811,298 +1811,312 @@ abstract class JFormComponent {
 
 
 class JFormComponentAddress extends JFormComponent {
-    var $selectedCountry = null;
-    var $selectedState = null;
-    var $stateDropDown = false;
-    var $emptyValues = null;
-    var $showSublabels = true;
-    var $unitedStatesOnly = false;
-    var $addressLine2Hidden = false;
+	var $selectedCountry = null;
+	var $selectedState = null;
+	var $stateDropDown = false;
+	var $emptyValues = null;
+	var $showSublabels = true;
+	var $unitedStatesOnly = false;
+	var $addressLine2Hidden = false;
 
-    /*
-     * Constructor
-     */
-    function __construct($id, $label, $optionArray = array()) {
-        // Class variables
-        $this->id = $id;
-        $this->name = $this->id;
-        $this->label = $label;
-        $this->class = 'jFormComponentAddress';
-        
-        // Initialize the abstract FormComponent object
-        $this->initialize($optionArray);
+	/*
+	 * Constructor
+	 */
+	function __construct($id, $label, $optionArray = array()) {
+		// Class variables
+		$this->id = $id;
+		$this->name = $this->id;
+		$this->label = $label;
+		$this->class = 'jFormComponentAddress';
+		
+		$this->initialValues = array('addressLine1' => '', 'addressLine2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '');
 
-        // Set the empty values with a boolean
-        if($this->emptyValues === true) {
-            $this->emptyValues = array('addressLine1' => 'Street Address', 'addressLine2' => 'Address Line 2', 'city' => 'City', 'state' => 'State / Province / Region', 'zip' => 'Postal / Zip Code');
-        }
+		// Set the empty values with a boolean
+		if($this->emptyValues === true) {
+			$this->emptyValues = array('addressLine1' => 'Street Address', 'addressLine2' => 'Address Line 2', 'city' => 'City', 'state' => 'State / Province / Region', 'zip' => 'Postal / Zip Code');
+		}
 
-        // United States only switch
-        if($this->unitedStatesOnly) {
-            $this->stateDropDown = true;
-            $this->selectedCountry = 'US';
-        }
-    }
+		// Initialize the abstract FormComponent object
+		$this->initialize($optionArray);
 
-    function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new JFormElement('option', array('value' => $optionValue));
-        $option->update($optionLabel);
+		$this->selectedState = $this->initialValues['state'];
+		$this->selectedCountry = $this->initialValues['country'];
+		
+		// United States only switch
+		if($this->unitedStatesOnly) {
+			$this->stateDropDown = true;
+			$this->selectedCountry = 'US';
+		}
+	}
 
-        if($optionSelected) {
-            $option->setAttribute('selected', 'selected');
-        }
+	function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
+		$option = new JFormElement('option', array('value' => $optionValue));
+		$option->update($optionLabel);
 
-        if($optionDisabled) {
-            $option->setAttribute('disabled', 'disabled');
-        }
+		if($optionSelected) {
+			$option->setAttribute('selected', 'selected');
+		}
 
-        return $option;
-    }
+		if($optionDisabled) {
+			$option->setAttribute('disabled', 'disabled');
+		}
 
-    function getOptions() {
-        $options = parent::getOptions();
+		return $option;
+	}
 
-        if(!empty($this->emptyValues)) {
-            $options['options']['emptyValue'] = $this->emptyValues;
-        }
+	function getOptions() {
+		$options = parent::getOptions();
 
-        if($this->stateDropDown){
-            $options['options']['stateDropDown'] = true;
-        }
+		if(!empty($this->emptyValues)) {
+			$options['options']['emptyValue'] = $this->emptyValues;
+		}
 
-        if(empty($options['options'])) {
-            unset($options['options']);
-        }
+		if($this->stateDropDown){
+			$options['options']['stateDropDown'] = true;
+		}
 
-        return $options;
-    }
+		if(empty($options['options'])) {
+			unset($options['options']);
+		}
 
-    /**
-     *
-     * @return string
-     */
-    function __toString() {
-        // Generate the component div
-        $componentDiv = $this->generateComponentDiv();
+		return $options;
+	}
 
-        // Add the Address Line 1 input tag
-        $addressLine1Div = new JFormElement('div', array(
-            'class' => 'addressLine1Div',
-        ));
-        $addressLine1 = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-addressLine1',
-            'name' => $this->name.'-addressLine1',
-            'class' => 'addressLine1',
+	/**
+	 *
+	 * @return string
+	 */
+	function __toString() {
+		// Generate the component div
+		$componentDiv = $this->generateComponentDiv();
+
+		// Add the Address Line 1 input tag
+		$addressLine1Div = new JFormElement('div', array(
+			'class' => 'addressLine1Div',
+		));
+		$addressLine1 = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-addressLine1',
+			'name' => $this->name.'-addressLine1',
+			'class' => 'addressLine1',
 			'placeholder' => 'Enter street address',
-        ));
-        $addressLine1Div->insert($addressLine1);
+			'value' => $this->initialValues['addressLine1'],
+		));
+		$addressLine1Div->insert($addressLine1);
 
-        // Add the Address Line 2 input tag
-        $addressLine2Div = new JFormElement('div', array(
-            'class' => 'addressLine2Div',
-        ));
-        $addressLine2 = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-addressLine2',
-            'name' => $this->name.'-addressLine2',
-            'class' => 'addressLine2',
+		// Add the Address Line 2 input tag
+		$addressLine2Div = new JFormElement('div', array(
+			'class' => 'addressLine2Div',
+		));
+		$addressLine2 = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-addressLine2',
+			'name' => $this->name.'-addressLine2',
+			'class' => 'addressLine2',
 			'placeholder' => 'Enter address line 2',
-        ));
-        $addressLine2Div->insert($addressLine2);
+			'value' => $this->initialValues['addressLine2'],
+		));
+		$addressLine2Div->insert($addressLine2);
 
-        // Add the city input tag
-        $cityDiv = new JFormElement('div', array(
-            'class' => 'cityDiv',
-        ));
-        $city = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-city',
-            'name' => $this->name.'-city',
-            'class' => 'city',
-            'maxlength' => '25',
+		// Add the city input tag
+		$cityDiv = new JFormElement('div', array(
+			'class' => 'cityDiv',
+		));
+		$city = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-city',
+			'name' => $this->name.'-city',
+			'class' => 'city',
+			'maxlength' => '25',
 			'placeholder' => 'Enter city',
-        ));
-        $cityDiv->insert($city);
+			'value' => $this->initialValues['city'],
+		));
+		$cityDiv->insert($city);
 
-        // Add the State input tag
-        $stateDiv = new JFormElement('div', array(
-            'class' => 'stateDiv',
-        ));
-        if($this->stateDropDown){
-            $state = new JFormElement('select', array(
-                'id' => $this->id.'-state',
-                'name' => $this->name.'-state',
-                'class' => 'state',
-            ));
+		// Add the State input tag
+		$stateDiv = new JFormElement('div', array(
+			'class' => 'stateDiv',
+		));
+		if($this->stateDropDown){
+			$state = new JFormElement('select', array(
+				'id' => $this->id.'-state',
+				'name' => $this->name.'-state',
+				'class' => 'state',
+				'value' => $this->initialValues['state'],
+			));
+			// Add any options that are not in an opt group to the select
+			foreach(JFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
+				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
+				$optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
+				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
+				$optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
+				$optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
 
-            // Add any options that are not in an opt group to the select
-            foreach(JFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
-                $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-                $optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-                $optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-                $optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-                $optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
-
-                $state->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
-            }
-        }
-        else {
-            $state = new JFormElement('input', array(
-                'type' => 'text',
-                'id' => $this->id.'-state',
-                'name' => $this->name.'-state',
-                'class' => 'state',
+				$state->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
+			}
+		}
+		else {
+			$state = new JFormElement('input', array(
+				'type' => 'text',
+				'id' => $this->id.'-state',
+				'name' => $this->name.'-state',
+				'class' => 'state',
 				'placeholder' => 'Enter state/province/region',
-            ));
-        }
-        $stateDiv->insert($state);
+				'value' => $this->initialValues['state'],
+			));
+		}
+		$stateDiv->insert($state);
 
-        // Add the Zip input tag
-        $zipDiv = new JFormElement('div', array(
-            'class' => 'zipDiv',
-        ));
-        $zip = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-zip',
-            'name' => $this->name.'-zip',
-            'class' => 'zip',
-            'maxlength' => '10',
+		// Add the Zip input tag
+		$zipDiv = new JFormElement('div', array(
+			'class' => 'zipDiv',
+		));
+		$zip = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-zip',
+			'name' => $this->name.'-zip',
+			'class' => 'zip',
+			'maxlength' => '10',
 			'placeholder' => 'Enter postal/zip code',
-        ));
-        $zipDiv->insert($zip);
+			'value' => $this->initialValues['zip'],
+		));
+		$zipDiv->insert($zip);
 
-        // Add the country input tag
-        $countryDiv = new JFormElement('div', array(
-            'class' => 'countryDiv',
-        ));
-        // Don't built a select list if you are United States only
-        if($this->unitedStatesOnly) {
-            $country = new JFormElement('input', array(
-                'type' => 'hidden',
-                'id' => $this->id.'-country',
-                'name' => $this->name.'-country',
-                'class' => 'country',
-                'value' => 'US',
-                'style' => 'display: none;',
-            ));
-        }
-        else {
-            $country = new JFormElement('select', array(
-                'id' => $this->id.'-country',
-                'name' => $this->name.'-country',
-                'class' => 'country',
-            ));
-            // Add any options that are not in an opt group to the select
-            foreach(JFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
-                $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-                $optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-                $optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-                $optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-                $optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
+		// Add the country input tag
+		$countryDiv = new JFormElement('div', array(
+			'class' => 'countryDiv',
+		));
+		// Don't built a select list if you are United States only
+		if($this->unitedStatesOnly) {
+			$country = new JFormElement('input', array(
+				'type' => 'hidden',
+				'id' => $this->id.'-country',
+				'name' => $this->name.'-country',
+				'class' => 'country',
+				'value' => 'US',
+				'style' => 'display: none;',
+			));
+		}
+		else {
+			$country = new JFormElement('select', array(
+				'id' => $this->id.'-country',
+				'name' => $this->name.'-country',
+				'class' => 'country',
+				'value' => $this->initialValues['country'],
+			));
+			// Add any options that are not in an opt group to the select
+			foreach(JFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
+				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
+				$optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
+				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
+				$optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
+				$optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
 
-                $country->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
-            }
-        }
-        $countryDiv->insert($country);
+				$country->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
+			}
+		}
+		$countryDiv->insert($country);
 
-        // Set the empty values if they are enabled
-        if(!empty($this->emptyValues)) {
-            foreach($this->emptyValues as $empyValueKey => $emptyValue) {
-                if($empyValueKey == 'addressLine1') {
-                    $addressLine1->setAttribute('value', $emptyValue);
-                    $addressLine1->addClassName('defaultValue');
-                }
-                if($empyValueKey == 'addressLine2') {
-                    $addressLine2->setAttribute('value', $emptyValue);
-                    $addressLine2->addClassName('defaultValue');
-                }
-                if($empyValueKey == 'city') {
-                    $city->setAttribute('value', $emptyValue);
-                    $city->addClassName('defaultValue');
-                }
-                if($empyValueKey == 'state' && !$this->stateDropDown) {
-                    $state->setAttribute('value', $emptyValue);
-                    $state->addClassName('defaultValue');
-                }
-                if($empyValueKey == 'zip') {
-                    $zip->setAttribute('value', $emptyValue);
-                    $zip->addClassName('defaultValue');
-                }
-            }
-        }
+		// Set the empty values if they are enabled
+		if(!empty($this->emptyValues)) {
+			foreach($this->emptyValues as $empyValueKey => $emptyValue) {
+				if (!isset($this->initialValues[$empyValueKey]) || $this->initialValues[$empyValueKey] == '')
+				{
+					if($empyValueKey == 'addressLine1') {
+						$addressLine1->setAttribute('value', $emptyValue);
+						$addressLine1->addClassName('defaultValue');
+					}
+					if($empyValueKey == 'addressLine2') {
+						$addressLine2->setAttribute('value', $emptyValue);
+						$addressLine2->addClassName('defaultValue');
+					}
+					if($empyValueKey == 'city') {
+						$city->setAttribute('value', $emptyValue);
+						$city->addClassName('defaultValue');
+					}
+					if($empyValueKey == 'state' && !$this->stateDropDown) {
+						$state->setAttribute('value', $emptyValue);
+						$state->addClassName('defaultValue');
+					}
+					if($empyValueKey == 'zip') {
+						$zip->setAttribute('value', $emptyValue);
+						$zip->addClassName('defaultValue');
+					}
+				}
+			}
+		}
 
 
-        // Put the sublabels in if the option allows for it
-        if($this->showSublabels) {
-            $addressLine1Div->insert('<div class="jFormComponentSublabel"><p>Street Address</p></div>');
-            $addressLine2Div->insert('<div class="jFormComponentSublabel"><p>Address Line 2</p></div>');
-            $cityDiv->insert('<div class="jFormComponentSublabel"><p>City</p></div>');
+		// Put the sublabels in if the option allows for it
+		if($this->showSublabels) {
+			$addressLine1Div->insert('<div class="jFormComponentSublabel"><p>Street Address</p></div>');
+			$addressLine2Div->insert('<div class="jFormComponentSublabel"><p>Address Line 2</p></div>');
+			$cityDiv->insert('<div class="jFormComponentSublabel"><p>City</p></div>');
 
-            if($this->unitedStatesOnly) {
-                $stateDiv->insert('<div class="jFormComponentSublabel"><p>State</p></div>');
-            }
-            else {
-                $stateDiv->insert('<div class="jFormComponentSublabel"><p>State / Province / Region</p></div>');
-            }
+			if($this->unitedStatesOnly) {
+				$stateDiv->insert('<div class="jFormComponentSublabel"><p>State</p></div>');
+			}
+			else {
+				$stateDiv->insert('<div class="jFormComponentSublabel"><p>State / Province / Region</p></div>');
+			}
 
-            if($this->unitedStatesOnly) {
-                $zipDiv->insert('<div class="jFormComponentSublabel"><p>Zip Code</p></div>');
-            }
-            else {
-                $zipDiv->insert('<div class="jFormComponentSublabel"><p>Postal / Zip Code</p></div>');
-            }
+			if($this->unitedStatesOnly) {
+				$zipDiv->insert('<div class="jFormComponentSublabel"><p>Zip Code</p></div>');
+			}
+			else {
+				$zipDiv->insert('<div class="jFormComponentSublabel"><p>Postal / Zip Code</p></div>');
+			}
 
-            $countryDiv->insert('<div class="jFormComponentSublabel"><p>Country</p></div>');
-        }
+			$countryDiv->insert('<div class="jFormComponentSublabel"><p>Country</p></div>');
+		}
 
-        // United States only switch
-        if($this->unitedStatesOnly) {
-            $countryDiv->setAttribute('style', 'display: none;');
-        }
+		// United States only switch
+		if($this->unitedStatesOnly) {
+			$countryDiv->setAttribute('style', 'display: none;');
+		}
 
-        // Hide address line 2
-        if($this->addressLine2Hidden) {
-            $addressLine2Div->setAttribute('style', 'display: none;');
-        }
+		// Hide address line 2
+		if($this->addressLine2Hidden) {
+			$addressLine2Div->setAttribute('style', 'display: none;');
+		}
 
-        // Insert the address components
-        $componentDiv->insert($addressLine1Div);
-        $componentDiv->insert($addressLine2Div);
-        $componentDiv->insert($cityDiv);
-        $componentDiv->insert($stateDiv);
-        $componentDiv->insert($zipDiv);
-        $componentDiv->insert($countryDiv);
+		// Insert the address components
+		$componentDiv->insert($addressLine1Div);
+		$componentDiv->insert($addressLine2Div);
+		$componentDiv->insert($cityDiv);
+		$componentDiv->insert($stateDiv);
+		$componentDiv->insert($zipDiv);
+		$componentDiv->insert($countryDiv);
 
-        // Add any description (optional)
-        $componentDiv = $this->insertComponentDescription($componentDiv);
+		// Add any description (optional)
+		$componentDiv = $this->insertComponentDescription($componentDiv);
 
-        // Add a tip (optional)
-        $componentDiv = $this->insertComponentTip($componentDiv);
+		// Add a tip (optional)
+		$componentDiv = $this->insertComponentTip($componentDiv);
 
-        return $componentDiv->__toString();
-    }
+		return $componentDiv->__toString();
+	}
 
-    // Address validations
-    public function required($options) {
-        $errorMessageArray = array();
-        if($options['value']->addressLine1 == '') {
-            array_push($errorMessageArray, array('Street Address is required.'));
-        }
-        if($options['value']->city == '') {
-            array_push($errorMessageArray, array('City is required.'));
-        }
-        if($options['value']->state == '') {
-            array_push($errorMessageArray, array('State is required.'));
-        }
-        if($options['value']->zip == '') {
-            array_push($errorMessageArray, array('Zip is required.'));
-        }
-        if($options['value']->country == '') {
-            array_push($errorMessageArray, array('Country is required.'));
-        }
-        return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
-    }
+	// Address validations
+	public function required($options) {
+		$errorMessageArray = array();
+		if($options['value']->addressLine1 == '') {
+			array_push($errorMessageArray, array('Street Address is required.'));
+		}
+		if($options['value']->city == '') {
+			array_push($errorMessageArray, array('City is required.'));
+		}
+		if($options['value']->state == '') {
+			array_push($errorMessageArray, array('State is required.'));
+		}
+		if($options['value']->zip == '') {
+			array_push($errorMessageArray, array('Zip is required.'));
+		}
+		if($options['value']->country == '') {
+			array_push($errorMessageArray, array('Country is required.'));
+		}
+		return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
+	}
 }
 
 
@@ -3350,604 +3364,606 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
 
 class JFormComponentName extends JFormComponent {
-    var $middleInitialHidden = false;
-    var $emptyValues = null;
-    var $showSublabels = true;
+	var $middleInitialHidden = false;
+	var $emptyValues = null;
+	var $showSublabels = true;
 
-    /*
-     * Constructor
-     */
-    function __construct($id, $label, $optionArray = array()) {
-        // Class variables
-        $this->id = $id;
-        $this->name = $this->id;
-        $this->label = $label;
-        $this->class = 'jFormComponentName';
+	/*
+	 * Constructor
+	 */
+	function __construct($id, $label, $optionArray = array()) {
+		// Class variables
+		$this->id = $id;
+		$this->name = $this->id;
+		$this->label = $label;
+		$this->class = 'jFormComponentName';
 
-        // Input options
-        $this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
+		// Input options
+		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
 
-        if($this->emptyValues === true) {
-            $this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
-        }
-        //$this->mask = '';
+		if($this->emptyValues === true) {
+			$this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
+		}
+		//$this->mask = '';
 
-        // Initialize the abstract FormComponent object
-        $this->initialize($optionArray);
-    }
+		// Initialize the abstract FormComponent object
+		$this->initialize($optionArray);
+	}
 
-    function hasInstanceValues() {
-        return is_array($this->value);
-    }
+	function hasInstanceValues() {
+		return is_array($this->value);
+	}
 
-    function getOptions() {
-        $options = parent::getOptions();
+	function getOptions() {
+		$options = parent::getOptions();
 
-        if(!empty($this->emptyValues)) {
-            $options['options']['emptyValue'] = $this->emptyValues;
-        }
+		if(!empty($this->emptyValues)) {
+			$options['options']['emptyValue'] = $this->emptyValues;
+		}
 
-        if(empty($options['options'])) {
-            unset($options['options']);
-        }
+		if(empty($options['options'])) {
+			unset($options['options']);
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 
-    /**
-     *
-     * @return string
-     */
-    function __toString() {
-        // Generate the component div
-        $div = $this->generateComponentDiv();
+	/**
+	 *
+	 * @return string
+	 */
+	function __toString() {
+		// Generate the component div
+		$div = $this->generateComponentDiv();
 
 
-        $firstNameDiv = new JFormElement('div', array(
-            'class' => 'firstNameDiv',
-        ));
-        // Add the first name input tag
-        $firstName = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-firstName',
-            'name' => $this->name.'-firstName',
-            'class' => 'firstName singleLineText',
+		$firstNameDiv = new JFormElement('div', array(
+			'class' => 'firstNameDiv',
+		));
+		// Add the first name input tag
+		$firstName = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-firstName',
+			'name' => $this->name.'-firstName',
+			'class' => 'firstName singleLineText',
 			'placeholder' => 'First Name',
-            'value' => $this->initialValues['firstName'],
-        ));
-        $firstNameDiv->insert($firstName);
+			'value' => $this->initialValues['firstName'],
+		));
+		$firstNameDiv->insert($firstName);
 
-        // Add the middle initial input tag
-        $middleInitialDiv = new JFormElement('div', array(
-            'class' => 'middleInitialDiv',
-        ));
-        $middleInitial = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-middleInitial',
-            'name' => $this->name.'-middleInitial',
-            'class' => 'middleInitial singleLineText',
-            'maxlength' => '1',
-            'value' => (isset($this->initialValues['middleInitial']) ? $this->initialValues['middleInitial'] : ''),
-        ));
-        if($this->middleInitialHidden) {
-            $middleInitial->setAttribute('style', 'display: none;');
-            $middleInitialDiv->setAttribute('style', 'display: none;');
-        }
-        $middleInitialDiv->insert($middleInitial);
-        
+		// Add the middle initial input tag
+		$middleInitialDiv = new JFormElement('div', array(
+			'class' => 'middleInitialDiv',
+		));
+		$middleInitial = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-middleInitial',
+			'name' => $this->name.'-middleInitial',
+			'class' => 'middleInitial singleLineText',
+			'maxlength' => '1',
+			'value' => (isset($this->initialValues['middleInitial']) ? $this->initialValues['middleInitial'] : ''),
+		));
+		if($this->middleInitialHidden) {
+			$middleInitial->setAttribute('style', 'display: none;');
+			$middleInitialDiv->setAttribute('style', 'display: none;');
+		}
+		$middleInitialDiv->insert($middleInitial);
+		
 
-        // Add the last name input tag
-        $lastNameDiv = new JFormElement('div', array(
-            'class' => 'lastNameDiv',
-        ));
-        $lastName = new JFormElement('input', array(
-            'type' => 'text',
-            'id' => $this->id.'-lastName',
-            'name' => $this->name.'-lastName',
-            'class' => 'lastName singleLineText',
+		// Add the last name input tag
+		$lastNameDiv = new JFormElement('div', array(
+			'class' => 'lastNameDiv',
+		));
+		$lastName = new JFormElement('input', array(
+			'type' => 'text',
+			'id' => $this->id.'-lastName',
+			'name' => $this->name.'-lastName',
+			'class' => 'lastName singleLineText',
 			'placeholder' => 'Last Name',
-            'value' => $this->initialValues['lastName'],
-        ));
-        $lastNameDiv->insert($lastName);
+			'value' => $this->initialValues['lastName'],
+		));
+		$lastNameDiv->insert($lastName);
 
-        if(!empty($this->emptyValues)){
-            $this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
-            foreach($this->emptyValues as $key => $value) {
-            if($key == 'firstName') {
-                $firstName->setAttribute('value', $value);
-                $firstName->addClassName('defaultValue');
-            }
-            if($key == 'middleInitial') {
-                $middleInitial->setAttribute('value', $value);
-                $middleInitial->addClassName('defaultValue');
-            }
-            if($key == 'lastName') {
-                $lastName->setAttribute('value', $value);
-                $lastName->addClassName('defaultValue');
-            }
-        }
-            
-        }
+		if(!empty($this->emptyValues)){
+			$this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
+			foreach($this->emptyValues as $key => $value) {
+				if (!isset($this->initialValues[$key]) || $this->initialValues[$key] == '')
+				{
+					if($key == 'firstName') {
+						$firstName->setAttribute('value', $value);
+						$firstName->addClassName('defaultValue');
+					}
+					if($key == 'middleInitial') {
+						$middleInitial->setAttribute('value', $value);
+						$middleInitial->addClassName('defaultValue');
+					}
+					if($key == 'lastName') {
+						$lastName->setAttribute('value', $value);
+						$lastName->addClassName('defaultValue');
+					}
+				}
+			}
+		}
+			
+		if($this->showSublabels) {
+			$firstNameDiv->insert('<div class="jFormComponentSublabel"><p>First Name</p></div>');
+			$middleInitialDiv->insert('<div class="jFormComponentSublabel"><p>MI</p></div>');
+			$lastNameDiv->insert('<div class="jFormComponentSublabel"><p>Last Name</p></div>');
+		}
+		
+		$div->insert($firstNameDiv);
+		$div->insert($middleInitialDiv);
+		$div->insert($lastNameDiv);
 
-        if($this->showSublabels) {
-            $firstNameDiv->insert('<div class="jFormComponentSublabel"><p>First Name</p></div>');
-            $middleInitialDiv->insert('<div class="jFormComponentSublabel"><p>MI</p></div>');
-            $lastNameDiv->insert('<div class="jFormComponentSublabel"><p>Last Name</p></div>');
-        }
-        
-        $div->insert($firstNameDiv);
-        $div->insert($middleInitialDiv);
-        $div->insert($lastNameDiv);
+		// Add any description (optional)
+		$div = $this->insertComponentDescription($div);
 
-        // Add any description (optional)
-        $div = $this->insertComponentDescription($div);
+		// Add a tip (optional)
+		$div = $this->insertComponentTip($div);
 
-        // Add a tip (optional)
-        $div = $this->insertComponentTip($div);
+		return $div->__toString();
+	}
 
-        return $div->__toString();
-    }
-
-    public function required($options) {
-        $errorMessageArray = array();
-        if($options['value']->firstName == '') {
-            array_push($errorMessageArray, array('First name is required.'));
-        }
-        if($options['value']->lastName == '') {
-            array_push($errorMessageArray, array('Last name is required.'));
-        }
-        return sizeof($errorMessageArray) == 0 ? 'success' : $errorMessageArray;
-    }
+	public function required($options) {
+		$errorMessageArray = array();
+		if($options['value']->firstName == '') {
+			array_push($errorMessageArray, array('First name is required.'));
+		}
+		if($options['value']->lastName == '') {
+			array_push($errorMessageArray, array('Last name is required.'));
+		}
+		return sizeof($errorMessageArray) == 0 ? 'success' : $errorMessageArray;
+	}
 }
 
 
 
 
 class JFormComponentSingleLineText extends JFormComponent {
-    var $sublabel;
+	var $sublabel;
 
-    /*
-     * Constructor
-     */
-    function __construct($id, $label, $optionArray = array()) {
-        // Class variables
-        $this->id = $id;
-        $this->name = $this->id;
-        $this->label = $label;
-        $this->class = 'jFormComponentSingleLineText';
-        $this->widthArray = array('shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em');
+	/*
+	 * Constructor
+	 */
+	function __construct($id, $label, $optionArray = array()) {
+		// Class variables
+		$this->id = $id;
+		$this->name = $this->id;
+		$this->label = $label;
+		$this->class = 'jFormComponentSingleLineText';
+		$this->widthArray = array('shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em');
 
-        // Input options
-        $this->initialValue = '';
-        $this->type = 'text'; // text, password, hidden
-        $this->disabled = false;
-        $this->readOnly = false;
-        $this->maxLength = '';
-        $this->width = '';
-        $this->mask = '';
-        $this->emptyValue = '';
+		// Input options
+		$this->initialValue = '';
+		$this->type = 'text'; // text, password, hidden
+		$this->disabled = false;
+		$this->readOnly = false;
+		$this->maxLength = '';
+		$this->width = '';
+		$this->mask = '';
+		$this->emptyValue = '';
 		$this->placeholder = '';
 
-        // Initialize the abstract FormComponent object
-        $this->initialize($optionArray);
-    }
+		// Initialize the abstract FormComponent object
+		$this->initialize($optionArray);
+	}
 
-    function hasInstanceValues() {
-        return is_array($this->value);
-    }
+	function hasInstanceValues() {
+		return is_array($this->value);
+	}
 
-    function getOptions() {
-        $options = parent::getOptions();
+	function getOptions() {
+		$options = parent::getOptions();
 
-        // Make sure you have an options array to manipulate
-        if(!isset($options['options'])) {
-            $options['options']  = array();
-        }
+		// Make sure you have an options array to manipulate
+		if(!isset($options['options'])) {
+			$options['options']  = array();
+		}
 
-        // Mask
-        if(!empty($this->mask)) {
-            $options['options']['mask'] = $this->mask;
-        }
+		// Mask
+		if(!empty($this->mask)) {
+			$options['options']['mask'] = $this->mask;
+		}
 
-        // Empty value
-        if(!empty($this->emptyValue)) {
-            $options['options']['emptyValue'] = $this->emptyValue;
-        }
+		// Empty value
+		if(!empty($this->emptyValue)) {
+			$options['options']['emptyValue'] = $this->emptyValue;
+		}
 
-        // Clear the options key if there is nothing in it
-        if(empty($options['options'])) {
-            unset($options['options']);
-        }
+		// Clear the options key if there is nothing in it
+		if(empty($options['options'])) {
+			unset($options['options']);
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 
-    /**
-     *
-     * @return string
-     */
-    function __toString() {
-        // Generate the component div
-        $div = $this->generateComponentDiv();
+	/**
+	 *
+	 * @return string
+	 */
+	function __toString() {
+		// Generate the component div
+		$div = $this->generateComponentDiv();
 
-        // Add the input tag
-        $input = new JFormElement('input', array(
-            'type' => $this->type,
-            'id' => $this->id,
-            'name' => $this->name,
-        ));
-        if(!empty($this->width)) {
-            if(array_key_exists($this->width, $this->widthArray)) {
-                $input->setAttribute('style', 'width: '.$this->widthArray[$this->width].';');
-            }
-            else {
-                $input->setAttribute('style', 'width: '.$this->width.';');
-            }
-        }
-        if(isset($this->initialValue)) {
-            $input->setAttribute('value', $this->initialValue);
-        }
-        if(!empty($this->maxLength)) {
-            $input->setAttribute('maxlength', $this->maxLength);
-        }
-        if(!empty($this->placeholder)) {
-            $input->setAttribute('placeholder', $this->placeholder);
-        }
-        if(!empty($this->mask)){
-            $this->formComponentMeta['options']['mask']= $this->mask;
-        }
-        if($this->disabled) {
-            $input->setAttribute('disabled', 'disabled');
-        }
-        if($this->readOnly) {
-            $input->setAttribute('readonly', 'readonly');
-        }
-        if($this->enterSubmits) {
-            $input->addToAttribute('class', ' jFormComponentEnterSubmits');
-        }
-        $div->insert($input);
+		// Add the input tag
+		$input = new JFormElement('input', array(
+			'type' => $this->type,
+			'id' => $this->id,
+			'name' => $this->name,
+		));
+		if(!empty($this->width)) {
+			if(array_key_exists($this->width, $this->widthArray)) {
+				$input->setAttribute('style', 'width: '.$this->widthArray[$this->width].';');
+			}
+			else {
+				$input->setAttribute('style', 'width: '.$this->width.';');
+			}
+		}
+		if(isset($this->initialValue)) {
+			$input->setAttribute('value', $this->initialValue);
+		}
+		if(!empty($this->maxLength)) {
+			$input->setAttribute('maxlength', $this->maxLength);
+		}
+		if(!empty($this->placeholder)) {
+			$input->setAttribute('placeholder', $this->placeholder);
+		}
+		if(!empty($this->mask)){
+			$this->formComponentMeta['options']['mask']= $this->mask;
+		}
+		if($this->disabled) {
+			$input->setAttribute('disabled', 'disabled');
+		}
+		if($this->readOnly) {
+			$input->setAttribute('readonly', 'readonly');
+		}
+		if($this->enterSubmits) {
+			$input->addToAttribute('class', ' jFormComponentEnterSubmits');
+		}
+		$div->insert($input);
 
-        if(!empty($this->sublabel)) {
-            $div->insert('<div class="jFormComponentSublabel">'.$this->sublabel.'</div>');
-        }
+		if(!empty($this->sublabel)) {
+			$div->insert('<div class="jFormComponentSublabel">'.$this->sublabel.'</div>');
+		}
 
-        // Add any description (optional)
-        $div = $this->insertComponentDescription($div);
+		// Add any description (optional)
+		$div = $this->insertComponentDescription($div);
 
-        // Add a tip (optional)
-        $div = $this->insertComponentTip($div);
+		// Add a tip (optional)
+		$div = $this->insertComponentTip($div);
 
-        return $div->__toString();
-    }
+		return $div->__toString();
+	}
 
-    // Validations
+	// Validations
 
-    public function alpha($options) {
-        $messageArray = array('Must only contain letters.');
-        return preg_match('/^[a-z_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function alpha($options) {
+		$messageArray = array('Must only contain letters.');
+		return preg_match('/^[a-z_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function alphaDecimal($options) {
-        $messageArray = array('Must only contain letters, numbers, or periods.');
-        return preg_match('/^\w+$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function alphaDecimal($options) {
+		$messageArray = array('Must only contain letters, numbers, or periods.');
+		return preg_match('/^\w+$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function alphaNumeric($options) {
-        $messageArray = array('Must only contain letters or numbers.');
-        return preg_match('/^[a-z0-9_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
-    
-    public function blank($options) {
-        $messageArray = array('Must be blank.');
-        return strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
-    }
-    
-    public function canadianPostal($options) {
-        $messageArray = array('Must be a valid Canadian postal code.');
-        return preg_match('/^[ABCEGHJKLMNPRSTVXY][0-9][A-Z] [0-9][A-Z][0-9]$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
-    
-    public function custom_regexp() {
-        $messageArray = array($options['custom_regexp']['custom_message']);
-        return preg_match ($options['custom_regexp']['regexp'], $options['value']) ? 'success' : $messageArray;
-    }
-    
-    public function date($options) {
-        $messageArray = array('Must be a date in the mm/dd/yyyy format.');
-        return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)[0-9]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
-    
-    public function dateTime($options) {
-        $messageArray = array('Must be a date in the mm/dd/yyyy hh:mm:ss tt format. ss and tt are optional.');
-        return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)?[0-9]{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
-    
-    public function decimal($options) {
-        // Can be negative and have a decimal value
-        // Do not accept commas in value as the DB does not accept them
-        $messageArray = array('Must be a number without any commas. Decimal is optional.');
-        return preg_match('/^-?((\d+(\.\d+)?)|(\.\d+))$/', $options['value']) ? 'success' : $messageArray;
-    }
-    
-    public function decimalNegative($options) {
-        // Must be negative and have a decimal value
-        $messageArray = array('Must be a negative number without any commas. Decimal is optional.');
-        //isDecimal = self.validations.decimal($options);
-        return ($isDecimal == 'success' && (floatval($options['value']) < 0)) ? 'success' : $messageArray;
-    }
-    
-    public function decimalPositive($options) {
-        // Must be positive and have a decimal value
-        $messageArray = array('Must be a positive number without any commas. Decimal is optional.');
-        //isDecimal = self.validations.decimal($options);
-        return ($isDecimal == 'success' && (floatval($options['value']) > 0)) ? 'success' : $messageArray;
-    }
-       
-    public function decimalZeroNegative($options) {
-        // Must be negative and have a decimal value
-        $messageArray = array('Must be zero or a negative number without any commas. Decimal is optional.');
-        //isDecimal = self.validations.decimal($options);
-        return ($isDecimal == 'success' && (floatval($options['value']) <= 0)) ? 'success' : $messageArray;
-    }
-    
-    public function decimalZeroPositive($options) {
-        // Must be positive and have a decimal value
-        $messageArray = array('Must be zero or a positive number without any commas. Decimal is optional.');
-        //isDecimal = self.validations.decimal($options);
-        return ($isDecimal == 'success' && (floatval($options['value']) >= 0)) ? 'success' : $messageArray;
-    }
-    
-    public function email($options) {
-        $messageArray = array('Must be a valid e-mail address.');
-        return preg_match('/^[A-Z0-9._%-\+]+@(?:[A-Z0-9\-]+\.)+[A-Z]{2,4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function alphaNumeric($options) {
+		$messageArray = array('Must only contain letters or numbers.');
+		return preg_match('/^[a-z0-9_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function integer($options) {
-        $messageArray = array('Must be a whole number.');
-        return preg_match('/^-?\d+$/', $options['value']) ? 'success' : $messageArray;
-    }
+	public function blank($options) {
+		$messageArray = array('Must be blank.');
+		return strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
+	}
 
-    public function integerNegative($options) {
-        $messageArray = array('Must be a negative whole number.');
-        //isInteger = preg_match('/^-?\d+$/', $options['value']);
-        return ($isInteger && (intval($options['value'], 10) < 0)) ? 'success' : $messageArray;
-    }
+	public function canadianPostal($options) {
+		$messageArray = array('Must be a valid Canadian postal code.');
+		return preg_match('/^[ABCEGHJKLMNPRSTVXY][0-9][A-Z] [0-9][A-Z][0-9]$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function integerPositive($options) {
-        $messageArray = array('Must be a positive whole number.');
-        //isInteger = preg_match('/^-?\d+$/', $options['value']);
-        return ($isInteger && (intval($options['value'], 10) > 0)) ? 'success' : $messageArray;
-    }
+	public function custom_regexp() {
+		$messageArray = array($options['custom_regexp']['custom_message']);
+		return preg_match ($options['custom_regexp']['regexp'], $options['value']) ? 'success' : $messageArray;
+	}
 
-    public function integerZeroNegative($options) {
-        $messageArray = array('Must be zero or a negative whole number.');
-        //isInteger = preg_match('/^-?\d+$/', $options['value']);
-        return ($isInteger && (intval($options['value'], 10) <= 0)) ? 'success' : $messageArray;
-    }
+	public function date($options) {
+		$messageArray = array('Must be a date in the mm/dd/yyyy format.');
+		return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)[0-9]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function integerZeroPositive($options) {
-        $messageArray = array('Must be zero or a positive whole number.');
-        //isInteger = preg_match('/^-?\d+$/', $options['value']);
-        return ($isInteger && (intval($options['value'], 10) >= 0)) ? 'success' : $messageArray;
-    }
+	public function dateTime($options) {
+		$messageArray = array('Must be a date in the mm/dd/yyyy hh:mm:ss tt format. ss and tt are optional.');
+		return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)?[0-9]{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function isbn($options) {
-        //Match an ISBN
-        $errorMessageArray = array('Must be a valid ISBN and consist of either ten or thirteen characters.');
-        //For ISBN-10
-        if(preg_match('/^(?=.{13}$)\d{1,5}([\- ])\d{1,7}\1\d{1,6}\1(\d|X)$/', $options['value'])) {
-            $errorMessageArray = 'sucess';
-        }
-        if(preg_match('/^\d{9}(\d|X)$/', $options['value'])) {
-            $errorMessageArray = 'sucess';
-        }
-        //For ISBN-13
-        if(preg_match('/^(?=.{17}$)\d{3}([\- ])\d{1,5}\1\d{1,7}\1\d{1,6}\1(\d|X)$/' , $options['value'])) {
-            $errorMessageArray = 'sucess';
-        }
-        if(preg_match('/^\d{3}[\- ]\d{9}(\d|X)$/', $options['value'])) {
-            $errorMessageArray = 'sucess';
-        }
-        //ISBN-13 without starting delimiter (Not a valid ISBN but less strict validation was requested)
-        if(preg_match('/^\d{12}(\d|X)$/', $options['value'])) {
-            $errorMessageArray = 'sucess';
-        }
-        return $errorMessageArray;
-    }
+	public function decimal($options) {
+		// Can be negative and have a decimal value
+		// Do not accept commas in value as the DB does not accept them
+		$messageArray = array('Must be a number without any commas. Decimal is optional.');
+		return preg_match('/^-?((\d+(\.\d+)?)|(\.\d+))$/', $options['value']) ? 'success' : $messageArray;
+	}
 
-    public function length($options) {
-        $messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.strlen($options['value']).' characters.');
-        return strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function decimalNegative($options) {
+		// Must be negative and have a decimal value
+		$messageArray = array('Must be a negative number without any commas. Decimal is optional.');
+		//isDecimal = self.validations.decimal($options);
+		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) < 0)) ? 'success' : $messageArray;
+	}
 
-    public function matches($options) {
-        $componentToMatch = $this->parentJFormSection->parentJFormPage->jFormer->select($options['matches']);
-        if($componentToMatch && $componentToMatch->value == $options['value']) {
-            return 'success';
-        }
-        else {
-            return array('Does not match.');
-        }
-    }
+	public function decimalPositive($options) {
+		// Must be positive and have a decimal value
+		$messageArray = array('Must be a positive number without any commas. Decimal is optional.');
+		//isDecimal = self.validations.decimal($options);
+		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) > 0)) ? 'success' : $messageArray;
+	}
 
-    public function maxLength($options) {
-        $messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
-        return strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function decimalZeroNegative($options) {
+		// Must be negative and have a decimal value
+		$messageArray = array('Must be zero or a negative number without any commas. Decimal is optional.');
+		//isDecimal = self.validations.decimal($options);
+		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) <= 0)) ? 'success' : $messageArray;
+	}
 
-    public function maxFloat($options) {
-        $messageArray = array('Must be numeric and cannot have more than ' . $options['maxFloat'] . ' decimal place(s).');
-        return preg_match('^-?((\\d+(\\.\\d{0,'+ $options['maxFloat'] +'})?)|(\\.\\d{0,' . $options['maxFloat'] . '}))$', $options['value'])  ? 'success' : $messageArray;
-    }
+	public function decimalZeroPositive($options) {
+		// Must be positive and have a decimal value
+		$messageArray = array('Must be zero or a positive number without any commas. Decimal is optional.');
+		//isDecimal = self.validations.decimal($options);
+		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) >= 0)) ? 'success' : $messageArray;
+	}
 
-    public function maxValue($options) {
-        $messageArray = array('Must be numeric with a maximum value of ' . $options['maxValue'] . '.');
-        return $options['maxValue'] >= $options['value'] ? 'success' : $messageArray;
-    }
+	public function email($options) {
+		$messageArray = array('Must be a valid e-mail address.');
+		return preg_match('/^[A-Z0-9._%-\+]+@(?:[A-Z0-9\-]+\.)+[A-Z]{2,4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function minLength($options) {
-        $messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
-        return strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
-    }
-    
-    public function minValue($options) {
-        $messageArray = array('Must be numeric with a minimum value of ' . $options['minValue'] . '.');
-        return $options['minValue'] <= $options['value'] ? 'success' : $messageArray;
-    }
+	public function integer($options) {
+		$messageArray = array('Must be a whole number.');
+		return preg_match('/^-?\d+$/', $options['value']) ? 'success' : $messageArray;
+	}
 
-    public function money($options) {
-        $messageArray = array('Must be a valid dollar value.');
-        return preg_match('/^\$?[1-9][0-9]{0,2}(,?[0-9]{3})*(\.[0-9]{2})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function integerNegative($options) {
+		$messageArray = array('Must be a negative whole number.');
+		//isInteger = preg_match('/^-?\d+$/', $options['value']);
+		return ($this->integer($optoins) && (intval($options['value'], 10) < 0)) ? 'success' : $messageArray;
+	}
 
-    public function moneyNegative($options) {
-        $messageArray = array('Must be a valid negative dollar value.');
-        return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] < 0 || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function integerPositive($options) {
+		$messageArray = array('Must be a positive whole number.');
+		//isInteger = preg_match('/^-?\d+$/', $options['value']);
+		return ($this->integer($optoins) && (intval($options['value'], 10) > 0)) ? 'success' : $messageArray;
+	}
 
-    public function moneyPositive($options) {
-        $messageArray = array('Must be a valid positive dollar value.');
-        return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] > 0 || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function integerZeroNegative($options) {
+		$messageArray = array('Must be zero or a negative whole number.');
+		//isInteger = preg_match('/^-?\d+$/', $options['value']);
+		return ($this->integer($optoins) && (intval($options['value'], 10) <= 0)) ? 'success' : $messageArray;
+	}
 
-    public function moneyZeroNegative($options) {
-        $messageArray = array('Must be zero or a valid negative dollar value.');
-        return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] <= 0 ? 'success' : $messageArray;
-    }
+	public function integerZeroPositive($options) {
+		$messageArray = array('Must be zero or a positive whole number.');
+		//isInteger = preg_match('/^-?\d+$/', $options['value']);
+		return ($this->integer($optoins) && (intval($options['value'], 10) >= 0)) ? 'success' : $messageArray;
+	}
 
-    public function moneyZeroPositive($options) {
-        $messageArray = array('Must be zero or a valid positive dollar value.');
-        return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0]= 0 || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function isbn($options) {
+		//Match an ISBN
+		$errorMessageArray = array('Must be a valid ISBN and consist of either ten or thirteen characters.');
+		//For ISBN-10
+		if(preg_match('/^(?=.{13}$)\d{1,5}([\- ])\d{1,7}\1\d{1,6}\1(\d|X)$/', $options['value'])) {
+			$errorMessageArray = 'sucess';
+		}
+		if(preg_match('/^\d{9}(\d|X)$/', $options['value'])) {
+			$errorMessageArray = 'sucess';
+		}
+		//For ISBN-13
+		if(preg_match('/^(?=.{17}$)\d{3}([\- ])\d{1,5}\1\d{1,7}\1\d{1,6}\1(\d|X)$/' , $options['value'])) {
+			$errorMessageArray = 'sucess';
+		}
+		if(preg_match('/^\d{3}[\- ]\d{9}(\d|X)$/', $options['value'])) {
+			$errorMessageArray = 'sucess';
+		}
+		//ISBN-13 without starting delimiter (Not a valid ISBN but less strict validation was requested)
+		if(preg_match('/^\d{12}(\d|X)$/', $options['value'])) {
+			$errorMessageArray = 'sucess';
+		}
+		return $errorMessageArray;
+	}
 
-    public function password($options) {
-        $messageArray = array('Must be between 4 and 32 characters.');
-        return preg_match('/^.{4,32}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function length($options) {
+		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.strlen($options['value']).' characters.');
+		return strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function phone($options) {
-        //$messageArray = array('Must be a 10 digit phone number.');
-        //return preg_match('/^(1[\-. ]?)?\(?[0-9]{3}\)?[\-. ]?[0-9]{3}[\-. ]?[0-9]{4}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray ;
-        $messageArray = array('Must be a US or International Phone Number');
-        return preg_match('/^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function matches($options) {
+		$componentToMatch = $this->parentJFormSection->parentJFormPage->jFormer->select($options['matches']);
+		if($componentToMatch && $componentToMatch->value == $options['value']) {
+			return 'success';
+		}
+		else {
+			return array('Does not match.');
+		}
+	}
 
-    public function postalZip($options) {
-        $messageArray = array('Must be a valid United States zip code, Canadian postal code, or United Kingdom postal code.');
-        $postal = false;
-        if(this.zip($options) == 'success') {
-            $postal = true;
-        }
-        if(this.canadianPostal($options) == 'success') {
-            $postal = true;
-        }
-        if(this.ukPostal($options) == 'success') {
-            $postal = true;
-        }
-        return postal ? 'success' : $messageArray;
-    }
-    
-    public function required($options) {
-        $messageArray = array('Required.');
-        //return empty($options['value']) ? 'success' : $messageArray; // Break validation on purpose
-        return !empty($options['value']) || $options['value'] == '0' ? 'success' : $messageArray;
-    }
+	public function maxLength($options) {
+		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
+		return strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function serverSide($options) {
-        // Handle empty values
-        if(empty($options['value'])) {
-            return 'success';
-        }
+	public function maxFloat($options) {
+		$messageArray = array('Must be numeric and cannot have more than ' . $options['maxFloat'] . ' decimal place(s).');
+		return preg_match('^-?((\\d+(\\.\\d{0,'+ $options['maxFloat'] +'})?)|(\\.\\d{0,' . $options['maxFloat'] . '}))$', $options['value'])  ? 'success' : $messageArray;
+	}
 
-        $messageArray = array();
+	public function maxValue($options) {
+		$messageArray = array('Must be numeric with a maximum value of ' . $options['maxValue'] . '.');
+		return $options['maxValue'] >= $options['value'] ? 'success' : $messageArray;
+	}
 
-        // Perform the server side check with a scrape
-        $serverSideResponse = getUrlContent($options['url'].'&value='.$options['value']);
+	public function minLength($options) {
+		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
+		return strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-        // Can't read the URL
-        if($serverSideResponse['status'] != 'success') {
-            $messageArray[] = 'This component could not be validated.';
-        }
-        // Read the URL
-        else {
-            $serverSideResponse = json_decode($serverSideResponse['response']);
-            if($serverSideResponse->status == 'success') {
-                $messageArray == 'success';
-            }
-            else {
-                $messageArray = $serverSideResponse->response;
-            }
-        }
+	public function minValue($options) {
+		$messageArray = array('Must be numeric with a minimum value of ' . $options['minValue'] . '.');
+		return $options['minValue'] <= $options['value'] ? 'success' : $messageArray;
+	}
 
-        return $messageArray;
+	public function money($options) {
+		$messageArray = array('Must be a valid dollar value.');
+		return preg_match('/^\$?[1-9][0-9]{0,2}(,?[0-9]{3})*(\.[0-9]{2})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-        function getUrlContent($url, $postData = null) {
-            // Handle objects and arrays
-            $curlHandler = curl_init();
-            curl_setopt($curlHandler, CURLOPT_URL, $url);
-            curl_setopt($curlHandler, CURLOPT_FAILONERROR, 1);
-            curl_setopt($curlHandler, CURLOPT_TIMEOUT, 20); // Time out in seconds
-            curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
-            if ($postData != null) {
-                foreach ($postData as $key => &$value) {
-                    if (is_object($value) || is_array($value)) {
-                        $value = json_encode($value);
-                    }
-                }
-                curl_setopt($curlHandler, CURLOPT_POSTFIELDS, $postData);
-            }
-            $request = curl_exec($curlHandler);
+	public function moneyNegative($options) {
+		$messageArray = array('Must be a valid negative dollar value.');
+		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] < 0 || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-            if (!$request) {
-                $response = array('status' => 'failure', 'response' => 'CURL error ' . curl_errno($curlHandler) . ': ' . curl_error($curlHandler));
-            } else {
-                $response = array('status' => 'success', 'response' => $request);
-            }
+	public function moneyPositive($options) {
+		$messageArray = array('Must be a valid positive dollar value.');
+		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] > 0 || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-            return $response;
-        }
-    }
+	public function moneyZeroNegative($options) {
+		$messageArray = array('Must be zero or a valid negative dollar value.');
+		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] <= 0 ? 'success' : $messageArray;
+	}
 
-    public function ssn($options) {
-        $messageArray = array('Must be a valid United States social security number.');
-        return preg_match('/^\d{3}-?\d{2}-?\d{4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function moneyZeroPositive($options) {
+		$messageArray = array('Must be zero or a valid positive dollar value.');
+		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0]= 0 || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function teenager($options) {
-        $messageArray = array('Must be at least 13 years old.');
-        if($this->date($options) == 'success') {
-            $oldEnough = strtotime($options['value']) - strtotime('-13 years');
-        }
-        else {
-            return false;
-        }
-        return $oldEnough >= 0  ? 'success' : $messageArray;
-    }
+	public function password($options) {
+		$messageArray = array('Must be between 4 and 32 characters.');
+		return preg_match('/^.{4,32}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function time($options) {
-        $messageArray = array('Must be a time in the hh:mm:ss tt format. ss and tt are optional.');
-        return preg_match('/^[0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function phone($options) {
+		//$messageArray = array('Must be a 10 digit phone number.');
+		//return preg_match('/^(1[\-. ]?)?\(?[0-9]{3}\)?[\-. ]?[0-9]{3}[\-. ]?[0-9]{4}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray ;
+		$messageArray = array('Must be a US or International Phone Number');
+		return preg_match('/^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
-    public function ukPostal($options) {
-        $messageArray = array('Must be a valid United Kingdom postal code.');
-        return preg_match('/^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function postalZip($options) {
+		$messageArray = array('Must be a valid United States zip code, Canadian postal code, or United Kingdom postal code.');
+		$postal = false;
+		if(this.zip($options) == 'success') {
+			$postal = true;
+		}
+		if(this.canadianPostal($options) == 'success') {
+			$postal = true;
+		}
+		if(this.ukPostal($options) == 'success') {
+			$postal = true;
+		}
+		return postal ? 'success' : $messageArray;
+	}
 
-    public function url($options) {
-        $messageArray = array('Must be a valid Internet address.');
-        return preg_match('/^((ht|f)tp(s)?:\/\/|www\.)?([\-A-Z0-9.]+)(\.[a-zA-Z]{2,4})(\/[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?(\?[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function required($options) {
+		$messageArray = array('Required.');
+		//return empty($options['value']) ? 'success' : $messageArray; // Break validation on purpose
+		return !empty($options['value']) || $options['value'] == '0' ? 'success' : $messageArray;
+	}
 
-    public function username($options) {
-        $messageArray = array('Must use 4 to 32 characters and start with a letter.');
-        return preg_match('/^[A-Za-z](?=[A-Za-z0-9_.]{3,31}$)[a-zA-Z0-9_]*\.?[a-zA-Z0-9_]*$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+	public function serverSide($options) {
+		// Handle empty values
+		if(empty($options['value'])) {
+			return 'success';
+		}
 
-    public function zip($options) {
-        $messageArray = array('Must be a valid United States zip code.');
-        return preg_match('/^[0-9]{5}(?:-[0-9]{4})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
-    }
+		$messageArray = array();
+
+		// Perform the server side check with a scrape
+		$serverSideResponse = getUrlContent($options['url'].'&value='.$options['value']);
+
+		// Can't read the URL
+		if($serverSideResponse['status'] != 'success') {
+			$messageArray[] = 'This component could not be validated.';
+		}
+		// Read the URL
+		else {
+			$serverSideResponse = json_decode($serverSideResponse['response']);
+			if($serverSideResponse->status == 'success') {
+				$messageArray == 'success';
+			}
+			else {
+				$messageArray = $serverSideResponse->response;
+			}
+		}
+
+		return $messageArray;
+
+		function getUrlContent($url, $postData = null) {
+			// Handle objects and arrays
+			$curlHandler = curl_init();
+			curl_setopt($curlHandler, CURLOPT_URL, $url);
+			curl_setopt($curlHandler, CURLOPT_FAILONERROR, 1);
+			curl_setopt($curlHandler, CURLOPT_TIMEOUT, 20); // Time out in seconds
+			curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
+			if ($postData != null) {
+				foreach ($postData as $key => &$value) {
+					if (is_object($value) || is_array($value)) {
+						$value = json_encode($value);
+					}
+				}
+				curl_setopt($curlHandler, CURLOPT_POSTFIELDS, $postData);
+			}
+			$request = curl_exec($curlHandler);
+
+			if (!$request) {
+				$response = array('status' => 'failure', 'response' => 'CURL error ' . curl_errno($curlHandler) . ': ' . curl_error($curlHandler));
+			} else {
+				$response = array('status' => 'success', 'response' => $request);
+			}
+
+			return $response;
+		}
+	}
+
+	public function ssn($options) {
+		$messageArray = array('Must be a valid United States social security number.');
+		return preg_match('/^\d{3}-?\d{2}-?\d{4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
+
+	public function teenager($options) {
+		$messageArray = array('Must be at least 13 years old.');
+		if($this->date($options) == 'success') {
+			$oldEnough = strtotime($options['value']) - strtotime('-13 years');
+		}
+		else {
+			return false;
+		}
+		return $oldEnough >= 0  ? 'success' : $messageArray;
+	}
+
+	public function time($options) {
+		$messageArray = array('Must be a time in the hh:mm:ss tt format. ss and tt are optional.');
+		return preg_match('/^[0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
+
+	public function ukPostal($options) {
+		$messageArray = array('Must be a valid United Kingdom postal code.');
+		return preg_match('/^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
+
+	public function url($options) {
+		$messageArray = array('Must be a valid Internet address.');
+		return preg_match('/^((ht|f)tp(s)?:\/\/|www\.)?([\-A-Z0-9.]+)(\.[a-zA-Z]{2,4})(\/[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?(\?[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
+
+	public function username($options) {
+		$messageArray = array('Must use 4 to 32 characters and start with a letter.');
+		return preg_match('/^[A-Za-z](?=[A-Za-z0-9_.]{3,31}$)[a-zA-Z0-9_]*\.?[a-zA-Z0-9_]*$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
+
+	public function zip($options) {
+		$messageArray = array('Must be a valid United States zip code.');
+		return preg_match('/^[0-9]{5}(?:-[0-9]{4})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
+	}
 
 }
 

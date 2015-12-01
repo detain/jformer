@@ -827,7 +827,7 @@ class JFormer {
                     'name' => $this->id . '-iframe',
                     'class' => 'jFormerIFrame',
                     'frameborder' => 0,
-                    'src' => (defined('URLDIR') ? URLDIR : '') . '/jquery/jFormer/jformer.php?iframe=true',
+                    'src' => (defined('URLDIR') ? URLDIR : '') . '/js/jformer-detain-git/php/JFormer.php?iframe=true',
                     //'src' => '/empty.html',
                         //'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
                 ));
