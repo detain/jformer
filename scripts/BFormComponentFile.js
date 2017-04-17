@@ -1,6 +1,6 @@
-JFormComponentFile = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
+BFormComponentFile = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
     },
     
     initialize: function(){
@@ -67,7 +67,7 @@ JFormComponentFile = JFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
            return null;
         }
         return this.component.find('input:file').val();

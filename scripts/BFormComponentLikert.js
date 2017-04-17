@@ -1,6 +1,6 @@
-JFormComponentLikert = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
+BFormComponentLikert = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
     },
 
     initialize: function(){
@@ -10,12 +10,12 @@ JFormComponentLikert = JFormComponent.extend({
         this.statementComponentArray = {};
 
         $.each(this.options.statementArray, function(statementName, statementOptions){
-            if(!jFormerUtility.empty(self.options.validationOptions)){
+            if(!bFormerUtility.empty(self.options.validationOptions)){
                 statementOptions.validationOptions = self.options.validationOptions;
             }
-            var newLikertStatment = new JFormComponentLikertStatement(self.parentJFormSection, statementName, 'JFormComponentLikertStatement', statementOptions);
+            var newLikertStatment = new BFormComponentLikertStatement(self.parentBFormSection, statementName, 'BFormComponentLikertStatement', statementOptions);
             newLikertStatment.id = self.id+'-'+newLikertStatment.id
-            self.parentJFormSection.addComponent(newLikertStatment);
+            self.parentBFormSection.addComponent(newLikertStatment);
             self.statementComponentArray[statementName] = newLikertStatment;
         });
     },
@@ -63,7 +63,7 @@ JFormComponentLikert = JFormComponent.extend({
             $.each(this.instanceArray, function(key, instance){    
                 $.each(errorMessageArray, function(index, passedErrorArray){
                     $.each(passedErrorArray, function(statementKey, statementError){
-                        var likertStatement = self.parentJFormSection.jFormComponents[instance.id+'-'+statementKey];
+                        var likertStatement = self.parentBFormSection.bFormComponents[instance.id+'-'+statementKey];
                         if(likertStatement != undefined){
                             likertStatement.errorMessageArray = [statementError];
                             likertStatement.validationPassed = false;

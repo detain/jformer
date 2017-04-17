@@ -1,19 +1,19 @@
 /**
- * jFormSection handles all functions on the section level, including dependencies and instances. A section groups components.
+ * bFormSection handles all functions on the section level, including dependencies and instances. A section groups components.
  *
  */
-JFormSection = Class.extend({
-    init: function(parentJFormPage, sectionId, options) {
+BFormSection = Class.extend({
+    init: function(parentBFormPage, sectionId, options) {
         this.options = $.extend({
             dependencyOptions: null,            // options {jsFunction:#, dependentOn:array, display:enum('hide','lock')}
             instanceOptions: null              // options {max:#, addButtonText:string, removeButtonText:string}
         }, options || {});
 
         // Class variables
-        this.parentJFormPage = parentJFormPage;
+        this.parentBFormPage = parentBFormPage;
         this.id = sectionId;
         this.section = $('#'+sectionId);
-        this.jFormComponents = {};
+        this.bFormComponents = {};
         this.formData = null;                       // Will be an object is there is just one instance, will be an array if there is more than one instance
         this.disabledByDependency = false;
 
@@ -41,14 +41,14 @@ JFormSection = Class.extend({
         var self =  this;
         if(this.options.instanceOptions != null){
             var buttonId = this.id+'-addInstance',
-            addButton = '<button id="'+buttonId+'" class="jFormSectionAddInstanceButton">' + this.options.instanceOptions.addButtonText + '</button>';
+            addButton = '<button id="'+buttonId+'" class="bFormSectionAddInstanceButton">' + this.options.instanceOptions.addButtonText + '</button>';
             if(this.options.dependencyOptions !== null){
                 if(this.options.dependencyOptions.display == 'hide'){
                     addButton.hide();
                 } 
             }
             this.instanceArray[this.instanceArray.length - 1].section.after(addButton);
-            this.parentJFormPage.page.find('#'+buttonId).bind('click', function(event){
+            this.parentBFormPage.page.find('#'+buttonId).bind('click', function(event){
                 event.preventDefault();
                 if(!self.disabledByDependency){
                     self.addSectionInstance();
@@ -93,14 +93,14 @@ JFormSection = Class.extend({
 
             // Create the remove button
             var removeButtonId = this.id+'-removeInstance',
-            removeButton = '<button id="'+removeButtonId+'" class="jFormSectionRemoveInstanceButton">'+this.options.instanceOptions.removeButtonText+'</button>';
+            removeButton = '<button id="'+removeButtonId+'" class="bFormSectionRemoveInstanceButton">'+this.options.instanceOptions.removeButtonText+'</button>';
 
             // Set the default animation options
             var animationOptions = {};
             if(this.options.instanceOptions.animationOptions !== undefined){
-                $.extend(animationOptions, this.parentJFormPage.jFormer.options.animationOptions.instance, this.options.instanceOptions.animationOptions);
+                $.extend(animationOptions, this.parentBFormPage.bFormer.options.animationOptions.instance, this.options.instanceOptions.animationOptions);
             } else {
-                animationOptions = this.parentJFormPage.jFormer.options.animationOptions.instance;
+                animationOptions = this.parentBFormPage.bFormer.options.animationOptions.instance;
             }
             //console.log(animationOptions);
             $(instanceClone).append(removeButton);
@@ -124,22 +124,22 @@ JFormSection = Class.extend({
                             target.remove();
                             
                         });
-                        //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                        parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                        //parent.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                        parent.parentBFormPage.bFormer.adjustHeight(animationOptions);
 
                     }
                     else {
                         target.parent().fadeOut(animationOptions.removeDuration, function(){
                             target.parent().remove();
                             target.remove();
-                            //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                            parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            //parent.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                            parent.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         });
                     }
                 }
                 
                 if(parent.instanceArray.length < parent.options.instanceOptions.max || parent.options.instanceOptions.max === 0){
-                    parent.parentJFormPage.page.find('#'+parent.id+'-addInstance').show();
+                    parent.parentBFormPage.page.find('#'+parent.id+'-addInstance').show();
                 }
 
                 // Relabel the instance array
@@ -150,7 +150,7 @@ JFormSection = Class.extend({
             if(!sectionHtmlExists) {
                 // Put the section in there, but hide it first, just in case
                 instanceClone.hide();
-                this.parentJFormPage.page.find('#'+this.id+'-addInstance').before(instanceClone);
+                this.parentBFormPage.page.find('#'+this.id+'-addInstance').before(instanceClone);
                 // no animation
                 if(animationOptions.appearEffect == 'none' || animationOptions.appearDuration === 0){
                     instanceClone.show();
@@ -160,14 +160,14 @@ JFormSection = Class.extend({
                     if(animationOptions.appearEffect == 'slide'){
                     
                         instanceClone.slideDown(animationOptions.appearDuration, function(){
-                            //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                            parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            //parent.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                            parent.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         });
                     }
                     else {
                         instanceClone.fadeIn(animationOptions.appearDuration, function(){});
-                        //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                        parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                        //parent.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                        parent.parentBFormPage.bFormer.adjustHeight(animationOptions);
                     }
                 }
             }
@@ -179,7 +179,7 @@ JFormSection = Class.extend({
             if(!sectionHtmlExists) {
                 this.relabelSectionInstances(this.instanceArray, animationOptions);
                 if (this.instanceArray.length >= this.options.instanceOptions.max && this.options.instanceOptions.max !== 0) {
-                    this.parentJFormPage.page.find('#'+this.id+'-addInstance').hide();
+                    this.parentBFormPage.page.find('#'+this.id+'-addInstance').hide();
                 }
             }
         }
@@ -229,17 +229,17 @@ JFormSection = Class.extend({
         var tempOptions = $.extend(true, {}, options);
         tempOptions.isInstance = true;
         var self = this,
-        instanceObject = new JFormSection(this.parentJFormPage, this.id+'-section'+this.iterations, tempOptions);
-        $.each(this.jFormComponents, function(key, component){
+        instanceObject = new BFormSection(this.parentBFormPage, this.id+'-section'+this.iterations, tempOptions);
+        $.each(this.bFormComponents, function(key, component){
             var componentTempOptions = $.extend(true, {}, component.options);
             componentTempOptions.isInstance = false;
             var componentClone = new window[component.type](instanceObject, component.id+'-section'+self.iterations, component.type, componentTempOptions);
             instanceObject.addComponent(componentClone);
         });
 
-        $.each(instanceObject.jFormComponents, function(key, instancedComponent) {
+        $.each(instanceObject.bFormComponents, function(key, instancedComponent) {
             if(instancedComponent.options.dependencyOptions != undefined){
-                var objectTop = self.parentJFormPage.form;
+                var objectTop = self.parentBFormPage.form;
 
                 // Define the dependent on component
                 var dependentOnComponent = objectTop.select(instancedComponent.options.dependencyOptions.dependentOn);
@@ -248,9 +248,9 @@ JFormSection = Class.extend({
                 if(self.section.find('#'+instancedComponent.options.dependencyOptions.dependentOn+'-wrapper').length != 0) {
                     // If the component that is dependentOn is inside the instanced section, use the instanced section's component as the dependentOn
                     //console.log(instanceObject.formComponents[instancedComponent.options.dependencyOptions.dependentOn+'-section'+self.iterations]);
-                    if(instanceObject.jFormComponents[instancedComponent.options.dependencyOptions.dependentOn+'-section'+self.iterations]) {
+                    if(instanceObject.bFormComponents[instancedComponent.options.dependencyOptions.dependentOn+'-section'+self.iterations]) {
                         //console.log('found it')
-                        dependentOnComponent = instanceObject.jFormComponents[instancedComponent.options.dependencyOptions.dependentOn+'-section'+self.iterations];
+                        dependentOnComponent = instanceObject.bFormComponents[instancedComponent.options.dependencyOptions.dependentOn+'-section'+self.iterations];
                     }
                 }
 
@@ -275,7 +275,7 @@ JFormSection = Class.extend({
         $.each(instanceArray, function(key, instance){
             if( key!== 0) {
                 var count = key+1,
-                label = instance.section.find('.jFormSectionTitle').children(':first');
+                label = instance.section.find('.bFormSectionTitle').children(':first');
                 if(label.length > 0){
                     if (label.text().match(/(\([0-9]+\))$/)){
                         label.text(label.text().replace(/(\([0-9]+\))$/, '('+count+')'));
@@ -286,17 +286,17 @@ JFormSection = Class.extend({
                 }
             }
         });
-        //this.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-        this.parentJFormPage.jFormer.adjustHeight(animationOptions);
+        //this.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+        this.parentBFormPage.bFormer.adjustHeight(animationOptions);
     },
 
     addComponent: function(component) {
-        this.jFormComponents[component.id] = component;
+        this.bFormComponents[component.id] = component;
         return this;
     },
 
     clearValidation: function() {
-        $.each(this.jFormComponents, function(componentKey, component) {
+        $.each(this.bFormComponents, function(componentKey, component) {
             component.clearValidation();
         });
     },
@@ -311,12 +311,12 @@ JFormSection = Class.extend({
         else {
             if(this.instanceArray.length > 1) {
                 this.formData = [];
-                $.each(this.instanceArray, function(instanceIndex, instanceJFormSection) {
+                $.each(this.instanceArray, function(instanceIndex, instanceBFormSection) {
                     var sectionData = {};
-                    $.each(instanceJFormSection.jFormComponents, function(jFormComponentKey, jFormComponent) {
-                        if(jFormComponent.type != 'JFormComponentLikertStatement') {
-                            jFormComponentKey = jFormComponentKey.replace(/-section[0-9]+/, '');
-                            sectionData[jFormComponentKey] = jFormComponent.getData();
+                    $.each(instanceBFormSection.bFormComponents, function(bFormComponentKey, bFormComponent) {
+                        if(bFormComponent.type != 'BFormComponentLikertStatement') {
+                            bFormComponentKey = bFormComponentKey.replace(/-section[0-9]+/, '');
+                            sectionData[bFormComponentKey] = bFormComponent.getData();
                         }
                     });
                     self.formData.push(sectionData);
@@ -324,8 +324,8 @@ JFormSection = Class.extend({
             }
             else {
                 this.formData = {};
-                $.each(this.jFormComponents, function(key, component) {
-                    if(component.type != 'JFormComponentLikertStatement'){
+                $.each(this.bFormComponents, function(key, component) {
+                    if(component.type != 'BFormComponentLikertStatement'){
                         self.formData[key] = component.getData();
                     }
                 });
@@ -345,11 +345,11 @@ JFormSection = Class.extend({
                     if(index !== 0){
                         key = key + '-section'+(index+1);
                     }
-                    if(self.instanceArray[index].jFormComponents[key] != undefined){
-                        self.instanceArray[index].jFormComponents[key].setData(componentData)
+                    if(self.instanceArray[index].bFormComponents[key] != undefined){
+                        self.instanceArray[index].bFormComponents[key].setData(componentData)
                     }
                 });
-            /*$.each(self.instanceArray[index].jFormComponents, function(key, component){
+            /*$.each(self.instanceArray[index].bFormComponents, function(key, component){
                    
                    component.setData(instance[key]);
                });*/
@@ -357,8 +357,8 @@ JFormSection = Class.extend({
         }
         else {
             $.each(data, function(key, componentData) {
-                if(self.jFormComponents[key] != undefined){
-                    self.jFormComponents[key].setData(componentData);
+                if(self.bFormComponents[key] != undefined){
+                    self.bFormComponents[key].setData(componentData);
                 }
                 
             });
@@ -368,7 +368,7 @@ JFormSection = Class.extend({
     disableByDependency: function(disable) {
         var self = this;
 
-        if(self.parentJFormPage.jFormer.initializing) {
+        if(self.parentBFormPage.bFormer.initializing) {
             var animationOptions = {
                 adjustHeightDuration : 0,
                 appearDuration : 0,
@@ -378,9 +378,9 @@ JFormSection = Class.extend({
 
             }
         } else if(this.options.dependencyOptions.animationOptions !== undefined){
-            animationOptions = $.extend(animationOptions, this.parentJFormPage.jFormer.options.animationOptions.dependency, this.options.dependencyOptions.animationOptions);
+            animationOptions = $.extend(animationOptions, this.parentBFormPage.bFormer.options.animationOptions.dependency, this.options.dependencyOptions.animationOptions);
         } else {
-            animationOptions = this.parentJFormPage.jFormer.options.animationOptions.dependency;
+            animationOptions = this.parentBFormPage.bFormer.options.animationOptions.dependency;
         }
 
         var elementsToDisable = this.section;
@@ -390,11 +390,11 @@ JFormSection = Class.extend({
             }
         });
         if(this.options.instanceOptions !== null && (this.instanceArray.length < this.options.instanceOptions.max || this.options.instanceOptions.max === 0)){
-            var addButton = $(this.parentJFormSection.section.find('#'+this.id+'-addInstance'));
-            if(self.parentJFormPage.jFormer.initializing) {
+            var addButton = $(this.parentBFormSection.section.find('#'+this.id+'-addInstance'));
+            if(self.parentBFormPage.bFormer.initializing) {
                 if(!disable && addButton.is(':hidden')){
                     addButton.show();
-                    self.parentJFormPage.jFormer.adjustHeight({
+                    self.parentBFormPage.bFormer.adjustHeight({
                         adjustHeightDuration:0
                     });
                 }
@@ -411,15 +411,15 @@ JFormSection = Class.extend({
                     //console.log('hiding section');
                     if(animationOptions.hideEffect == 'none' || animationOptions.hideDuration === 0){
                         elementsToDisable.hide();
-                        self.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                        self.parentBFormPage.bFormer.adjustHeight(animationOptions);
                     } else {
                         if(animationOptions.appearEffect === 'fade'){
                             elementsToDisable.fadeOut(animationOptions.hideDuration, function() {
-                                self.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                                self.parentBFormPage.bFormer.adjustHeight(animationOptions);
                             });
                         }else if(animationOptions.appearEffect === 'slide'){
                             elementsToDisable.slideUp(animationOptions.hideDuration, function() {
-                                self.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                                self.parentBFormPage.bFormer.adjustHeight(animationOptions);
                             });
                         }
                     }
@@ -427,8 +427,8 @@ JFormSection = Class.extend({
                 }
                 // Lock the section and disable all inputs
                 else {
-                    elementsToDisable.addClass('jFormSectionDependencyDisabled').find(':not(.jFormComponentDisabled) > :input').attr('disabled', 'disabled');
-                    this.parentJFormPage.jFormer.adjustHeight({
+                    elementsToDisable.addClass('bFormSectionDependencyDisabled').find(':not(.bFormComponentDisabled) > :input').attr('disabled', 'disabled');
+                    this.parentBFormPage.bFormer.adjustHeight({
                         adjustHeightDuration:0
                     }); // Handle if they are showing a border on the DependencyDisabled class
                 }
@@ -439,7 +439,7 @@ JFormSection = Class.extend({
                 if(this.options.dependencyOptions.display == 'hide') {
                     if(animationOptions.appearEffect == 'none' || animationOptions.appearDuration === 0){
                         elementsToDisable.show();
-                        self.parentJFormPage.form.adjustHeight(animationOptions);
+                        self.parentBFormPage.form.adjustHeight(animationOptions);
                         if(self.options.dependencyOptions.onAfterEnable) {
                             //console.log('Running: ', self.options.dependencyOptions.onAfterEnable);
                             eval(self.options.dependencyOptions.onAfterEnable);
@@ -453,7 +453,7 @@ JFormSection = Class.extend({
                                     eval(self.options.dependencyOptions.onAfterEnable);
                                 }
                             });
-                            self.parentJFormPage.form.adjustHeight(animationOptions);
+                            self.parentBFormPage.form.adjustHeight(animationOptions);
                         }
                         else if(animationOptions.hideEffect === 'slide'){
                             elementsToDisable.slideDown(animationOptions.appearDuration, function() {
@@ -462,15 +462,15 @@ JFormSection = Class.extend({
                                     eval(self.options.dependencyOptions.onAfterEnable);
                                 }
                             });
-                            self.parentJFormPage.form.adjustHeight(animationOptions);
+                            self.parentBFormPage.form.adjustHeight(animationOptions);
                         }
                     }
                 //console.log('showing section');
                 }
                 // Unlock the section and reenable all inputs that aren't manually disabled
                 else {
-                    elementsToDisable.removeClass('jFormSectionDependencyDisabled').find(':not(.jFormComponentDisabled) > :input').removeAttr('disabled');
-                    this.parentJFormPage.jFormer.adjustHeight({
+                    elementsToDisable.removeClass('bFormSectionDependencyDisabled').find(':not(.bFormComponentDisabled) > :input').removeAttr('disabled');
+                    this.parentBFormPage.bFormer.adjustHeight({
                         adjustHeightDuration:0
                     }); // Handle if they are showing a border on the DependencyDisabled class
                 }
@@ -496,8 +496,8 @@ JFormSection = Class.extend({
     },
 
     checkChildrenDependencies: function() {
-        $.each(this.jFormComponents, function(jFormComponentKey, jFormComponent) {
-            jFormComponent.checkDependencies();
+        $.each(this.bFormComponents, function(bFormComponentKey, bFormComponent) {
+            bFormComponent.checkDependencies();
         });
     }
 });

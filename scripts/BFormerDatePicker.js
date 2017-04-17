@@ -32,11 +32,11 @@ DateInput = (function($) {
         if (typeof(opts) != "object") options = {};
         $.extend(this, DateInput.DEFAULT_OPTS, options);
 
-        var button = $('<span class="jFormComponentDateButton">Find Date</span>');
+        var button = $('<span class="bFormComponentDateButton">Find Date</span>');
 
         this.input = $(element);
         this.input.after(button);
-        this.button = $(element).parent().find('span.jFormComponentDateButton');
+        this.button = $(element).parent().find('span.bFormComponentDateButton');
         this.bindMethodsToObj("show", "hide", "hideIfClickOutside", "keydownHandler", "selectDate");
   
         this.build();
@@ -44,40 +44,40 @@ DateInput = (function($) {
         this.hide();
     };
     DateInput.DEFAULT_OPTS = {
-        jFormComponentDateSelectorMonthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        short_jFormComponentDateSelectorMonthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        bFormComponentDateSelectorMonthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        short_bFormComponentDateSelectorMonthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         short_day_names: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         start_of_week: 0
     };
     DateInput.prototype = {
         build: function() {
-            var monthNav = $('<p class="jFormComponentDateSelectorMonthNavigator">' +
-                '<span class="jFormComponentDateSelectorButton jFormComponentDateSelectorPrevious" title="[Page-Up]">&#171;</span>' +
-                ' <span class="jFormComponentDateSelectorMonthName"></span> ' +
-                '<span class="jFormComponentDateSelectorButton jFormComponentDateSelectorNext" title="[Page-Down]">&#187;</span>' +
+            var monthNav = $('<p class="bFormComponentDateSelectorMonthNavigator">' +
+                '<span class="bFormComponentDateSelectorButton bFormComponentDateSelectorPrevious" title="[Page-Up]">&#171;</span>' +
+                ' <span class="bFormComponentDateSelectorMonthName"></span> ' +
+                '<span class="bFormComponentDateSelectorButton bFormComponentDateSelectorNext" title="[Page-Down]">&#187;</span>' +
                 '</p>');
-            this.monthNameSpan = $(".jFormComponentDateSelectorMonthName", monthNav);
-            $(".jFormComponentDateSelectorPrevious", monthNav).click(this.bindToObj(function() {
+            this.monthNameSpan = $(".bFormComponentDateSelectorMonthName", monthNav);
+            $(".bFormComponentDateSelectorPrevious", monthNav).click(this.bindToObj(function() {
                 this.moveMonthBy(-1);
             }));
-            $(".jFormComponentDateSelectorNext", monthNav).click(this.bindToObj(function() {
+            $(".bFormComponentDateSelectorNext", monthNav).click(this.bindToObj(function() {
                 this.moveMonthBy(1);
             }));
     
-            var yearNav = $('<p class="jFormComponentDateSelectorYearNavigator">' +
-                '<span class="jFormComponentDateSelectorButton jFormComponentDateSelectorPrevious" title="[Ctrl+Page-Up]">&#171;</span>' +
-                ' <span class="jFormComponentDateSelectorYearName"></span> ' +
-                '<span class="jFormComponentDateSelectorButton jFormComponentDateSelectorNext" title="[Ctrl+Page-Down]">&#187;</span>' +
+            var yearNav = $('<p class="bFormComponentDateSelectorYearNavigator">' +
+                '<span class="bFormComponentDateSelectorButton bFormComponentDateSelectorPrevious" title="[Ctrl+Page-Up]">&#171;</span>' +
+                ' <span class="bFormComponentDateSelectorYearName"></span> ' +
+                '<span class="bFormComponentDateSelectorButton bFormComponentDateSelectorNext" title="[Ctrl+Page-Down]">&#187;</span>' +
                 '</p>');
-            this.yearNameSpan = $(".jFormComponentDateSelectorYearName", yearNav);
-            $(".jFormComponentDateSelectorPrevious", yearNav).click(this.bindToObj(function() {
+            this.yearNameSpan = $(".bFormComponentDateSelectorYearName", yearNav);
+            $(".bFormComponentDateSelectorPrevious", yearNav).click(this.bindToObj(function() {
                 this.moveMonthBy(-12);
             }));
-            $(".jFormComponentDateSelectorNext", yearNav).click(this.bindToObj(function() {
+            $(".bFormComponentDateSelectorNext", yearNav).click(this.bindToObj(function() {
                 this.moveMonthBy(12);
             }));
     
-            var nav = $('<div class="jFormComponentDateSelectorNavigator"></div>').append(monthNav, yearNav);
+            var nav = $('<div class="bFormComponentDateSelectorNavigator"></div>').append(monthNav, yearNav);
     
             var tableShell = "<table><thead><tr>";
             $(this.adjustDays(this.short_day_names)).each(function() {
@@ -85,17 +85,17 @@ DateInput = (function($) {
             });
             tableShell += "</tr></thead><tbody></tbody></table>";
     
-            this.dateSelector = this.rootLayers = $('<div class="jFormComponentDateSelector"></div>').append(nav, tableShell).insertAfter(this.input);
+            this.dateSelector = this.rootLayers = $('<div class="bFormComponentDateSelector"></div>').append(nav, tableShell).insertAfter(this.input);
     
             if ($.browser.msie && $.browser.version < 7) {
       
-                this.ieframe = $('<iframe class="jFormComponentDateSelectorIEFrame" frameborder="0" src="#"></iframe>').insertBefore(this.dateSelector);
+                this.ieframe = $('<iframe class="bFormComponentDateSelectorIEFrame" frameborder="0" src="#"></iframe>').insertBefore(this.dateSelector);
                 this.rootLayers = this.rootLayers.add(this.ieframe);
       
-                $(".jFormComponentDateSelectorButton", nav).mouseover(function() {
+                $(".bFormComponentDateSelectorButton", nav).mouseover(function() {
                     $(this).addClass("hover")
                 });
-                $(".jFormComponentDateSelectorButton", nav).mouseout(function() {
+                $(".bFormComponentDateSelectorButton", nav).mouseout(function() {
                     $(this).removeClass("hover")
                 });
             };
@@ -126,9 +126,9 @@ DateInput = (function($) {
                     if (this.isFirstDayOfWeek(currentDay)) dayCells += "<tr>";
         
                     if (currentDay.getMonth() == date.getMonth()) {
-                        dayCells += '<td class="jFormComponentDateSelectorSelectedDay" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
+                        dayCells += '<td class="bFormComponentDateSelectorSelectedDay" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
                     } else {
-                        dayCells += '<td class="jFormComponentDateSelectorUnselectedMonth" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
+                        dayCells += '<td class="bFormComponentDateSelectorUnselectedMonth" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
                     };
         
                     if (this.isLastDayOfWeek(currentDay)) dayCells += "</tr>";
@@ -138,22 +138,22 @@ DateInput = (function($) {
                 this.monthNameSpan.empty().append(this.monthName(date));
                 this.yearNameSpan.empty().append(this.currentMonth.getFullYear());
       
-                $(".jFormComponentDateSelectorSelectedDay", this.tbody).click(this.bindToObj(function(event) {
+                $(".bFormComponentDateSelectorSelectedDay", this.tbody).click(this.bindToObj(function(event) {
                     this.changeInput($(event.target).attr("date"));
                 }));
       
-                $('td[date="' + this.dateToString(new Date()) + '"]', this.tbody).addClass("jFormComponentDateSelectorToday");
+                $('td[date="' + this.dateToString(new Date()) + '"]', this.tbody).addClass("bFormComponentDateSelectorToday");
       
-                $("td.jFormComponentDateSelectorSelectedDay", this.tbody).mouseover(function() {
+                $("td.bFormComponentDateSelectorSelectedDay", this.tbody).mouseover(function() {
                     $(this).addClass("hover")
                 });
-                $("td.jFormComponentDateSelectorSelectedDay", this.tbody).mouseout(function() {
+                $("td.bFormComponentDateSelectorSelectedDay", this.tbody).mouseout(function() {
                     $(this).removeClass("hover")
                 });
             };
     
-            $('.jFormComponentDateSelectorSelected', this.tbody).removeClass("jFormComponentDateSelectorSelected");
-            $('td[date="' + this.selectedDateString + '"]', this.tbody).addClass("jFormComponentDateSelectorSelected");
+            $('.bFormComponentDateSelectorSelected', this.tbody).removeClass("bFormComponentDateSelectorSelected");
+            $('td[date="' + this.selectedDateString + '"]', this.tbody).addClass("bFormComponentDateSelectorSelected");
         },
   
         selectDate: function(date) {
@@ -277,7 +277,7 @@ DateInput = (function($) {
             }
             var bottom = offset.top + this.dateSelector.outerHeight() + 12;
             var top = '';
-            if(jFormerUtility.isSet(window.scrollY)) {
+            if(bFormerUtility.isSet(window.scrollY)) {
                 top = window.scrollY;
             }
             else { // IE FTL
@@ -311,7 +311,7 @@ DateInput = (function($) {
         },
   
         monthName: function(date) {
-            return this.jFormComponentDateSelectorMonthNames[date.getMonth()];
+            return this.bFormComponentDateSelectorMonthNames[date.getMonth()];
         },
   
         bindToObj: function(fn) {
@@ -333,12 +333,12 @@ DateInput = (function($) {
             };
         },
   
-        monthNum: function(jFormComponentDateSelectorMonthName) {
-            return this.indexFor(this.jFormComponentDateSelectorMonthNames, jFormComponentDateSelectorMonthName);
+        monthNum: function(bFormComponentDateSelectorMonthName) {
+            return this.indexFor(this.bFormComponentDateSelectorMonthNames, bFormComponentDateSelectorMonthName);
         },
   
-        shortMonthNum: function(jFormComponentDateSelectorMonthName) {
-            return this.indexFor(this.short_jFormComponentDateSelectorMonthNames, jFormComponentDateSelectorMonthName);
+        shortMonthNum: function(bFormComponentDateSelectorMonthName) {
+            return this.indexFor(this.short_bFormComponentDateSelectorMonthNames, bFormComponentDateSelectorMonthName);
         },
   
         shortDayNum: function(day_name) {

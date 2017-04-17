@@ -1,6 +1,6 @@
 <?php
 
-class JFormComponentSingleLineText extends JFormComponent {
+class BFormComponentSingleLineText extends BFormComponent {
 	var $sublabel;
 
 	/*
@@ -11,7 +11,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'jFormComponentSingleLineText';
+		$this->class = 'bFormComponentSingleLineText';
 		$this->widthArray = array('shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em');
 
 		// Input options
@@ -68,7 +68,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 		$div = $this->generateComponentDiv();
 
 		// Add the input tag
-		$input = new JFormElement('input', array(
+		$input = new BFormElement('input', array(
 			'type' => $this->type,
 			'id' => $this->id,
 			'name' => $this->name,
@@ -100,12 +100,12 @@ class JFormComponentSingleLineText extends JFormComponent {
 			$input->setAttribute('readonly', 'readonly');
 		}
 		if($this->enterSubmits) {
-			$input->addToAttribute('class', ' jFormComponentEnterSubmits');
+			$input->addToAttribute('class', ' bFormComponentEnterSubmits');
 		}
 		$div->insert($input);
 
 		if(!empty($this->sublabel)) {
-			$div->insert('<div class="jFormComponentSublabel">'.$this->sublabel.'</div>');
+			$div->insert('<div class="bFormComponentSublabel">'.$this->sublabel.'</div>');
 		}
 
 		// Add any description (optional)
@@ -258,7 +258,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function matches($options) {
-		$componentToMatch = $this->parentJFormSection->parentJFormPage->jFormer->select($options['matches']);
+		$componentToMatch = $this->parentBFormSection->parentBFormPage->bFormer->select($options['matches']);
 		if($componentToMatch && $componentToMatch->value == $options['value']) {
 			return 'success';
 		}

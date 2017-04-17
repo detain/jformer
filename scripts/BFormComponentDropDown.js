@@ -1,6 +1,6 @@
-JFormComponentDropDown = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
+BFormComponentDropDown = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
     },
 
     initialize: function(){
@@ -8,7 +8,7 @@ JFormComponentDropDown = JFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
            return null;
         }
             var dropDownValue = $('#'+this.id).val();
@@ -16,8 +16,8 @@ JFormComponentDropDown = JFormComponent.extend({
     },
 
     setValue: function(value){
-        $('#'+this.id).val(value).trigger('jFormComponent:changed');
-      //this.component.find('option[value=\''+value+'\']').attr('selected', 'selected').trigger('jFormComponent:changed');
+        $('#'+this.id).val(value).trigger('bFormComponent:changed');
+      //this.component.find('option[value=\''+value+'\']').attr('selected', 'selected').trigger('bFormComponent:changed');
       this.validate(true);
     }
 

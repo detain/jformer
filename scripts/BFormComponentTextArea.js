@@ -1,7 +1,7 @@
 
-JFormComponentTextArea = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
+BFormComponentTextArea = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
         
         if(this.options.allowTabbing) {
             this.allowTabbing();
@@ -103,8 +103,8 @@ JFormComponentTextArea = JFormComponent.extend({
             shadow.html(val);
             textArea.css('height', Math.max(shadow.height() + 20, minHeight));
 
-            if(self.parentJFormSection.parentJFormPage.jFormer.currentJFormPage) {
-                self.parentJFormSection.parentJFormPage.jFormer.adjustHeight({delay:0});
+            if(self.parentBFormSection.parentBFormPage.bFormer.currentBFormPage) {
+                self.parentBFormSection.parentBFormPage.bFormer.adjustHeight({delay:0});
             }
         }
 
@@ -115,7 +115,7 @@ JFormComponentTextArea = JFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
             return null;
         }
 

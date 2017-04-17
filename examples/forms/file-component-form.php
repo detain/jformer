@@ -1,21 +1,21 @@
 <?php
-// Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
-    require_once('../php/JFormer.php');
+// Include the bFormer PHP (use an good path in your code)
+if(file_exists('../php/BFormer.php')) {
+    require_once('../php/BFormer.php');
 }
-else if(file_exists('../../php/JFormer.php')) {
-    require_once('../../php/JFormer.php');
+else if(file_exists('../../php/BFormer.php')) {
+    require_once('../../php/BFormer.php');
 }
 
 // Create the form
-$fileComponentForm = new JFormer('fileComponentForm', array(
+$fileComponentForm = new BFormer('fileComponentForm', array(
     'title' => '<h1>File Component</h1>',
     'submitButtonText' => 'Test',
 ));
 
 // Add components to the form
-$fileComponentForm->addJFormComponentArray(array(
-    new JFormComponentFile('file1', 'File:', array(
+$fileComponentForm->addBFormComponentArray(array(
+    new BFormComponentFile('file1', 'File:', array(
         'tip' => '<p>This is a tip on a file component.</p>',
     )),
 ));

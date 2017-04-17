@@ -1,2 +1,2 @@
 all:
-	php JFormer-concat.php > jformer-all.js
+	php BFormer-concat.php > bformer-all.js

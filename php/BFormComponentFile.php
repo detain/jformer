@@ -1,5 +1,5 @@
 <?php
-class JFormComponentFile extends JFormComponent {
+class BFormComponentFile extends BFormComponent {
     /*
      * Constructor
      */
@@ -7,7 +7,7 @@ class JFormComponentFile extends JFormComponent {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'jFormComponentFile';
+        $this->class = 'bFormComponentFile';
         $this->label = $label;
         $this->inputClass = 'file';
 
@@ -47,17 +47,17 @@ class JFormComponentFile extends JFormComponent {
         $div = $this->generateComponentDiv();
 
         // Add the input tag
-        $pseudoFileWrapper = new JFormElement('div', array(
+        $pseudoFileWrapper = new BFormElement('div', array(
             'class' => 'pseudoFile',
             'style' => 'position:absolute;'
         ));
 
-        $pseudoFileInput = new JFormElement('input', array (
+        $pseudoFileInput = new BFormElement('input', array (
            'type'=> 'text',
            'disabled' => 'disabled',
         ));
 
-        $pseudoFileButton = new JFormElement('button', array (
+        $pseudoFileButton = new BFormElement('button', array (
            'onclick' => 'return false;',
            'disabled' => 'disabled'
         ));
@@ -65,7 +65,7 @@ class JFormComponentFile extends JFormComponent {
         $pseudoFileWrapper->insert($pseudoFileInput);
         $pseudoFileWrapper->insert($pseudoFileButton);
 
-        $input = new JFormElement('input', array(
+        $input = new BFormElement('input', array(
             'type' => $this->type,
             'id' => $this->id,
             'name' => $this->name,

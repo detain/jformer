@@ -1,21 +1,21 @@
 <?php
-// Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
-    require_once('../php/JFormer.php');
+// Include the bFormer PHP (use an good path in your code)
+if(file_exists('../php/BFormer.php')) {
+    require_once('../php/BFormer.php');
 }
-else if(file_exists('../../php/JFormer.php')) {
-    require_once('../../php/JFormer.php');
+else if(file_exists('../../php/BFormer.php')) {
+    require_once('../../php/BFormer.php');
 }
 
 // Create the form
-$dropDownComponentForm = new JFormer('dropDownComponentForm', array(
+$dropDownComponentForm = new BFormer('dropDownComponentForm', array(
     'title' => '<h1>Drop Down Component</h1>',
     'submitButtonText' => 'Test',
 ));
 
 // Add components to the form
-$dropDownComponentForm->addJFormComponentArray(array(
-    new JFormComponentDropDown('dropDown1', 'Drop down:',
+$dropDownComponentForm->addBFormComponentArray(array(
+    new BFormComponentDropDown('dropDown1', 'Drop down:',
         array(
             array('label' => 'Choice 1', 'value' => '1'),
             array('label' => 'Choice 2', 'value' => '2'),

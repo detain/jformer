@@ -1,6 +1,6 @@
 <?php
 
-class JFormComponentDate extends JFormComponentSingleLineText {
+class BFormComponentDate extends BFormComponentSingleLineText {
     /*
      * Constructor
      */
@@ -9,7 +9,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
-        $this->class = 'jFormComponentDate';
+        $this->class = 'bFormComponentDate';
 
         // Input options
         $this->initialValue = '';

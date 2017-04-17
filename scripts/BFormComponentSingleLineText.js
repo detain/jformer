@@ -1,6 +1,6 @@
-JFormComponentSingleLineText = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType ,options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType ,options);
+BFormComponentSingleLineText = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType ,options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType ,options);
     },
 
     initialize: function() {
@@ -218,7 +218,7 @@ JFormComponentSingleLineText = JFormComponent.extend({
                 // options: value, url, data
                 var errorMessageArray = [];
 
-                options.component.addClass('jFormComponentServerSideCheck');
+                options.component.addClass('bFormComponentServerSideCheck');
                 $.ajax({
                     url: options.url,
                     type: 'post',
@@ -234,14 +234,14 @@ JFormComponentSingleLineText = JFormComponent.extend({
                             errorMessageArray = json.response;
                         }
 
-                        options.component.removeClass('jFormComponentServerSideCheck');
+                        options.component.removeClass('bFormComponentServerSideCheck');
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
                         if(textStatus != 'error'){
                             errorThrown = textStatus ? textStatus : 'Unknown error';
                         }
                         errorMessageArray = ['There was an error during server side validation: '+ errorThrown];
-                        options.component.removeClass('jFormComponentServerSideCheck');
+                        options.component.removeClass('bFormComponentServerSideCheck');
                     }
                 });
 
@@ -293,10 +293,10 @@ JFormComponentSingleLineText = JFormComponent.extend({
         component = this.component;
 
         var strengthComponent = "<p id='"+this.id+"-strength' > Strength: <b> " + this.getPasswordStrength().strength + " </b> </p>";
-        component.find('div.jFormComponentTip').append(strengthComponent);
+        component.find('div.bFormComponentTip').append(strengthComponent);
         component.find('input:password').bind('keyup', function(event){
             component.find('#'+self.id+'-strength b').text(self.getPasswordStrength().strength);
-            self.tip.update(component.find('div.jFormComponentTip').html());
+            self.tip.update(component.find('div.bFormComponentTip').html());
         });
     },
 
@@ -365,7 +365,7 @@ JFormComponentSingleLineText = JFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
             return null;
         }
         var input = $('#'+this.id).val();

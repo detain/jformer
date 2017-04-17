@@ -1,5 +1,5 @@
 <?php
-class JFormComponentDropDown extends JFormComponent {
+class BFormComponentDropDown extends BFormComponent {
     var $dropDownOptionArray = array();
 
     var $disabled = false;
@@ -14,7 +14,7 @@ class JFormComponentDropDown extends JFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'jFormComponentDropDown';
+        $this->class = 'bFormComponentDropDown';
         $this->label = $label;
         $this->dropDownOptionArray = $dropDownOptionArray;
 
@@ -23,7 +23,7 @@ class JFormComponentDropDown extends JFormComponent {
     }
 
     function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new JFormElement('option', array('value' => $optionValue));
+        $option = new BFormElement('option', array('value' => $optionValue));
         $option->update($optionLabel);
 
         if($optionSelected) {
@@ -94,7 +94,7 @@ class JFormComponentDropDown extends JFormComponent {
         $div = parent::generateComponentDiv();
 
         // Select tag
-        $select = new JFormElement('select', array(
+        $select = new BFormElement('select', array(
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->class,
@@ -125,7 +125,7 @@ class JFormComponentDropDown extends JFormComponent {
 
         // Create the optgroup elements
         foreach($optGroupArray as $optGroup) {
-            ${$optGroup} = new JFormElement('optgroup', array('label' => $optGroup));
+            ${$optGroup} = new BFormElement('optgroup', array('label' => $optGroup));
         }
 
         // Add any options to their appropriate optgroup

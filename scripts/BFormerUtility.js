@@ -1,7 +1,7 @@
-JFormerUtility = function() {
+BFormerUtility = function() {
     }
 
-$.extend(JFormerUtility.prototype, {
+$.extend(BFormerUtility.prototype, {
     isSet: function() {
         var a = arguments;
         var l = a.length;
@@ -192,7 +192,7 @@ $.extend(JFormerUtility.prototype, {
 
 });
 
-jFormerUtility = new JFormerUtility();
+bFormerUtility = new BFormerUtility();
 
 // Simple class creation and inheritance
 // Inspired by base2 and Prototype

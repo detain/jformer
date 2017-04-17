@@ -1,21 +1,21 @@
 <?php
-// Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
-    require_once('../php/JFormer.php');
+// Include the bFormer PHP (use an good path in your code)
+if(file_exists('../php/BFormer.php')) {
+    require_once('../php/BFormer.php');
 }
-else if(file_exists('../../php/JFormer.php')) {
-    require_once('../../php/JFormer.php');
+else if(file_exists('../../php/BFormer.php')) {
+    require_once('../../php/BFormer.php');
 }
 
 // Create the form
-$likertComponentForm = new JFormer('likertComponentForm', array(
+$likertComponentForm = new BFormer('likertComponentForm', array(
     'title' => '<h1>Likert Component</h1>',
     'submitButtonText' => 'Test',
 ));
 
 // Add components to the form
-$likertComponentForm->addJFormComponentArray(array(
-    new JFormComponentLikert('likert1', 'Likert component:',
+$likertComponentForm->addBFormComponentArray(array(
+    new BFormComponentLikert('likert1', 'Likert component:',
         array(
             array('value' => '1', 'label' => 'Yes', 'sublabel' => 'Yes'),
             array('value' => '2', 'label' => 'No', 'sublabel' => 'No'),

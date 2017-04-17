@@ -2,35 +2,35 @@
 	<head>
 		<title>Drop Down Component</title>
 
-		<!-- jFormer CSS -->
-		<link rel="stylesheet" type="text/css" href="../styles/jformer.css" />
+		<!-- bFormer CSS -->
+		<link rel="stylesheet" type="text/css" href="../styles/bformer.css" />
 
 		<!-- jQuery JavaScript -->
 		<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
-		<!-- jFormer JavaScript -->
-		<script type="text/javascript" src="../scripts/JFormerUtility.js"></script>
-		<script type="text/javascript" src="../scripts/JFormer.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponent.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentAddress.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentCreditCard.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentDate.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentDropDown.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentFile.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentHidden.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentLikert.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentLikertStatement.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentMultipleChoice.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentName.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentSingleLineText.js"></script>
-		<script type="text/javascript" src="../scripts/JFormComponentTextArea.js"></script>
-		<script type="text/javascript" src="../scripts/JFormPage.js"></script>
-		<script type="text/javascript" src="../scripts/JFormSection.js"></script>
-		<script type="text/javascript" src="../scripts/JFormerDatePicker.js"></script>
-		<script type="text/javascript" src="../scripts/JFormerMask.js"></script>
-		<script type="text/javascript" src="../scripts/JFormerScroller.js"></script>
-		<script type="text/javascript" src="../scripts/JFormerTip.js"></script>
+		<!-- bFormer JavaScript -->
+		<script type="text/javascript" src="../scripts/BFormerUtility.js"></script>
+		<script type="text/javascript" src="../scripts/BFormer.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponent.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentAddress.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentCreditCard.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentDate.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentDropDown.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentFile.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentHidden.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentLikert.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentLikertStatement.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentMultipleChoice.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentName.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentSingleLineText.js"></script>
+		<script type="text/javascript" src="../scripts/BFormComponentTextArea.js"></script>
+		<script type="text/javascript" src="../scripts/BFormPage.js"></script>
+		<script type="text/javascript" src="../scripts/BFormSection.js"></script>
+		<script type="text/javascript" src="../scripts/BFormerDatePicker.js"></script>
+		<script type="text/javascript" src="../scripts/BFormerMask.js"></script>
+		<script type="text/javascript" src="../scripts/BFormerScroller.js"></script>
+		<script type="text/javascript" src="../scripts/BFormerTip.js"></script>
 	</head>
 
 	<body>

@@ -1,6 +1,6 @@
 <?php
 
-class JFormElement {
+class BFormElement {
     private $type;
     private $unaryTagArray = array('input', 'img', 'hr', 'br', 'meta', 'link');
     private $attributeArray;

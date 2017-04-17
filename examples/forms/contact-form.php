@@ -1,31 +1,31 @@
 <?php
-// Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
-    require_once('../php/JFormer.php');
+// Include the bFormer PHP (use an good path in your code)
+if(file_exists('../php/BFormer.php')) {
+    require_once('../php/BFormer.php');
 }
-else if(file_exists('../../php/JFormer.php')) {
-    require_once('../../php/JFormer.php');
+else if(file_exists('../../php/BFormer.php')) {
+    require_once('../../php/BFormer.php');
 }
 
 // Create the form
-$contactForm = new JFormer('contactForm', array(
+$contactForm = new BFormer('contactForm', array(
     'submitButtonText' => 'Send Message',
     'title' => '<h1>Contact Us</h1>',
 ));
 
 // Add components to the form
-$contactForm->addJFormComponentArray(array(
-    new JFormComponentName('name', 'Name:', array(
+$contactForm->addBFormComponentArray(array(
+    new BFormComponentName('name', 'Name:', array(
         'validationOptions' => array('required'),
         'tip' => '<p>Please enter your full name.</p>'
     )),
-    new JFormComponentSingleLineText('email', 'E-mail address:', array(
+    new BFormComponentSingleLineText('email', 'E-mail address:', array(
         'validationOptions' => array('required', 'email'),
     )),
-    new JFormComponentSingleLineText('subject', 'Subject:', array(
+    new BFormComponentSingleLineText('subject', 'Subject:', array(
         'validationOptions' => array('required'),
     )),
-    new JFormComponentTextArea('message', 'Message:', array(
+    new BFormComponentTextArea('message', 'Message:', array(
         'validationOptions' => array('required'),
     )),
 ));
@@ -42,7 +42,7 @@ function onSubmit($formValues) {
     }
 
     // Prepare the variables for sending the mail
-    $toAddress = 'noreply@jformer.com';
+    $toAddress = 'noreply@bformer.com';
     $fromAddress = $formValues->email;
     $fromName = $name;
     $subject = $formValues->subject.' from '.$fromName;

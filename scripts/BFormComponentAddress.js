@@ -1,6 +1,6 @@
-JFormComponentAddress = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
+BFormComponentAddress = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
     },
 
     initialize: function(){
@@ -83,7 +83,7 @@ JFormComponentAddress = JFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
            return null;
         }
         var address = {},
@@ -122,7 +122,7 @@ JFormComponentAddress = JFormComponent.extend({
     },
 
     validate: function(){
-        if(!this.parentJFormSection.parentJFormPage.jFormer.options.clientSideValidation) {
+        if(!this.parentBFormSection.parentBFormPage.bFormer.options.clientSideValidation) {
             return;
         }
 
@@ -132,7 +132,7 @@ JFormComponentAddress = JFormComponent.extend({
         }
         
         setTimeout(function() {
-            if(!self.component.hasClass('jFormComponentHighlight')){
+            if(!self.component.hasClass('bFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){
                     return true;
                 }

@@ -1,6 +1,6 @@
 <?php
 
-class JFormComponentMultipleChoice extends JFormComponent {
+class BFormComponentMultipleChoice extends BFormComponent {
     var $multipleChoiceType = 'checkbox'; // radio, checkbox
     var $multipleChoiceClass = 'choice';
     var $multipleChoiceLabelClass = 'choiceLabel';
@@ -14,7 +14,7 @@ class JFormComponentMultipleChoice extends JFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'jFormComponentMultipleChoice';
+        $this->class = 'bFormComponentMultipleChoice';
         $this->label = $label;
         $this->multipleChoiceArray = $multipleChoiceArray;
 
@@ -108,13 +108,13 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
     function getMultipleChoiceWrapper($multipleChoiceValue, $multipleChoiceLabel, $multipleChoiceChecked, $multipleChoiceTip, $multipleChoiceDisabled, $multipleChoiceInputHidden, $multipleChoiceCount) {
         // Make a wrapper div for the input and label
-        $multipleChoiceWrapperDiv = new JFormElement('div', array(
+        $multipleChoiceWrapperDiv = new BFormElement('div', array(
             'id' => $this->id.'-choice'.$multipleChoiceCount.'-wrapper',
             'class' => $this->multipleChoiceClass.'Wrapper',
         ));
 
         // Input tag
-        $input = new JFormElement('input', array(
+        $input = new BFormElement('input', array(
             'type' => $this->multipleChoiceType,
             'id' => $this->id.'-choice'.$multipleChoiceCount,
             'name' => $this->name,
@@ -134,14 +134,14 @@ class JFormComponentMultipleChoice extends JFormComponent {
         $multipleChoiceWrapperDiv->insert($input);
 
         // Multiple choice label
-        $multipleChoiceLabelElement = new JFormElement('label', array(
+        $multipleChoiceLabelElement = new BFormElement('label', array(
             'for' => $this->id.'-choice'.$multipleChoiceCount,
             'class' => $this->multipleChoiceLabelClass,
             'style' => 'display: inline;',
         ));
         // Add an image to the label if there is a tip
         if(!empty($multipleChoiceTip) && $this->showMultipleChoiceTipIcons) {
-            $multipleChoiceLabelElement->update($multipleChoiceLabel.' <span class="jFormComponentMultipleChoiceTipIcon">&nbsp;</span>');
+            $multipleChoiceLabelElement->update($multipleChoiceLabel.' <span class="bFormComponentMultipleChoiceTipIcon">&nbsp;</span>');
         }
         else {
             $multipleChoiceLabelElement->update($multipleChoiceLabel);
@@ -150,7 +150,7 @@ class JFormComponentMultipleChoice extends JFormComponent {
         if(sizeof($this->multipleChoiceArray) == 1) {
             // Add the required star to the label
             if(in_array('required', $this->validationOptions)) {
-                $labelRequiredStarSpan = new JFormElement('span', array(
+                $labelRequiredStarSpan = new BFormElement('span', array(
                     'class' => $this->labelRequiredStarClass
                 ));
                 $labelRequiredStarSpan->update(' *');
@@ -161,10 +161,10 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
         // Multiple choice tip
         if(!empty($multipleChoiceTip)) {
-            $multipleChoiceTipDiv = new JFormElement('div', array(
+            $multipleChoiceTipDiv = new BFormElement('div', array(
                 'id' => $this->id.'-'.$multipleChoiceValue.'-tip',
                 'style' => 'display: none;',
-                'class' => 'jFormComponentMultipleChoiceTip'
+                'class' => 'bFormComponentMultipleChoiceTip'
             ));
             $multipleChoiceTipDiv->update($multipleChoiceTip);
             $multipleChoiceWrapperDiv->insert($multipleChoiceTipDiv);

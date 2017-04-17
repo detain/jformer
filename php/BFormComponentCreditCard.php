@@ -1,6 +1,6 @@
 <?php
 
-class JFormComponentCreditCard extends JFormComponent {
+class BFormComponentCreditCard extends BFormComponent {
     var $emptyValues = null; // cardNumber, securityCode
     var $showSublabels = true;
     var $showCardType = true;
@@ -17,7 +17,7 @@ class JFormComponentCreditCard extends JFormComponent {
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
-        $this->class = 'jFormComponentCreditCard';
+        $this->class = 'bFormComponentCreditCard';
         
         // Initialize the abstract FormComponent object
         $this->initialize($optionArray);
@@ -29,7 +29,7 @@ class JFormComponentCreditCard extends JFormComponent {
     }
 
     function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new JFormElement('option', array('value' => $optionValue));
+        $option = new BFormElement('option', array('value' => $optionValue));
         $option->update($optionLabel);
 
         if($optionSelected) {
@@ -67,10 +67,10 @@ class JFormComponentCreditCard extends JFormComponent {
 
          // Add the card type select tag
         if($this->showCardType) {
-            $cardTypeDiv = new JFormElement('div', array(
+            $cardTypeDiv = new BFormElement('div', array(
                 'class' => 'cardTypeDiv',
             ));
-            $cardType = new JFormElement('select', array(
+            $cardType = new BFormElement('select', array(
                 'id' => $this->id.'-cardType',
                 'name' => $this->name.'-cardType',
                 'class' => 'cardType',
@@ -87,10 +87,10 @@ class JFormComponentCreditCard extends JFormComponent {
         }
 
         // Add the card number input tag
-        $cardNumberDiv = new JFormElement('div', array(
+        $cardNumberDiv = new BFormElement('div', array(
             'class' => 'cardNumberDiv',
         ));
-        $cardNumber = new JFormElement('input', array(
+        $cardNumber = new BFormElement('input', array(
             'type' => 'text',
             'id' => $this->id.'-cardNumber',
             'name' => $this->name.'-cardNumber',
@@ -100,10 +100,10 @@ class JFormComponentCreditCard extends JFormComponent {
         $cardNumberDiv->insert($cardNumber);
 
         // Add the expiration month select tag
-        $expirationDateDiv = new JFormElement('div', array(
+        $expirationDateDiv = new BFormElement('div', array(
             'class' => 'expirationDateDiv',
         ));
-        $expirationMonth = new JFormElement('select', array(
+        $expirationMonth = new BFormElement('select', array(
             'id' => $this->id.'-expirationMonth',
             'name' => $this->name.'-expirationMonth',
             'class' => 'expirationMonth',
@@ -113,7 +113,7 @@ class JFormComponentCreditCard extends JFormComponent {
             $expirationMonth->insert($this->getOption('', 'Month', true, true));
         }
         // Add the months
-        foreach(JFormComponentDropDown::getMonthArray() as $dropDownOption) {
+        foreach(BFormComponentDropDown::getMonthArray() as $dropDownOption) {
             $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
             $optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
             $optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
@@ -130,7 +130,7 @@ class JFormComponentCreditCard extends JFormComponent {
         }
         $expirationDateDiv->insert($expirationMonth);
         // Add the expiration year select tag
-        $expirationYear = new JFormElement('select', array(
+        $expirationYear = new BFormElement('select', array(
             'id' => $this->id.'-expirationYear',
             'name' => $this->name.'-expirationYear',
             'class' => 'expirationYear',
@@ -155,10 +155,10 @@ class JFormComponentCreditCard extends JFormComponent {
         $expirationDateDiv->insert($expirationYear);
 
         // Add the security code input tag
-        $securityCodeDiv = new JFormElement('div', array(
+        $securityCodeDiv = new BFormElement('div', array(
             'class' => 'securityCodeDiv',
         ));
-        $securityCode = new JFormElement('input', array(
+        $securityCode = new BFormElement('input', array(
             'type' => 'text',
             'id' => $this->id.'-securityCode',
             'name' => $this->name.'-securityCode',
@@ -184,12 +184,12 @@ class JFormComponentCreditCard extends JFormComponent {
         // Put the sublabels in if the option allows for it
         if($this->showSublabels) {
             if($this->showCardType) {
-                $cardTypeDiv->insert('<div class="jFormComponentSublabel"><p>Card Type</p></div>');
+                $cardTypeDiv->insert('<div class="bFormComponentSublabel"><p>Card Type</p></div>');
             }
-            $cardNumberDiv->insert('<div class="jFormComponentSublabel"><p>Card Number</p></div>');
-            $expirationDateDiv->insert('<div class="jFormComponentSublabel"><p>Expiration Date</p></div>');
+            $cardNumberDiv->insert('<div class="bFormComponentSublabel"><p>Card Number</p></div>');
+            $expirationDateDiv->insert('<div class="bFormComponentSublabel"><p>Expiration Date</p></div>');
             if($this->showSecurityCode) {
-                $securityCodeDiv->insert('<div class="jFormComponentSublabel"><p>Security Code</p></div>');
+                $securityCodeDiv->insert('<div class="bFormComponentSublabel"><p>Security Code</p></div>');
             }
         }
 

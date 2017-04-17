@@ -1,6 +1,6 @@
-JFormComponentMultipleChoice = JFormComponent.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
-        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
+BFormComponentMultipleChoice = BFormComponent.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
+        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
     },
 
     initialize: function(){
@@ -25,17 +25,17 @@ JFormComponentMultipleChoice = JFormComponent.extend({
 
     addChoiceTips: function(){
         var self = this;
-        var tips = this.component.find('div.jFormComponentMultipleChoiceTip');
+        var tips = this.component.find('div.bFormComponentMultipleChoiceTip');
         if(tips.length > 0) {
             tips.each(function(index, tip) {
-                var tipTarget = $(tip).prev('label').find('.jFormComponentMultipleChoiceTipIcon');
+                var tipTarget = $(tip).prev('label').find('.bFormComponentMultipleChoiceTipIcon');
                 if (tipTarget.length == 0){
                     tipTarget = $(tip).parent();
                 }
                 tipTarget.simpletip({
                     position: 'topRight',
                     content: $(tip),
-                    baseClass: 'jFormerTip jFormComponentMultipleChoiceTip',
+                    baseClass: 'bFormerTip bFormComponentMultipleChoiceTip',
                     hideEffect: 'none'
                 });
             });
@@ -43,7 +43,7 @@ JFormComponentMultipleChoice = JFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
            return null;
         }
         var multipleChoiceValue
@@ -69,15 +69,15 @@ JFormComponentMultipleChoice = JFormComponent.extend({
         // Checkbox
         if(this.options.multipleChoiceType == 'checkbox') {
             $.each(data, function(key, value){
-                self.component.find('input[value=\''+value+'\']').attr('checked', 'checked').trigger('jFormComponent:changed');
+                self.component.find('input[value=\''+value+'\']').attr('checked', 'checked').trigger('bFormComponent:changed');
             });
         }
         // Radio button
         else {
-            this.component.find('input[value=\''+data+'\']').attr('checked', 'checked').trigger('jFormComponent:changed');
+            this.component.find('input[value=\''+data+'\']').attr('checked', 'checked').trigger('bFormComponent:changed');
 
             if(data == null) {
-                this.component.find('input').attr('checked', false).trigger('jFormComponent:changed');
+                this.component.find('input').attr('checked', false).trigger('bFormComponent:changed');
             }
         }
         this.validate(true);

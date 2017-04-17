@@ -1,6 +1,6 @@
 <?php
 
-class JFormComponentLikert extends JFormComponent {
+class BFormComponentLikert extends BFormComponent {
     var $choiceArray = array();
     var $statementArray = array();
     var $showTableHeading = true;
@@ -13,7 +13,7 @@ class JFormComponentLikert extends JFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'jFormComponentLikert';
+        $this->class = 'bFormComponentLikert';
         $this->label = $label;
 
         $this->choiceArray = $choiceArray;
@@ -58,24 +58,24 @@ class JFormComponentLikert extends JFormComponent {
         $componentDiv = parent::generateComponentDiv(!$this->collapseLabelIntoTableHeading);
 
         // Create the table
-        $table = new JFormElement('table', array('class' => 'jFormComponentLikertTable'));
+        $table = new BFormElement('table', array('class' => 'bFormComponentLikertTable'));
 
         // Generate the first row
         if($this->showTableHeading) {
-            $tableHeadingRow = new JFormElement('tr', array('class' => 'jFormComponentLikertTableHeading'));
+            $tableHeadingRow = new BFormElement('tr', array('class' => 'bFormComponentLikertTableHeading'));
 
-            $tableHeading = new JFormElement('th', array(
-                'class' => 'jFormComponentLikertStatementColumn',
+            $tableHeading = new BFormElement('th', array(
+                'class' => 'bFormComponentLikertStatementColumn',
             ));
             // Collapse the label into the heading if the option is set
             if($this->collapseLabelIntoTableHeading) {
-                $tableHeadingLabel = new JFormElement('label', array(
-                    'class' => 'jFormComponentLikertStatementLabel',
+                $tableHeadingLabel = new BFormElement('label', array(
+                    'class' => 'bFormComponentLikertStatementLabel',
                 ));
                 $tableHeadingLabel->update($this->label);
                 // Add the required star to the label
                 if(in_array('required', $this->validationOptions)) {
-                    $labelRequiredStarSpan = new JFormElement('span', array(
+                    $labelRequiredStarSpan = new BFormElement('span', array(
                         'class' => $this->labelRequiredStarClass
                     ));
                     $labelRequiredStarSpan->update(' *');
@@ -96,33 +96,33 @@ class JFormComponentLikert extends JFormComponent {
         foreach($this->statementArray as $statement) {
             // Set the row style
             if($statementCount % 2 == 0) {
-                $statementRowClass = 'jFormComponentLikertTableRowEven';
+                $statementRowClass = 'bFormComponentLikertTableRowEven';
             }
             else {
-                $statementRowClass = 'jFormComponentLikertTableRowOdd';
+                $statementRowClass = 'bFormComponentLikertTableRowOdd';
             }
 
             // Set the statement
-            $statementRow = new JFormElement('tr', array('class' => $statementRowClass));
-            $statementColumn = new JFormElement('td', array('class' => 'jFormComponentLikertStatementColumn'));
-            $statementLabel = new JFormElement('label', array(
-                'class' => 'jFormComponentLikertStatementLabel',
+            $statementRow = new BFormElement('tr', array('class' => $statementRowClass));
+            $statementColumn = new BFormElement('td', array('class' => 'bFormComponentLikertStatementColumn'));
+            $statementLabel = new BFormElement('label', array(
+                'class' => 'bFormComponentLikertStatementLabel',
                 'for' => $statement['name'].'-choice1',
             ));
             $statementColumn->insert($statementLabel->insert($statement['statement']));
 
             // Set the statement description (optional)
             if(!empty($statement['description'])) {
-                $statementDescription = new JFormElement('div', array(
-                    'class' => 'jFormComponentLikertStatementDescription',
+                $statementDescription = new BFormElement('div', array(
+                    'class' => 'bFormComponentLikertStatementDescription',
                 ));
                 $statementColumn->insert($statementDescription->update($statement['description']));
             }
 
             // Insert a tip (optional)
             if(!empty($statement['tip'])) {
-                $statementTip = new JFormElement('div', array(
-                    'class' => 'jFormComponentLikertStatementTip',
+                $statementTip = new BFormElement('div', array(
+                    'class' => 'bFormComponentLikertStatementTip',
                     'style' => 'display: none;',
                 ));
                 $statementColumn->insert($statementTip->update($statement['tip']));
@@ -132,9 +132,9 @@ class JFormComponentLikert extends JFormComponent {
 
             $choiceCount = 1;
             foreach($this->choiceArray as $choice) {
-                $choiceColumn = new JFormElement('td');
+                $choiceColumn = new BFormElement('td');
 
-                $choiceInput = new JFormElement('input', array(
+                $choiceInput = new BFormElement('input', array(
                     'id' => $statement['name'].'-choice'.$choiceCount,
                     'type' => 'radio',
                     'value' => $choice['value'],
@@ -150,8 +150,8 @@ class JFormComponentLikert extends JFormComponent {
 
                 // Choice sub labels
                 if(!empty($choice['sublabel'])) {
-                    $choiceSublabel = new JFormElement('label', array(
-                        'class' => 'jFormComponentLikertSublabel',
+                    $choiceSublabel = new BFormElement('label', array(
+                        'class' => 'bFormComponentLikertSublabel',
                         'for' => $statement['name'].'-choice'.$choiceCount,
                     ));
                     $choiceSublabel->update($choice['sublabel']);
@@ -192,7 +192,7 @@ class JFormComponentLikert extends JFormComponent {
     }
 }
 
-class JFormComponentLikertStatement extends JFormComponent {
+class BFormComponentLikertStatement extends BFormComponent {
     /**
      * Constructor
      */
@@ -200,7 +200,7 @@ class JFormComponentLikertStatement extends JFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'jFormComponentLikertStatement';
+        $this->class = 'bFormComponentLikertStatement';
         $this->label = $label;
         // Initialize the abstract FormComponent object
         $this->initialize($optionsArray);

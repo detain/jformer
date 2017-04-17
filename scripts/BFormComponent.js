@@ -1,12 +1,12 @@
 /**
- *  jFormComponent is the base class for all components in the form. all specific components extend off of this class
+ *  bFormComponent is the base class for all components in the form. all specific components extend off of this class
  *  Handles instances, dependencies and trigger bases
  *
  */
-JFormComponent = Class.extend({
-    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
+BFormComponent = Class.extend({
+    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
         this.options = $.extend({
-            validationOptions: [],                // 'required', 'email', etc... - An array of validation keys used by this.validate() and jFormerValidator
+            validationOptions: [],                // 'required', 'email', etc... - An array of validation keys used by this.validate() and bFormerValidator
             showErrorTipOnce: false,
             triggerFunction: null,              // set to a function name, is a function
             componentChangedOptions: null,      // set options for when component:changed is run
@@ -18,13 +18,13 @@ JFormComponent = Class.extend({
             persistentTip: false
         }, options || {});
 
-        //console.count(jFormComponentType);
+        //console.count(bFormComponentType);
         // Class variables
-        this.parentJFormSection = parentJFormSection;
-        this.id = jFormComponentId;
-        this.component = $('#'+jFormComponentId+'-wrapper');
+        this.parentBFormSection = parentBFormSection;
+        this.id = bFormComponentId;
+        this.component = $('#'+bFormComponentId+'-wrapper');
         this.formData = null;                       // Will be an object is there is just one instance, will be an array if there is more than one instance
-        this.type = jFormComponentType;                       // 'SingleLineText', 'TextArea', etc... - The component jFormComponentType
+        this.type = bFormComponentType;                       // 'SingleLineText', 'TextArea', etc... - The component bFormComponentType
         this.errorMessageArray = [];            // Used to store error messages displayed in tips or appended to the description
         this.tip = null;
         this.tipDiv = this.component.find('#'+this.id+'-tip');
@@ -89,7 +89,7 @@ JFormComponent = Class.extend({
                 self.removeHighlight();
 
                 // Handle multifield highlight and validation
-                if((self.type == 'JFormComponentName' || self.type == 'JFormComponentAddress' || self.type == 'JFormComponentCreditCard') && self.changed === true){
+                if((self.type == 'BFormComponentName' || self.type == 'BFormComponentAddress' || self.type == 'BFormComponentCreditCard') && self.changed === true){
                     self.validate();
                 }
             });
@@ -102,7 +102,7 @@ JFormComponent = Class.extend({
                 this.tip.getTooltip().mouseenter(function(event) {
                     $(document).bind('click', function(clickevent){
 
-                        if($(clickevent.target).closest('.jFormerTip').length != 0 || $(clickevent.target).is(':focus')) {
+                        if($(clickevent.target).closest('.bFormerTip').length != 0 || $(clickevent.target).is(':focus')) {
                             return;
                         } else {
                             self.removeHighlight();
@@ -120,13 +120,13 @@ JFormComponent = Class.extend({
                             self.removeHighlight();
 
                             // Handle multifield highlight and validation
-                            if((self.type == 'JFormComponentName' || self.type == 'JFormComponentAddress' || self.type == 'JFormComponentCreditCard') && self.changed === true){
+                            if((self.type == 'BFormComponentName' || self.type == 'BFormComponentAddress' || self.type == 'BFormComponentCreditCard') && self.changed === true){
                                 self.validate();
                             }
                         });
                     });
                 });
-                this.tip.getTooltip().find('.jFormerTipClose').bind('click', function(){
+                this.tip.getTooltip().find('.bFormerTipClose').bind('click', function(){
                     $(document).unbind('click');
                    self.removeHighlight();
                 });
@@ -188,30 +188,30 @@ JFormComponent = Class.extend({
         // Handle IE events
         this.component.find('input:checkbox, input:radio').each(function(key, input) {
             $(input).bind('click', function(event) {
-                $(this).trigger('jFormComponent:changed', self);
+                $(this).trigger('bFormComponent:changed', self);
             });
         });
 
         this.component.find(':input:not(button, :checkbox, :radio)').each(function(key, input) {
             $(input).bind('change', function(event) {
-                $(this).trigger('jFormComponent:changed', self);
+                $(this).trigger('bFormComponent:changed', self);
             });
         });
     },
 
     catchComponentChangedEventListener: function() {
         var self = this;
-        this.component.bind('jFormComponent:changed', function(event) {
+        this.component.bind('bFormComponent:changed', function(event) {
             // Run a trigger on change if there is one
             if(self.options.triggerFunction !== null) {
                 eval(self.options.triggerFunction);
             }
             // Prevent validation from occuring with components with more than one input
-            if(self.type == 'JFormComponentName' || self.type == 'JFormComponentAddress' || self.type == 'JFormComponentLikert' || self.type == 'JFormComponentCreditCard'){
+            if(self.type == 'BFormComponentName' || self.type == 'BFormComponentAddress' || self.type == 'BFormComponentLikert' || self.type == 'BFormComponentCreditCard'){
                 self.changed = true;
             }
             // Validate the component on change if client side validation is enabled
-            if(self.parentJFormSection.parentJFormPage.jFormer.options.clientSideValidation) {
+            if(self.parentBFormSection.parentBFormPage.bFormer.options.clientSideValidation) {
                 self.validate();
             }
         });
@@ -219,18 +219,18 @@ JFormComponent = Class.extend({
 
     highlight: function() {
         // Add the highlight class and trigger the highlight
-        this.component.addClass('jFormComponentHighlight').trigger('jFormComponent:highlighted', this.component);
-        this.component.trigger('jFormComponent:showTip', this.component);
+        this.component.addClass('bFormComponentHighlight').trigger('bFormComponent:highlighted', this.component);
+        this.component.trigger('bFormComponent:showTip', this.component);
     },
 
     removeHighlight: function() {
         var self = this;
-        this.component.removeClass('jFormComponentHighlight').trigger('jFormComponent:highlightRemoved', this.component);
+        this.component.removeClass('bFormComponentHighlight').trigger('bFormComponent:highlightRemoved', this.component);
 
         // Wait just a microsecond to see if you are still on the same component
         setTimeout(function() {
-            if(!self.component.hasClass('jFormComponentHighlight')){
-                self.component.trigger('jFormComponent:hideTip', self.component);
+            if(!self.component.hasClass('bFormComponentHighlight')){
+                self.component.trigger('bFormComponent:hideTip', self.component);
             }
         }, 1);
     },
@@ -239,7 +239,7 @@ JFormComponent = Class.extend({
         var self = this;
 
         // Handle disabled component
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency) {
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency) {
             this.formData = null;
         }
         else {
@@ -261,7 +261,7 @@ JFormComponent = Class.extend({
         var self = this;
         if($.isArray(data)) {
             $.each(data, function(index, value) {
-                if((self.type == 'JFormComponentMultipleChoice' && ($.isArray(value) ||  self.multipeChoiceType == 'radio')) || self.type != 'JFormComponentMultipleChoice'){
+                if((self.type == 'BFormComponentMultipleChoice' && ($.isArray(value) ||  self.multipeChoiceType == 'radio')) || self.type != 'BFormComponentMultipleChoice'){
                     if(index !== 0 && self.instanceArray[index] == undefined){
                         self.addInstance();
                     }
@@ -282,15 +282,15 @@ JFormComponent = Class.extend({
         var self =  this;
         if(this.options.instanceOptions != null){
         //if(this.options.instancesAllowed != 1){
-        var addButton = $('<button id="'+this.id+'-addInstance" class="jFormComponentAddInstanceButton">'+this.options.instanceOptions.addButtonText+'</button>');
+        var addButton = $('<button id="'+this.id+'-addInstance" class="bFormComponentAddInstanceButton">'+this.options.instanceOptions.addButtonText+'</button>');
         // hide the button if there are dependencies... show it later if necessary
         if(this.options.dependencyOptions !== null){
             addButton.hide();
         }
         
           this.component.after(addButton);
-          //this.component.after('<button id="'+this.id+'-addInstance" class="jFormComponentAddInstanceButton">'+this.options.instanceAddText+'</button>');
-          this.parentJFormSection.section.find('#'+this.id+'-addInstance').bind('click', function(event){
+          //this.component.after('<button id="'+this.id+'-addInstance" class="bFormComponentAddInstanceButton">'+this.options.instanceAddText+'</button>');
+          this.parentBFormSection.section.find('#'+this.id+'-addInstance').bind('click', function(event){
               event.preventDefault();
               if(!self.disabledByDependency){
                 self.addInstance();
@@ -308,21 +308,21 @@ JFormComponent = Class.extend({
 
     addInstance: function() {
         if(this.options.componentChangedOptions != null && this.options.componentChangedOptions.instance != undefined && this.options.componentChangedOptions.instance == true){
-            this.component.trigger('jFormComponent:changed', this);
+            this.component.trigger('bFormComponent:changed', this);
         }
         var parent = this;
         if(this.instanceArray.length < this.options.instanceOptions.max || this.options.instanceOptions.max === 0){
             var instanceClone = this.clone.clone();
-            var addButton = this.parentJFormSection.section.find('#'+this.id+'-addInstance');
+            var addButton = this.parentBFormSection.section.find('#'+this.id+'-addInstance');
             var animationOptions = {};
             if(this.options.instanceOptions.animationOptions !== undefined){
-                animationOptions = $.extend(animationOptions, this.parentJFormSection.parentJFormPage.jFormer.options.animationOptions.instance, this.options.instanceOptions.animationOptions);
+                animationOptions = $.extend(animationOptions, this.parentBFormSection.parentBFormPage.bFormer.options.animationOptions.instance, this.options.instanceOptions.animationOptions);
             } else {
-                animationOptions = this.parentJFormSection.parentJFormPage.jFormer.options.animationOptions.instance;
+                animationOptions = this.parentBFormSection.parentBFormPage.bFormer.options.animationOptions.instance;
             }
 
             // Create the remove button
-            $(instanceClone).append('<button id="'+this.id+'-removeInstance" class="jFormComponentRemoveInstanceButton">'+this.options.instanceOptions.removeButtonText+'</button>');
+            $(instanceClone).append('<button id="'+this.id+'-removeInstance" class="bFormComponentRemoveInstanceButton">'+this.options.instanceOptions.removeButtonText+'</button>');
             
             // Add an event listener on the remove button
             instanceClone.find('#'+this.id+'-removeInstance').bind('click', function(event){
@@ -346,16 +346,16 @@ JFormComponent = Class.extend({
                         target.parent().slideUp(animationOptions.removeDuration, function(){
                             target.parent().remove();
                             target.remove();
-                            //parent.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                            parent.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            //parent.parentBFormSection.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                            parent.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         })
                         
                     }else {
                         target.parent().fadeOut(animationOptions.removeDuration, function(){
                             target.parent().remove();
                             target.remove();
-                            //parent.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                            parent.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            //parent.parentBFormSection.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                            parent.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         });
                     }
                 }
@@ -376,13 +376,13 @@ JFormComponent = Class.extend({
                 if(!parent.disabledByDependency){
                     if(animationOptions.appearEffect == 'slide'){
                         instanceClone.slideDown(animationOptions.appearDuration, function(){
-                            parent.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                            parent.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            parent.parentBFormSection.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                            parent.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         });
                     }else {
                         instanceClone.fadeIn(animationOptions.appearDuration, function(){
-                            parent.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-                            parent.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            parent.parentBFormSection.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+                            parent.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         });
                     }
                 }
@@ -399,29 +399,29 @@ JFormComponent = Class.extend({
             }
 
             if(this.options.dependencies != undefined){
-                var objectTop = parent.parentJFormSection.parentJFormPage.jFormer;
+                var objectTop = parent.parentBFormSection.parentBFormPage.bFormer;
                 instanceObject.component.find(':text, textarea').bind('keyup', function(event) {
                     $.each(parent.options.dependencies.pages, function(index, object) {
-                        objectTop.jFormPages[object.jFormPageId].checkDependencies();
+                        objectTop.bFormPages[object.bFormPageId].checkDependencies();
                     });
                     $.each(parent.options.dependencies.sections, function(index, object) {
-                        objectTop.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].checkDependencies();
+                        objectTop.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].checkDependencies();
                     });
                     $.each(parent.options.dependencies.components, function(index, object) {
-                        objectTop.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].jFormComponents[object.jFormComponentId].checkDependencies();
+                        objectTop.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].bFormComponents[object.bFormComponentId].checkDependencies();
                     });
                 });
 
-                instanceObject.component.bind('jFormComponent:changed', function(event) {
+                instanceObject.component.bind('bFormComponent:changed', function(event) {
                     
                         $.each(parent.options.dependencies.pages, function(index, object) {
-                            objectTop.jFormPages[object.jFormPageId].checkDependencies();
+                            objectTop.bFormPages[object.bFormPageId].checkDependencies();
                         });
                         $.each(parent.options.dependencies.sections, function(index, object) {
-                            objectTop.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].checkDependencies();
+                            objectTop.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].checkDependencies();
                         });
                         $.each(parent.options.dependencies.components, function(index, object) {
-                            objectTop.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].jFormComponents[object.jFormComponentId].checkDependencies();
+                            objectTop.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].bFormComponents[object.bFormComponentId].checkDependencies();
                         });
                 });
             }
@@ -430,7 +430,7 @@ JFormComponent = Class.extend({
             }
             
             // Resize the page
-            //parent.parentJFormSection.parentJFormPage.scrollTo();
+            //parent.parentBFormSection.parentBFormPage.scrollTo();
         }
         return this;
     },
@@ -478,7 +478,7 @@ JFormComponent = Class.extend({
         if(this.options.componentChangedOptions != null && this.options.componentChangedOptions.children != undefined && this.options.componentChangedOptions.children == false ){
             tempOptions.componentChangedOptions = null;
         }
-        var instanceObject = new window[this.type](this.parentJFormSection, this.id+'-instance'+this.iterations, this.type, tempOptions);
+        var instanceObject = new window[this.type](this.parentBFormSection, this.id+'-instance'+this.iterations, this.type, tempOptions);
         return instanceObject;
     },
 
@@ -488,7 +488,7 @@ JFormComponent = Class.extend({
                 var count = key+1,
                 label = instance.component.find('#'+instance.component.attr('id').replace('-wrapper','-label'));
                 if(label.length > 0) {
-                    var star = label.find('span.jFormComponentLabelRequiredStar');
+                    var star = label.find('span.bFormComponentLabelRequiredStar');
                     if(star.length > 0){
                         star.remove()
                     }
@@ -504,7 +504,7 @@ JFormComponent = Class.extend({
                     label.append(star);
                 } else {
                     label = instance.component.find('label');
-                    var star = label.find('span.jFormComponentLabelRequiredStar');
+                    var star = label.find('span.bFormComponentLabelRequiredStar');
                     if(star.length > 0){
                         star.remove()
                     }
@@ -518,8 +518,8 @@ JFormComponent = Class.extend({
 
             }
         });
-        //this.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
-        this.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+        //this.parentBFormSection.parentBFormPage.bFormer.bFormPageWrapper.dequeue();
+        this.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
     },
 
     addTip: function() {
@@ -533,7 +533,7 @@ JFormComponent = Class.extend({
                 focus: true,
                 position: 'topRight',
                 content: self.tipDiv,
-                baseClass: 'jFormerTip',
+                baseClass: 'bFormerTip',
                 hideEffect: 'none',
                 onBeforeShow: function(){
                     if(self.tipDiv.find('.tipContent').text() == ''){
@@ -557,7 +557,7 @@ JFormComponent = Class.extend({
         var self = this;
 
         // Show a tip
-        this.component.bind('jFormComponent:showTip', function(event) {
+        this.component.bind('bFormComponent:showTip', function(event) {
             // Make sure the tip exists and display the tip if it is not empty
             if(self.tip && typeof(self.tip) == 'object' && $.trim(self.tipDiv.html()) !== '') {
                 self.tip.show();
@@ -566,7 +566,7 @@ JFormComponent = Class.extend({
         });
 
         // Hide a tip
-        this.component.bind('jFormComponent:hideTip', function(event) {
+        this.component.bind('bFormComponent:hideTip', function(event) {
             // Make sure the tip exists
             if(self.tip && typeof(self.tip) == 'object') {
                 self.tip.hide();
@@ -587,8 +587,8 @@ JFormComponent = Class.extend({
         this.validationPassed = true;
 
         // Reset the classes
-        this.component.removeClass('jFormComponentValidationFailed');
-        this.component.addClass('jFormComponentValidationPassed');
+        this.component.removeClass('bFormComponentValidationFailed');
+        this.component.addClass('bFormComponentValidationPassed');
 
         // Remove any tipErrorUl from the tip div
         this.component.find('.tipErrorUl').remove();
@@ -615,9 +615,9 @@ JFormComponent = Class.extend({
     },
 
     validate: function(silent) {
-        //console.log('validating a component Bi!', this.parentJFormSection.parentJFormPage.id, this.id);
+        //console.log('validating a component Bi!', this.parentBFormSection.parentBFormPage.id, this.id);
         // Handle dependencies
-        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency) {
+        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency) {
             return null;
         }
 
@@ -650,9 +650,9 @@ JFormComponent = Class.extend({
             else {
                 if(validationType.match('required')){
                     self.requiredCompleted = false;
-                    if(self.parentJFormSection.parentJFormPage.jFormer.options.pageNavigator != false){
-                        var pageIndex = $.inArray(self.parentJFormSection.parentJFormPage.id, self.parentJFormSection.parentJFormPage.jFormer.jFormPageIdArray);
-                        $('#navigatePage'+(pageIndex + 1)).addClass('jFormPageNavigatorLinkWarning');
+                    if(self.parentBFormSection.parentBFormPage.bFormer.options.pageNavigator != false){
+                        var pageIndex = $.inArray(self.parentBFormSection.parentBFormPage.id, self.parentBFormSection.parentBFormPage.bFormer.bFormPageIdArray);
+                        $('#navigatePage'+(pageIndex + 1)).addClass('bFormPageNavigatorLinkWarning');
                     }
                 }
                 if(silent){
@@ -686,7 +686,7 @@ JFormComponent = Class.extend({
             if(this.instanceArray.length != 1) {
                 // Go through each of the instances and assign the error messages
                 $.each(this.instanceArray, function(instanceKey, instance) {
-                    if(!jFormerUtility.empty(errorMessageArray[instanceKey])){
+                    if(!bFormerUtility.empty(errorMessageArray[instanceKey])){
                         $.each(errorMessageArray[instanceKey], function(errorMessageArrayIndex, errorMessage){
                             if(errorMessage != '') {
                                 instance.errorMessageArray.push(errorMessage);
@@ -712,8 +712,8 @@ JFormComponent = Class.extend({
         var self = this;
 
         // Change classes
-        this.component.removeClass('jFormComponentValidationPassed');
-        this.component.addClass('jFormComponentValidationFailed');
+        this.component.removeClass('bFormComponentValidationPassed');
+        this.component.addClass('bFormComponentValidationFailed');
 
         // Add a tip div and tip neccesary
         if(this.tipDiv.length == 0) {
@@ -721,7 +721,7 @@ JFormComponent = Class.extend({
         }
 
         // If validation tips are disabled
-        if(!this.parentJFormSection.parentJFormPage.jFormer.options.validationTips) {
+        if(!this.parentBFormSection.parentBFormPage.bFormer.options.validationTips) {
             return;
         }
 
@@ -736,7 +736,7 @@ JFormComponent = Class.extend({
         this.tip.update(self.tipDiv.html());
 
         // Show the tip if you are currently on it
-        if(this.component.hasClass('jFormComponentHighlight')) {
+        if(this.component.hasClass('bFormComponentHighlight')) {
             this.tip.show();
 
         }
@@ -753,7 +753,7 @@ JFormComponent = Class.extend({
         var self = this;
         var animationOptions = {};
         if(this.options.componentChangedOptions != null && this.options.componentChangedOptions.dependency != undefined && this.options.componentChangedOptions.dependency == true){
-            this.component.trigger('jFormComponent:changed', this);
+            this.component.trigger('bFormComponent:changed', this);
         }
         //stuff we are going to do stuff to...
         var elementsToDisable = this.component;
@@ -763,20 +763,20 @@ JFormComponent = Class.extend({
             }
         });
         if(this.options.instanceOptions !== null && (this.instanceArray.length < this.options.instanceOptions.max || this.options.instanceOptions.max === 0)){
-            var addButton = $(this.parentJFormSection.section.find('#'+this.id+'-addInstance'));
-            if(self.parentJFormSection.parentJFormPage.jFormer.initializing) {
+            var addButton = $(this.parentBFormSection.section.find('#'+this.id+'-addInstance'));
+            if(self.parentBFormSection.parentBFormPage.bFormer.initializing) {
                 if(!disable && addButton.is(':hidden')){
                     addButton.show();
-                    self.parentJFormSection.parentJFormPage.jFormer.adjustHeight({adjustHeightDuration:0});
+                    self.parentBFormSection.parentBFormPage.bFormer.adjustHeight({adjustHeightDuration:0});
                 } else if(this.options.dependencyOptions.display == 'lock'){
                     addButton.show();
-                    self.parentJFormSection.parentJFormPage.jFormer.adjustHeight({adjustHeightDuration:0});
+                    self.parentBFormSection.parentBFormPage.bFormer.adjustHeight({adjustHeightDuration:0});
                 }
             }
             elementsToDisable = elementsToDisable.add(addButton);
         }
   
-        if(self.parentJFormSection.parentJFormPage.jFormer.initializing) {
+        if(self.parentBFormSection.parentBFormPage.bFormer.initializing) {
             animationOptions = {
                 adjustHeightDelay : 0,
                 appearDuration : 0,
@@ -786,13 +786,13 @@ JFormComponent = Class.extend({
 
             }
         } else if(this.options.dependencyOptions.animationOptions !== undefined){
-            animationOptions = $.extend(animationOptions, this.parentJFormSection.parentJFormPage.jFormer.options.animationOptions.dependency, this.options.dependencyOptions.animationOptions);
+            animationOptions = $.extend(animationOptions, this.parentBFormSection.parentBFormPage.bFormer.options.animationOptions.dependency, this.options.dependencyOptions.animationOptions);
         } else {
-            animationOptions = this.parentJFormSection.parentJFormPage.jFormer.options.animationOptions.dependency;
+            animationOptions = this.parentBFormSection.parentBFormPage.bFormer.options.animationOptions.dependency;
         }
 
         // If the condition is different then the current condition or if the form is initializing
-        if(this.disabledByDependency !== disable || this.parentJFormSection.parentJFormPage.jFormer.initializing) {
+        if(this.disabledByDependency !== disable || this.parentBFormSection.parentBFormPage.bFormer.initializing) {
             // Disable the component
             if(disable) {
                 // Clear the validation to prevent validation issues with disabled component
@@ -803,23 +803,23 @@ JFormComponent = Class.extend({
                     //console.log('hiding component')
                     if(animationOptions.hideEffect == 'none' || animationOptions.hideDuration === 0){
                         elementsToDisable.hide(animationOptions.hideDuration);
-                        self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                        self.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                     } else {
                         if(animationOptions.hideEffect === 'fade'){
                             elementsToDisable.fadeOut(animationOptions.hideDuration, function() {
-                                self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                                self.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                             });
                         }else if(animationOptions.hideEffect === 'fade'){
                         
                             elementsToDisable.slideUp(animationOptions.hideDuration, function() {
-                                self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                                self.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                             });
                         }
                     }
                 }
                 // Lock the component
                 else {
-                    elementsToDisable.addClass('jFormComponentDependencyDisabled').find(':input').attr('disabled', 'disabled');
+                    elementsToDisable.addClass('bFormComponentDependencyDisabled').find(':input').attr('disabled', 'disabled');
                 }
             }
             // Show or unlock the component
@@ -830,22 +830,22 @@ JFormComponent = Class.extend({
                     if(animationOptions.appearEffect == 'none' || animationOptions.apearDuration === 0){
                         
                         elementsToDisable.show();
-                        self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                        self.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                     }else {
                         if(animationOptions.appearEffect === 'fade'){
                         
                             elementsToDisable.fadeIn(animationOptions.appearDuration);
-                            self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            self.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         }else if(animationOptions.appearEffect === 'slide'){
                         
                             elementsToDisable.slideDown(animationOptions.appearDuration);
-                            self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
+                            self.parentBFormSection.parentBFormPage.bFormer.adjustHeight(animationOptions);
                         }
                     }
                 }
                 // Unlock the component
                 else {
-                    elementsToDisable.removeClass('jFormComponentDependencyDisabled').find(':input').removeAttr('disabled');
+                    elementsToDisable.removeClass('bFormComponentDependencyDisabled').find(':input').removeAttr('disabled');
                 }
             }
             this.disabledByDependency = disable;
