@@ -828,6 +828,7 @@ class BFormer {
 					'name' => $this->id . '-iframe',
 					'class' => 'bFormerIFrame',
 					'frameborder' => 0,
+					'height' => '0px;',
 					'src' => (defined('URLDIR') ? URLDIR : '') . '/js/bformer-detain-git/php/BFormer.php?iframe=true',
 					//'src' => '/empty.html',
 						//'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
