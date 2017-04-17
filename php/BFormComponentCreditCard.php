@@ -225,7 +225,7 @@ class JFormComponentCreditCard extends JFormComponent {
             if(preg_match('/[^\d]/', $options['value']->cardNumber)) {
                 array_push($errorMessageArray, array('Card number may only contain numbers.'));
             }
-            if(strlen($options['value']->cardNumber) > 16 || strlen($options['value']->cardNumber) < 13) {
+            if(mb_strlen($options['value']->cardNumber) > 16 || mb_strlen($options['value']->cardNumber) < 13) {
                 array_push($errorMessageArray, array('Card number must contain 13 to 16 digits.'));
             }
         }
@@ -242,7 +242,7 @@ class JFormComponentCreditCard extends JFormComponent {
             if(preg_match('/[^\d]/', $options['value']->securityCode)) {
                 array_push($errorMessageArray, array('Security code may only contain numbers.'));
             }
-            if(strlen($options['value']->securityCode) > 4 || strlen($options['value']->securityCode) < 3) {
+            if(mb_strlen($options['value']->securityCode) > 4 || mb_strlen($options['value']->securityCode) < 3) {
                 array_push($errorMessageArray, array('Security code must contain 3 or 4 digits.'));
             }
         }

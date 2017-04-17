@@ -13,7 +13,7 @@ class JFormComponentName extends JFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'jFormComponentName';
+		$this->class = 'jFormComponentName form-group';
 
 		// Input options
 		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
@@ -55,14 +55,14 @@ class JFormComponentName extends JFormComponent {
 
 
 		$firstNameDiv = new JFormElement('div', array(
-			'class' => 'firstNameDiv',
+			'class' => 'firstNameDiv form-group',
 		));
 		// Add the first name input tag
 		$firstName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-firstName',
 			'name' => $this->name.'-firstName',
-			'class' => 'firstName singleLineText',
+			'class' => 'firstName singleLineText form-control',
 			'placeholder' => 'First Name',
 			'value' => $this->initialValues['firstName'],
 		));
@@ -70,13 +70,13 @@ class JFormComponentName extends JFormComponent {
 
 		// Add the middle initial input tag
 		$middleInitialDiv = new JFormElement('div', array(
-			'class' => 'middleInitialDiv',
+			'class' => 'middleInitialDiv form-group',
 		));
 		$middleInitial = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-middleInitial',
 			'name' => $this->name.'-middleInitial',
-			'class' => 'middleInitial singleLineText',
+			'class' => 'middleInitial singleLineText form-control',
 			'maxlength' => '1',
 			'value' => (isset($this->initialValues['middleInitial']) ? $this->initialValues['middleInitial'] : ''),
 		));
@@ -85,17 +85,17 @@ class JFormComponentName extends JFormComponent {
 			$middleInitialDiv->setAttribute('style', 'display: none;');
 		}
 		$middleInitialDiv->insert($middleInitial);
-		
+
 
 		// Add the last name input tag
 		$lastNameDiv = new JFormElement('div', array(
-			'class' => 'lastNameDiv',
+			'class' => 'lastNameDiv form-group',
 		));
 		$lastName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-lastName',
 			'name' => $this->name.'-lastName',
-			'class' => 'lastName singleLineText',
+			'class' => 'lastName singleLineText form-control',
 			'placeholder' => 'Last Name',
 			'value' => $this->initialValues['lastName'],
 		));
@@ -121,13 +121,13 @@ class JFormComponentName extends JFormComponent {
 				}
 			}
 		}
-			
+
 		if($this->showSublabels) {
 			$firstNameDiv->insert('<div class="jFormComponentSublabel"><p>First Name</p></div>');
 			$middleInitialDiv->insert('<div class="jFormComponentSublabel"><p>MI</p></div>');
 			$lastNameDiv->insert('<div class="jFormComponentSublabel"><p>Last Name</p></div>');
 		}
-		
+
 		$div->insert($firstNameDiv);
 		$div->insert($middleInitialDiv);
 		$div->insert($lastNameDiv);

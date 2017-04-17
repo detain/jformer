@@ -136,7 +136,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 
 	public function blank($options) {
 		$messageArray = array('Must be blank.');
-		return strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
+		return mb_strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
 	}
 
 	public function canadianPostal($options) {
@@ -253,8 +253,8 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function length($options) {
-		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.strlen($options['value']).' characters.');
-		return strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
+		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		return mb_strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function matches($options) {
@@ -268,8 +268,8 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function maxLength($options) {
-		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
-		return strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
+		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		return mb_strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function maxFloat($options) {
@@ -283,8 +283,8 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function minLength($options) {
-		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
-		return strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
+		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		return mb_strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function minValue($options) {

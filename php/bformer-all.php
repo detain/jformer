@@ -2347,7 +2347,7 @@ class JFormComponentCreditCard extends JFormComponent {
             if(preg_match('/[^\d]/', $options['value']->cardNumber)) {
                 array_push($errorMessageArray, array('Card number may only contain numbers.'));
             }
-            if(strlen($options['value']->cardNumber) > 16 || strlen($options['value']->cardNumber) < 13) {
+            if(mb_strlen($options['value']->cardNumber) > 16 || mb_strlen($options['value']->cardNumber) < 13) {
                 array_push($errorMessageArray, array('Card number must contain 13 to 16 digits.'));
             }
         }
@@ -2364,7 +2364,7 @@ class JFormComponentCreditCard extends JFormComponent {
             if(preg_match('/[^\d]/', $options['value']->securityCode)) {
                 array_push($errorMessageArray, array('Security code may only contain numbers.'));
             }
-            if(strlen($options['value']->securityCode) > 4 || strlen($options['value']->securityCode) < 3) {
+            if(mb_strlen($options['value']->securityCode) > 4 || mb_strlen($options['value']->securityCode) < 3) {
                 array_push($errorMessageArray, array('Security code must contain 3 or 4 digits.'));
             }
         }
@@ -3376,7 +3376,7 @@ class JFormComponentName extends JFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'jFormComponentName';
+		$this->class = 'jFormComponentName form-group';
 
 		// Input options
 		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
@@ -3418,14 +3418,14 @@ class JFormComponentName extends JFormComponent {
 
 
 		$firstNameDiv = new JFormElement('div', array(
-			'class' => 'firstNameDiv',
+			'class' => 'firstNameDiv form-group',
 		));
 		// Add the first name input tag
 		$firstName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-firstName',
 			'name' => $this->name.'-firstName',
-			'class' => 'firstName singleLineText',
+			'class' => 'firstName singleLineText form-control',
 			'placeholder' => 'First Name',
 			'value' => $this->initialValues['firstName'],
 		));
@@ -3433,13 +3433,13 @@ class JFormComponentName extends JFormComponent {
 
 		// Add the middle initial input tag
 		$middleInitialDiv = new JFormElement('div', array(
-			'class' => 'middleInitialDiv',
+			'class' => 'middleInitialDiv form-group',
 		));
 		$middleInitial = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-middleInitial',
 			'name' => $this->name.'-middleInitial',
-			'class' => 'middleInitial singleLineText',
+			'class' => 'middleInitial singleLineText form-control',
 			'maxlength' => '1',
 			'value' => (isset($this->initialValues['middleInitial']) ? $this->initialValues['middleInitial'] : ''),
 		));
@@ -3448,17 +3448,17 @@ class JFormComponentName extends JFormComponent {
 			$middleInitialDiv->setAttribute('style', 'display: none;');
 		}
 		$middleInitialDiv->insert($middleInitial);
-		
+
 
 		// Add the last name input tag
 		$lastNameDiv = new JFormElement('div', array(
-			'class' => 'lastNameDiv',
+			'class' => 'lastNameDiv form-group',
 		));
 		$lastName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-lastName',
 			'name' => $this->name.'-lastName',
-			'class' => 'lastName singleLineText',
+			'class' => 'lastName singleLineText form-control',
 			'placeholder' => 'Last Name',
 			'value' => $this->initialValues['lastName'],
 		));
@@ -3484,13 +3484,13 @@ class JFormComponentName extends JFormComponent {
 				}
 			}
 		}
-			
+
 		if($this->showSublabels) {
 			$firstNameDiv->insert('<div class="jFormComponentSublabel"><p>First Name</p></div>');
 			$middleInitialDiv->insert('<div class="jFormComponentSublabel"><p>MI</p></div>');
 			$lastNameDiv->insert('<div class="jFormComponentSublabel"><p>Last Name</p></div>');
 		}
-		
+
 		$div->insert($firstNameDiv);
 		$div->insert($middleInitialDiv);
 		$div->insert($lastNameDiv);
@@ -3655,7 +3655,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 
 	public function blank($options) {
 		$messageArray = array('Must be blank.');
-		return strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
+		return mb_strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
 	}
 
 	public function canadianPostal($options) {
@@ -3689,28 +3689,28 @@ class JFormComponentSingleLineText extends JFormComponent {
 		// Must be negative and have a decimal value
 		$messageArray = array('Must be a negative number without any commas. Decimal is optional.');
 		//isDecimal = self.validations.decimal($options);
-		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) < 0)) ? 'success' : $messageArray;
+		return ($this->decimal($options) == 'success' && (floatval($options['value']) < 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalPositive($options) {
 		// Must be positive and have a decimal value
 		$messageArray = array('Must be a positive number without any commas. Decimal is optional.');
 		//isDecimal = self.validations.decimal($options);
-		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) > 0)) ? 'success' : $messageArray;
+		return ($this->decimal($options) == 'success' && (floatval($options['value']) > 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalZeroNegative($options) {
 		// Must be negative and have a decimal value
 		$messageArray = array('Must be zero or a negative number without any commas. Decimal is optional.');
 		//isDecimal = self.validations.decimal($options);
-		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) <= 0)) ? 'success' : $messageArray;
+		return ($this->decimal($options) == 'success' && (floatval($options['value']) <= 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalZeroPositive($options) {
 		// Must be positive and have a decimal value
 		$messageArray = array('Must be zero or a positive number without any commas. Decimal is optional.');
 		//isDecimal = self.validations.decimal($options);
-		return ($this->decimal($optoins) == 'success' && (floatval($options['value']) >= 0)) ? 'success' : $messageArray;
+		return ($this->decimal($options) == 'success' && (floatval($options['value']) >= 0)) ? 'success' : $messageArray;
 	}
 
 	public function email($options) {
@@ -3726,25 +3726,25 @@ class JFormComponentSingleLineText extends JFormComponent {
 	public function integerNegative($options) {
 		$messageArray = array('Must be a negative whole number.');
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
-		return ($this->integer($optoins) && (intval($options['value'], 10) < 0)) ? 'success' : $messageArray;
+		return ($this->integer($options) && (intval($options['value'], 10) < 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerPositive($options) {
 		$messageArray = array('Must be a positive whole number.');
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
-		return ($this->integer($optoins) && (intval($options['value'], 10) > 0)) ? 'success' : $messageArray;
+		return ($this->integer($options) && (intval($options['value'], 10) > 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerZeroNegative($options) {
 		$messageArray = array('Must be zero or a negative whole number.');
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
-		return ($this->integer($optoins) && (intval($options['value'], 10) <= 0)) ? 'success' : $messageArray;
+		return ($this->integer($options) && (intval($options['value'], 10) <= 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerZeroPositive($options) {
 		$messageArray = array('Must be zero or a positive whole number.');
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
-		return ($this->integer($optoins) && (intval($options['value'], 10) >= 0)) ? 'success' : $messageArray;
+		return ($this->integer($options) && (intval($options['value'], 10) >= 0)) ? 'success' : $messageArray;
 	}
 
 	public function isbn($options) {
@@ -3772,8 +3772,8 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function length($options) {
-		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.strlen($options['value']).' characters.');
-		return strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
+		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		return mb_strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function matches($options) {
@@ -3787,8 +3787,8 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function maxLength($options) {
-		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
-		return strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
+		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		return mb_strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function maxFloat($options) {
@@ -3802,8 +3802,8 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function minLength($options) {
-		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.strlen($options['value']).' characters.');
-		return strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
+		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		return mb_strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function minValue($options) {
