@@ -97,7 +97,7 @@ class BFormComponentDropDown extends BFormComponent {
         $select = new BFormElement('select', array(
             'id' => $this->id,
             'name' => $this->name,
-            'class' => $this->class,
+            'class' => $this->class . ' form-control',
         ));
 
         // Only use if disabled is set, otherwise will throw an error
@@ -161,7 +161,7 @@ class BFormComponentDropDown extends BFormComponent {
         }
 
         // Add the select box to the div
-        $div->insert($select);
+        $div->insert('<div class="col-xs-8">'.$select.'</div>');
 
         // Add any description (optional)
         $div = $this->insertComponentDescription($div);

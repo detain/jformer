@@ -237,7 +237,7 @@ abstract class BFormComponent {
         // Div tag contains everything about the component
         $componentDiv = new BFormElement('div', array(
             'id' => $this->id.'-wrapper',
-            'class' => 'bFormComponent '.$this->class,
+            'class' => 'form-group bFormComponent '.$this->class,
         ));
 
         // This causes issues with things that are dependent and should display by default
@@ -268,11 +268,11 @@ abstract class BFormComponent {
         if(empty($this->label)) {
             return '';
         }
-
+	
         $label = new BFormElement('label', array(
             'id' => $this->id.'-label',
             'for' => $this->id,
-            'class' => $this->labelClass
+            'class' => $this->labelClass . ' control-label col-xs-4'
         ));
         $label->update($this->label);
         // Add the required star to the label

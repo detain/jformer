@@ -99,10 +99,11 @@ class BFormComponentSingleLineText extends BFormComponent {
 		if($this->readOnly) {
 			$input->setAttribute('readonly', 'readonly');
 		}
+		$input->addToAttribute('class', ' form-control');
 		if($this->enterSubmits) {
 			$input->addToAttribute('class', ' bFormComponentEnterSubmits');
 		}
-		$div->insert($input);
+		$div->insert('<div class="col-xs-8">'.$input.'</div>');
 
 		if(!empty($this->sublabel)) {
 			$div->insert('<div class="bFormComponentSublabel">'.$this->sublabel.'</div>');
