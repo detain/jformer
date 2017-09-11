@@ -96,9 +96,8 @@ class BFormer {
 
 		// Use the options array to update the form variables
 		if (is_array($optionArray)) {
-			foreach ($optionArray as $option => $value) {
+			foreach ($optionArray as $option => $value)
 				$this->{$option} = $value;
-			}
 		}
 
 		// Set defaults for the page navigator
@@ -111,14 +110,12 @@ class BFormer {
 		}
 
 		// Set defaults for the splash page
-		if (!empty($this->splashPage)) {
+		if (!empty($this->splashPage))
 			$this->splashPageEnabled = true;
-		}
 
 		// Add the pages from the constructor
-		foreach ($bFormPageArray as $bFormPage) {
+		foreach ($bFormPageArray as $bFormPage)
 			$this->addBFormPage($bFormPage);
-		}
 
 		return $this;
 	}
@@ -144,9 +141,8 @@ class BFormer {
 	// Convenience method, no need to create a page or section to get components on the form
 	function addBFormComponent($bFormComponent) {
 		// Create an anonymous page if necessary
-		if (empty($this->bFormPageArray)) {
+		if (empty($this->bFormPageArray))
 			$this->addBFormPage(new BFormPage($this->id . '_page1', array('anonymous' => true)));
-		}
 
 		// Get the first page in the bFormPageArray
 		$currentBFormPage = current($this->bFormPageArray);
@@ -155,9 +151,8 @@ class BFormer {
 		$lastBFormSection = end($currentBFormPage->bFormSectionArray);
 
 		// If the last section exists and is anonymous, add the component to it
-		if (!empty($lastBFormSection) && $lastBFormSection->anonymous) {
+		if (!empty($lastBFormSection) && $lastBFormSection->anonymous)
 			$lastBFormSection->addBFormComponent($bFormComponent);
-		}
 		// If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
 		else {
 			// Create an anonymous section
@@ -171,18 +166,16 @@ class BFormer {
 	}
 
 	function addBFormComponentArray($bFormComponentArray) {
-		foreach ($bFormComponentArray as $bFormComponent) {
+		foreach ($bFormComponentArray as $bFormComponent)
 			$this->addBFormComponent($bFormComponent);
-		}
 		return $this;
 	}
 
 	// Convenience method, no need to create a to get a section on the form
 	function addBFormSection($bFormSection) {
 		// Create an anonymous page if necessary
-		if (empty($this->bFormPageArray)) {
+		if (empty($this->bFormPageArray))
 			$this->addBFormPage(new BFormPage($this->id . '_page1', array('anonymous' => true)));
-		}
 
 		// Get the first page in the bFormPageArray
 		$currentBFormPage = current($this->bFormPageArray);
@@ -215,9 +208,8 @@ class BFormer {
 		$this->validationResponse = array();
 
 		// Validate each page
-		foreach ($this->bFormPageArray as $bFormPage) {
+		foreach ($this->bFormPageArray as $bFormPage)
 			$this->validationResponse[$bFormPage->id] = $bFormPage->validate();
-		}
 		// Walk through all of the pages to see if there are any errors
 		$this->validationPassed = true;
 
@@ -231,14 +223,12 @@ class BFormer {
 							if ($bFormComponentErrorMessageArray != null && array_key_exists(0, $bFormComponentErrorMessageArray) && is_array($bFormComponentErrorMessageArray[0])) {
 								foreach ($bFormComponentErrorMessageArray as $bFormComponentInstanceErrorMessageArray) {
 									// If the first value is not empty, the component did not pass validation
-									if (!empty($bFormComponentInstanceErrorMessageArray[0]) || sizeof($bFormComponentInstanceErrorMessageArray) > 1) {
+									if (!empty($bFormComponentInstanceErrorMessageArray[0]) || sizeof($bFormComponentInstanceErrorMessageArray) > 1)
 										$this->validationPassed = false;
-									}
 								}
 							} else {
-								if (!empty($bFormComponentErrorMessageArray)) {
+								if (!empty($bFormComponentErrorMessageArray))
 									$this->validationPassed = false;
-								}
 							}
 						}
 					}
@@ -250,14 +240,12 @@ class BFormer {
 						if ($bFormComponentErrorMessageArray != null && array_key_exists(0, $bFormComponentErrorMessageArray) && is_array($bFormComponentErrorMessageArray[0])) {
 							foreach ($bFormComponentErrorMessageArray as $bFormComponentInstanceErrorMessageArray) {
 								// If the first value is not empty, the component did not pass validation
-								if (!empty($bFormComponentInstanceErrorMessageArray[0]) || sizeof($bFormComponentInstanceErrorMessageArray) > 1) {
+								if (!empty($bFormComponentInstanceErrorMessageArray[0]) || sizeof($bFormComponentInstanceErrorMessageArray) > 1)
 									$this->validationPassed = false;
-								}
 							}
 						} else {
-							if (!empty($bFormComponentErrorMessageArray)) {
+							if (!empty($bFormComponentErrorMessageArray))
 								$this->validationPassed = false;
-							}
 						}
 					}
 				}
@@ -303,23 +291,20 @@ class BFormer {
 		// Make sure we are always working with an object
 		if (!is_object($formValues)) {
 			$formValues = json_decode(urldecode($formValues));
-			if (!is_object($formValues)) {
+			if (!is_object($formValues))
 				$formValues = json_decode(urldecode(stripslashes($data)));
-			}
 		}
 
 		// Walk through the form object and apply initial values
-		foreach ($formValues as $formPageKey => $formPageData) {
+		foreach ($formValues as $formPageKey => $formPageData)
 			$this->formPageArray[$formPageKey]->setInitialValues($formPageData);
-		}
 	}
 
 	function setData($data, $fileArray = array()) {
 		// Get the form data as an object, handle apache auto-add slashes on post requests
 		$bFormerData = json_decode(urldecode($data));
-		if (!is_object($bFormerData)) {
+		if (!is_object($bFormerData))
 			$bFormerData = json_decode(urldecode(stripslashes($data)));
-		}
 
 		// Clear all of the component values
 		$this->clearData();
@@ -330,9 +315,8 @@ class BFormer {
 		$this->setStatus('processing', 'Setting component values.');
 
 		// Assign all of the received JSON values to the form
-		foreach ($bFormerData as $bFormPageKey => $bFormPageData) {
+		foreach ($bFormerData as $bFormPageKey => $bFormPageData)
 			$this->bFormPageArray[$bFormPageKey]->setData($bFormPageData);
-		}
 
 		// Handle files
 		if (!empty($fileArray)) {
@@ -392,9 +376,8 @@ class BFormer {
 	}
 
 	function clearData() {
-		foreach ($this->bFormPageArray as $bFormPage) {
+		foreach ($this->bFormPageArray as $bFormPage)
 			$bFormPage->clearData();
-		}
 		$this->data = null;
 	}
 
@@ -402,33 +385,28 @@ class BFormer {
 		// Clear all of the components in the form
 		foreach ($this->bFormPageArray as $bFormPage) {
 			foreach ($bFormPage->bFormSectionArray as $bFormSection) {
-				foreach ($bFormSection->bFormComponentArray as $bFormComponent) {
+				foreach ($bFormSection->bFormComponentArray as $bFormComponent)
 					$bFormComponent->value = null;
-				}
 			}
 		}
 	}
 
 	function select($id) {
 		foreach ($this->bFormPageArray as $bFormPageId => &$bFormPage) {
-			if ($id === $bFormPageId) {
+			if ($id === $bFormPageId)
 				return $bFormPage;
-			}
 			foreach ($bFormPage->bFormSectionArray as $bFormSectionId => &$bFormSection) {
-				if ($id === $bFormSectionId) {
+				if ($id === $bFormSectionId)
 					return $bFormSection;
-				}
 				foreach ($bFormSection->bFormComponentArray as $bFormComponentId => &$bFormComponent) {
 					if (is_array($bFormComponent)) {
 						foreach ($bFormComponent as $sectionInstanceComponentId => &$sectionInstanceComponent) {
-							if ($id === $sectionInstanceComponentId) {
+							if ($id === $sectionInstanceComponentId)
 								return $sectionInstanceComponent;
-							}
 						}
 					}
-					if ($id === $bFormComponentId) {
+					if ($id === $bFormComponentId)
 						return $bFormComponent;
-					}
 				}
 			}
 		}
@@ -495,9 +473,8 @@ class BFormer {
 					}
 
 					// Make sure you actually get a callback response
-					if (empty($onSubmitResponse)) {
+					if (empty($onSubmitResponse))
 						$onSubmitErrorMessageArray[] = '<p>The function <b>' . $this->onSubmitFunctionServerSide . '</b> did not return a valid response.</p>';
-					}
 
 					// If there are no errors, it is a successful response
 					if (empty($onSubmitErrorMessageArray)) {
@@ -537,52 +514,39 @@ class BFormer {
 		$options['bFormPages'] = array();
 
 		// Get all of the pages
-		foreach ($this->bFormPageArray as $bFormPage) {
+		foreach ($this->bFormPageArray as $bFormPage)
 			$options['bFormPages'][$bFormPage->id] = $bFormPage->getOptions();
-		}
 
 		// Set form options
-		if (!$this->clientSideValidation) {
+		if (!$this->clientSideValidation)
 			$options['options']['clientSideValidation'] = $this->clientSideValidation;
-		}
-		if ($this->debugMode) {
+		if ($this->debugMode)
 			$options['options']['debugMode'] = $this->debugMode;
-		}
-		if (!$this->validationTips) {
+		if (!$this->validationTips)
 			$options['options']['validationTips'] = $this->validationTips;
-		}
-		if (!$this->setupPageScroller) {
+		if (!$this->setupPageScroller)
 			$options['options']['setupPageScroller'] = $this->setupPageScroller;
-		}
-		if ($this->animationOptions !== null) {
+		if ($this->animationOptions !== null)
 			$options['options']['animationOptions'] = $this->animationOptions;
-		}
-		if ($this->pageNavigatorEnabled) {
+		if ($this->pageNavigatorEnabled)
 			$options['options']['pageNavigator'] = $this->pageNavigator;
-		}
 		if ($this->splashPageEnabled) {
 			$options['options']['splashPage'] = $this->splashPage;
 			unset($options['options']['splashPage']['content']);
 		}
-		if (!empty($this->onSubmitStartClientSide)) {
+		if (!empty($this->onSubmitStartClientSide))
 			$options['options']['onSubmitStart'] = $this->onSubmitStartClientSide;
-		}
-		if (!empty($this->onSubmitFinishClientSide)) {
+		if (!empty($this->onSubmitFinishClientSide))
 			$options['options']['onSubmitFinish'] = $this->onSubmitFinishClientSide;
-		}
-		if (!$this->alertsEnabled) {
+		if (!$this->alertsEnabled)
 			$options['options']['alertsEnabled'] = false;
-		}
-		if ($this->submitButtonText != 'Submit') {
+		if ($this->submitButtonText != 'Submit')
 			$options['options']['submitButtonText'] = $this->submitButtonText;
-		}
-		if ($this->submitProcessingButtonText != 'Processing...') {
+		if ($this->submitProcessingButtonText != 'Processing...')
 			$options['options']['submitProcessingButtonText'] = $this->submitProcessingButtonText;
-		}
 
-		if (empty($options['options'])) {
+		if (empty($options['options']))
 			unset($options['options']);
-		}
 
 		return $options;
 	}
@@ -608,18 +572,15 @@ class BFormer {
 					'class' => $this->class . ' form-'.$this->form_type,
 					'action' => $this->action,
 				));
-		if (!empty($this->onMouseOver)) {
+		if (!empty($this->onMouseOver))
 			$formBFormElement->attr('onmouseover', $this->onMouseOver);
-		}
 
-		if (!empty($this->onMouseOut)) {
+		if (!empty($this->onMouseOut))
 			$formBFormElement->attr('onmouseout', $this->onMouseOut);
-		}
 
 		// Set the style
-		if (!empty($this->style)) {
+		if (!empty($this->style))
 			$bFormElement->addToAttribute('style', $this->style);
-		}
 
 		// Global messages
 		if ($this->alertsEnabled) {
@@ -643,12 +604,10 @@ class BFormer {
 					));
 
 			// Set defaults if they aren't set
-			if (!isset($this->splashPage['content'])) {
+			if (!isset($this->splashPage['content']))
 				$this->splashPage['content'] = '';
-			}
-			if (!isset($this->splashPage['splashButtonText'])) {
+			if (!isset($this->splashPage['splashButtonText']))
 				$this->splashPage['splashButtonText'] = 'Begin';
-			}
 
 			$splashPageDiv->insert('<div class="bFormerSplashPageContent">' . $this->splashPage['content'] . '</div>');
 
@@ -742,9 +701,8 @@ class BFormer {
 			$cancelButton = new BFormElement('button', array('class' => $this->cancelButtonClass));
 			$cancelButton->update($this->cancelButtonText);
 
-			if (!empty($this->cancelButtonOnClick)) {
+			if (!empty($this->cancelButtonOnClick))
 				$cancelButton->attr('onclick', $this->cancelButtonOnClick);
-			}
 
 			$cancelButtonLi->append($cancelButton);
 		}
@@ -760,15 +718,13 @@ class BFormer {
 		$nextButton = new BFormElement('button', array('class' => 'btn btn-primary nextButton'));
 		$nextButton->update($this->submitButtonText);
 		// Don't show the next button
-		if ($this->splashPageEnabled) {
+		if ($this->splashPageEnabled)
 			$nextButtonLi->setAttribute('style', 'display: none;');
-		}
 		$nextButtonLi->insert($nextButton);
 
 		// Add a splash page button if it exists
-		if (isset($splashLi)) {
+		if (isset($splashLi))
 			$bFormerControlUl->insert($splashLi);
-		}
 
 		// Add the previous and next buttons
 		$bFormerControlUl->insert($previousButtonLi);
@@ -790,17 +746,15 @@ class BFormer {
 		$bFormPageScroller = new BFormElement('div', array('class' => 'bFormPageScroller'));
 
 		// Add a splash page if it exists
-		if (isset($splashPageDiv)) {
+		if (isset($splashPageDiv))
 			$bFormPageScroller->insert($splashPageDiv);
-		}
 
 		// Add the form pages to the form
 		$bFormPageCount = 0;
 		foreach ($this->bFormPageArray as $bFormPage) {
 			// Hide everything but the first page
-			if ($bFormPageCount != 0 || ($bFormPageCount == 0 && ($this->splashPageEnabled))) {
+			if ($bFormPageCount != 0 || ($bFormPageCount == 0 && ($this->splashPageEnabled)))
 				$bFormPage->style .= 'display: none;';
-			}
 
 			$bFormPageScroller->insert($bFormPage);
 			$bFormPageCount++;
@@ -834,9 +788,8 @@ class BFormer {
 						//'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
 				));
 
-		if ($this->debugMode) {
+		if ($this->debugMode)
 			$iframe->addToAttribute('style', 'display:block;');
-		}
 
 		$bFormElement->insert($iframe);
 
@@ -854,7 +807,6 @@ class BFormer {
 }
 
 // Handle any requests that come to this file
-if (isset($_GET['iframe'])) {
+if (isset($_GET['iframe']))
 	echo '';
-}
 ?>

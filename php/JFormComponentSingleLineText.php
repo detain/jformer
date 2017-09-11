@@ -388,9 +388,8 @@ class BFormComponentSingleLineText extends BFormComponent {
 			curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
 			if ($postData != null) {
 				foreach ($postData as $key => &$value) {
-					if (is_object($value) || is_array($value)) {
+					if (is_object($value) || is_array($value))
 						$value = json_encode($value);
-					}
 				}
 				curl_setopt($curlHandler, CURLOPT_POSTFIELDS, $postData);
 			}
