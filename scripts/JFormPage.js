@@ -1,9 +1,9 @@
 /**
- * bFormPage handles all functions on the page level, including page validation.
+ * jFormPage handles all functions on the page level, including page validation.
  *
  */
-BFormPage = Class.extend({
-    init: function(bFormer, pageId, options) {
+JFormPage = Class.extend({
+    init: function(jFormer, pageId, options) {
         this.options = $.extend({
             dependencyOptions: null,
             onScrollTo: {
@@ -24,10 +24,10 @@ BFormPage = Class.extend({
         }
 
         // Class variables
-        this.bFormer = bFormer;
+        this.jFormer = jFormer;
         this.id = pageId;
         this.page = $('#'+pageId);
-        this.bFormSections = {};
+        this.jFormSections = {};
         this.formData = {};
         this.active = false;
         this.validationPassed = null;
@@ -35,7 +35,7 @@ BFormPage = Class.extend({
     },
 
     addSection: function(section) {
-        this.bFormSections[section.id] = section;
+        this.jFormSections[section.id] = section;
         return this;
     },
 
@@ -49,8 +49,8 @@ BFormPage = Class.extend({
         }
         else {
             this.formData = {};
-            $.each(this.bFormSections, function(bFormSectionKey, bFormSection) {
-                self.formData[bFormSectionKey] = bFormSection.getData();
+            $.each(this.jFormSections, function(jFormSectionKey, jFormSection) {
+                self.formData[jFormSectionKey] = jFormSection.getData();
             });
         }
 
@@ -60,8 +60,8 @@ BFormPage = Class.extend({
     setData: function(data) {
         var self = this;
         $.each(data, function(key, values) {
-            if(self.bFormSections[key] != undefined){
-                self.bFormSections[key].setData(values);
+            if(self.jFormSections[key] != undefined){
+                self.jFormSections[key].setData(values);
             } else {
                 data[key] = undefined;
             }
@@ -81,10 +81,10 @@ BFormPage = Class.extend({
         var each = $.each;
         
         self.validationPassed = true;
-        each(this.bFormSections, function(sectionKey, section) {
+        each(this.jFormSections, function(sectionKey, section) {
            each(section.instanceArray, function(instanceIndex, sectionInstance){
-                each(sectionInstance.bFormComponents, function(componentKey, component) {
-                    if(component.type == 'BFormComponentLikert'){
+                each(sectionInstance.jFormComponents, function(componentKey, component) {
+                    if(component.type == 'JFormComponentLikert'){
                         return;
                     }
                     each(component.instanceArray, function(instanceIndex, instance) {
@@ -98,10 +98,10 @@ BFormPage = Class.extend({
         });
 
         if(self.validationPassed) {
-            $('#navigatePage'+(self.bFormer.currentBFormPageIdArrayIndex + 1)).removeClass('bFormPageNavigatorLinkWarning');
+            $('#navigatePage'+(self.jFormer.currentJFormPageIdArrayIndex + 1)).removeClass('jFormPageNavigatorLinkWarning');
         }
         else if(!silent) {
-            if(this.id === this.bFormer.currentBFormPage.id){
+            if(this.id === this.jFormer.currentJFormPage.id){
                 this.focusOnFirstFailedComponent();
             }
         }
@@ -110,7 +110,7 @@ BFormPage = Class.extend({
     },
 
     clearValidation: function() {
-        $.each(this.bFormSections, function(sectionKey, section) {
+        $.each(this.jFormSections, function(sectionKey, section) {
             section.clearValidation();
         });
     },
@@ -118,9 +118,9 @@ BFormPage = Class.extend({
     focusOnFirstFailedComponent: function() {
         var each = $.each,
         validationPassed = true;
-        each(this.bFormSections, function(sectionLabel, section){
+        each(this.jFormSections, function(sectionLabel, section){
             each(section.instanceArray, function(sectionInstanceIndex, sectionInstance){
-                each(sectionInstance.bFormComponents, function(componentLabel, component){
+                each(sectionInstance.jFormComponents, function(componentLabel, component){
                     each(component.instanceArray, function(instanceLabel, instance){
                         if(!instance.validationPassed || instance.errorMessageArray.length > 0){
                             var offset = instance.component.offset().top - 30;
@@ -150,26 +150,26 @@ BFormPage = Class.extend({
     },
 
     scrollTo: function(options) {
-        this.bFormer.scrollToPage(this.id, options);
+        this.jFormer.scrollToPage(this.id, options);
         return this;
     },
 
     show: function(){
-        if(this.page.hasClass('bFormPageInactive')){
-            this.page.removeClass('bFormPageInactive');
+        if(this.page.hasClass('jFormPageInactive')){
+            this.page.removeClass('jFormPageInactive');
         }
     },
 
     hide:function() {
         if(!this.active){
-            this.page.addClass('bFormPageInactive');
+            this.page.addClass('jFormPageInactive');
         }
     },
 
     disableByDependency: function(disable) {
         // If the condition is different then the current condition
         if(this.disabledByDependency !== disable) {
-            var pageIndex = $.inArray(this.id, this.bFormer.bFormPageIdArray);
+            var pageIndex = $.inArray(this.id, this.jFormer.jFormPageIdArray);
 
             // Disable the page
             if(disable === true) {
@@ -177,17 +177,17 @@ BFormPage = Class.extend({
                 this.page.hide();
 
                 // Update the page navigator appropriately
-                if(this.bFormer.options.pageNavigator !== false) {
+                if(this.jFormer.options.pageNavigator !== false) {
                     // Hide the page link
                     if(this.options.dependencyOptions.display == 'hide') {
                         $('#navigatePage'+(pageIndex+1)).hide();
 
                         // Renumber appropriately
-                        this.bFormer.renumberPageNavigator();
+                        this.jFormer.renumberPageNavigator();
                     }
                     // Lock the page link
                     else {
-                        $('#navigatePage'+(pageIndex+1)).addClass('bFormPageNavigatorLinkDependencyLocked').find('span').html('&nbsp;');
+                        $('#navigatePage'+(pageIndex+1)).addClass('jFormPageNavigatorLinkDependencyLocked').find('span').html('&nbsp;');
                     }
                 }
             }
@@ -197,24 +197,24 @@ BFormPage = Class.extend({
                  this.page.show();
 
                 // Update the page navigator appropriately
-                if(this.bFormer.options.pageNavigator !== false) {
+                if(this.jFormer.options.pageNavigator !== false) {
                     // Show the page link
                     if(this.options.dependencyOptions.display == 'hide') {
                         $('#navigatePage'+(pageIndex+1)).show();
                     }
                     // Unlock the page link
                     else {
-                        $('#navigatePage'+(pageIndex+1)).removeClass('bFormPageNavigatorLinkDependencyLocked');
+                        $('#navigatePage'+(pageIndex+1)).removeClass('jFormPageNavigatorLinkDependencyLocked');
                     }
 
                     // Renumber the existing links
-                    this.bFormer.renumberPageNavigator();
+                    this.jFormer.renumberPageNavigator();
                  }
 
              }
 
             this.disabledByDependency = disable;
-            this.bFormer.setupControl();
+            this.jFormer.setupControl();
         }
     },
 
@@ -230,8 +230,8 @@ BFormPage = Class.extend({
     },
 
     checkChildrenDependencies: function() {
-        $.each(this.bFormSections, function(bFormSectionKey, bFormSection) {
-            bFormSection.checkDependencies();
+        $.each(this.jFormSections, function(jFormSectionKey, jFormSection) {
+            jFormSection.checkDependencies();
         });
     }
 });

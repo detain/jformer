@@ -2,23 +2,23 @@
 
 $php = '';
 
-$php .= file_get_contents('BFormElement.php');
-$php .= file_get_contents('BFormer.php');
-$php .= file_get_contents('BFormPage.php');
-$php .= file_get_contents('BFormSection.php');
-$php .= file_get_contents('BFormComponent.php');
-$php .= file_get_contents('BFormComponentAddress.php');
-$php .= file_get_contents('BFormComponentCreditCard.php');
-$php .= file_get_contents('BFormComponentDate.php');
-$php .= file_get_contents('BFormComponentDropDown.php');
-$php .= file_get_contents('BFormComponentFile.php');
-$php .= file_get_contents('BFormComponentHidden.php');
-$php .= file_get_contents('BFormComponentHtml.php');
-$php .= file_get_contents('BFormComponentLikert.php');
-$php .= file_get_contents('BFormComponentMultipleChoice.php');
-$php .= file_get_contents('BFormComponentName.php');
-$php .= file_get_contents('BFormComponentSingleLineText.php');
-$php .= file_get_contents('BFormComponentTextArea.php');
+$php .= file_get_contents('JFormElement.php');
+$php .= file_get_contents('JFormer.php');
+$php .= file_get_contents('JFormPage.php');
+$php .= file_get_contents('JFormSection.php');
+$php .= file_get_contents('JFormComponent.php');
+$php .= file_get_contents('JFormComponentAddress.php');
+$php .= file_get_contents('JFormComponentCreditCard.php');
+$php .= file_get_contents('JFormComponentDate.php');
+$php .= file_get_contents('JFormComponentDropDown.php');
+$php .= file_get_contents('JFormComponentFile.php');
+$php .= file_get_contents('JFormComponentHidden.php');
+$php .= file_get_contents('JFormComponentHtml.php');
+$php .= file_get_contents('JFormComponentLikert.php');
+$php .= file_get_contents('JFormComponentMultipleChoice.php');
+$php .= file_get_contents('JFormComponentName.php');
+$php .= file_get_contents('JFormComponentSingleLineText.php');
+$php .= file_get_contents('JFormComponentTextArea.php');
 
 $php = str_ireplace('?>', '', $php);
 $php = str_ireplace('<?php', '', $php);

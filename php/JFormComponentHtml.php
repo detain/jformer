@@ -1,5 +1,5 @@
 <?php
-class BFormComponentHtml extends BFormComponent {
+class JFormComponentHtml extends JFormComponent {
     var $html;
 
     function __construct($html) {

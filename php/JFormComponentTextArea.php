@@ -1,6 +1,6 @@
 <?php
 
-class BFormComponentTextArea extends BFormComponent {
+class JFormComponentTextArea extends JFormComponent {
     /*
      * Constructor
      */
@@ -9,7 +9,7 @@ class BFormComponentTextArea extends BFormComponent {
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
-        $this->class = 'bFormComponentTextArea';
+        $this->class = 'jFormComponentTextArea';
         $this->inputClass = 'textArea';
         $this->widthArray = array('shortest' => '5em', 'short' => '10em', 'medium' => '20em', 'long' => '30em', 'longest' => '40em');
         $this->heightArray = array('short' => '6em', 'medium' => '12em', 'tall' => '18em');
@@ -64,7 +64,7 @@ class BFormComponentTextArea extends BFormComponent {
         $div = $this->generateComponentDiv();
 
         // Add the input tag
-        $textArea = new BFormElement('textarea', array(
+        $textArea = new JFormElement('textarea', array(
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->inputClass,

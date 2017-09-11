@@ -1,6 +1,6 @@
-BFormComponentName = BFormComponent.extend({
-    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
-        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
+JFormComponentName = JFormComponent.extend({
+    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
+        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
     },
 
     initialize: function(){
@@ -49,7 +49,7 @@ BFormComponentName = BFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
            return null;
         }
         var name = {},
@@ -74,7 +74,7 @@ BFormComponentName = BFormComponent.extend({
     },
 
     validate: function(){
-        if(!this.parentBFormSection.parentBFormPage.bFormer.options.clientSideValidation) {
+        if(!this.parentJFormSection.parentJFormPage.jFormer.options.clientSideValidation) {
             return;
         }
 
@@ -84,7 +84,7 @@ BFormComponentName = BFormComponent.extend({
         }
         
         setTimeout(function() {
-            if(!self.component.hasClass('bFormComponentHighlight')){
+            if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){
                     return true;
                 }

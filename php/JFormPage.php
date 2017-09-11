@@ -3,25 +3,25 @@
 /**
  * A FormPage object contains FormSection objects and belongs to a Form object
  */
-class BFormPage {
+class JFormPage {
     
     // General settings
     var $id;
-    var $class = 'bFormPage';
+    var $class = 'jFormPage';
     var $style = '';
-    var $bFormer;
-    var $bFormSectionArray = array();
+    var $jFormer;
+    var $jFormSectionArray = array();
     var $onBeforeScrollTo; // array('function', 'notificationHtml')
     var $data;
     var $anonymous = false;
 
     // Title, description, submit instructions
     var $title = '';
-    var $titleClass = 'bFormPageTitle';
+    var $titleClass = 'jFormPageTitle';
     var $description = '';
-    var $descriptionClass = 'bFormPageDescription';
+    var $descriptionClass = 'jFormPageDescription';
     var $submitInstructions = '';
-    var $submitInstructionsClass = 'bFormPageSubmitInstructions';
+    var $submitInstructionsClass = 'jFormPageSubmitInstructions';
 
     // Validation
     var $errorMessageArray = array();
@@ -32,7 +32,7 @@ class BFormPage {
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $bFormSectionArray = array()) {
+    function __construct($id, $optionArray = array(), $jFormSectionArray = array()) {
         // Set the id
         $this->id = $id;
 
@@ -44,80 +44,80 @@ class BFormPage {
         }
 
         // Add the sections from the constructor
-        foreach($bFormSectionArray as $bFormSection) {
-            $this->addBFormSection($bFormSection);
+        foreach($jFormSectionArray as $jFormSection) {
+            $this->addJFormSection($jFormSection);
         }
 
         return $this;
     }
 
-    function addBFormSection($bFormSection) {
-        $bFormSection->parentBFormPage = $this;
-        $this->bFormSectionArray[$bFormSection->id] = $bFormSection;
+    function addJFormSection($jFormSection) {
+        $jFormSection->parentJFormPage = $this;
+        $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
 
-    function addBFormSections($bFormSections) {
-        if (is_array($bFormSections)) {
-            foreach ($bFormSections as $bFormSection) {
-                $bFormSection->parentBFormPage = $this;
-                $this->bFormSectionArray[$bFormSection->id] = $bFormSection;
+    function addJFormSections($jFormSections) {
+        if (is_array($jFormSections)) {
+            foreach ($jFormSections as $jFormSection) {
+                $jFormSection->parentJFormPage = $this;
+                $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
             }
         }
-        $bFormSection->parentBFormPage = $this;
-        $this->bFormSectionArray[$bFormSection->id] = $bFormSection;
+        $jFormSection->parentJFormPage = $this;
+        $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
     
     // Convenience method, no need to create a section to get components on the page
-    function addBFormComponent($bFormComponent) {
+    function addJFormComponent($jFormComponent) {
         // Create an anonymous section if necessary
-        if(empty($this->bFormSectionArray)) {
-            $this->addBFormSection(new BFormSection($this->id.'_section1', array('anonymous' => true)));
+        if(empty($this->jFormSectionArray)) {
+            $this->addJFormSection(new JFormSection($this->id.'_section1', array('anonymous' => true)));
         }
 
         // Get the last section in the page
-        $lastBFormSection = end($this->bFormSectionArray);
+        $lastJFormSection = end($this->jFormSectionArray);
 
         // If the last section exists and is anonymous, add the component to it
-        if(!empty($lastBFormSection) && $lastBFormSection->anonymous) {
-            $lastBFormSection->addBFormComponent($bFormComponent);
+        if(!empty($lastJFormSection) && $lastJFormSection->anonymous) {
+            $lastJFormSection->addJFormComponent($jFormComponent);
         }
         // If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
         else {
             // Create an anonymous section
-            $anonymousSection = new BFormSection($this->id.'_section'.(sizeof($this->bFormSectionArray) + 1), array('anonymous' => true));
+            $anonymousSection = new JFormSection($this->id.'_section'.(sizeof($this->jFormSectionArray) + 1), array('anonymous' => true));
 
             // Add the anonymous section to the page
-            $this->addBFormSection($anonymousSection->addBFormComponent($bFormComponent));
+            $this->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
         }
 
         return $this;
     }
-    function addBFormComponentArray($bFormComponentArray) {
-        foreach($bFormComponentArray as $bFormComponent) {
-            $this->addBFormComponent($bFormComponent);
+    function addJFormComponentArray($jFormComponentArray) {
+        foreach($jFormComponentArray as $jFormComponent) {
+            $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
     function getData() {
         $this->data = array();
-        foreach($this->bFormSectionArray as $bFormSectionKey => $bFormSection) {
-            $this->data[$bFormSectionKey] = $bFormSection->getData();
+        foreach($this->jFormSectionArray as $jFormSectionKey => $jFormSection) {
+            $this->data[$jFormSectionKey] = $jFormSection->getData();
         }
         return $this->data;
     }
 
-    function setData($bFormPageData) {
-        foreach($bFormPageData as $bFormSectionKey => $bFormSectionData) {
-            $this->bFormSectionArray[$bFormSectionKey]->setData($bFormSectionData);
+    function setData($jFormPageData) {
+        foreach($jFormPageData as $jFormSectionKey => $jFormSectionData) {
+            $this->jFormSectionArray[$jFormSectionKey]->setData($jFormSectionData);
         }
     }
 
     function clearData() {
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $bFormSection->clearData();
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $jFormSection->clearData();
         }
         $this->data = null;
     }
@@ -127,8 +127,8 @@ class BFormPage {
         $this->errorMessageArray = array();
 
         // Validate each section
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $this->errorMessageArray[$bFormSection->id] = $bFormSection->validate();
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $this->errorMessageArray[$jFormSection->id] = $jFormSection->validate();
         }
 
         return $this->errorMessageArray;
@@ -137,10 +137,10 @@ class BFormPage {
     function getOptions() {
         $options = array();
         $options['options'] = array();
-        $options['bFormSections'] = array();
+        $options['jFormSections'] = array();
 
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $options['bFormSections'][$bFormSection->id] = $bFormSection->getOptions();
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $options['jFormSections'][$jFormSection->id] = $jFormSection->getOptions();
         }
 
         if(!empty($this->onScrollTo)) {
@@ -164,8 +164,8 @@ class BFormPage {
     }
 
     function updateRequiredText($requiredText) {
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $bFormSection->updateRequiredText($requiredText);
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $jFormSection->updateRequiredText($requiredText);
         }
     }
 
@@ -175,49 +175,49 @@ class BFormPage {
      */
     function __toString() {
         // Page div
-        $bFormPageDiv = new BFormElement('div', array(
+        $jFormPageDiv = new JFormElement('div', array(
             'id' => $this->id,
             'class' => $this->class
         ));
 
         // Set the styile
         if(!empty($this->style)) {
-            $bFormPageDiv->addToAttribute('style', $this->style);
+            $jFormPageDiv->addToAttribute('style', $this->style);
         }
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new BFormElement('div', array(
+            $title = new JFormElement('div', array(
                 'class' => $this->titleClass
             ));
             $title->update($this->title);
-            $bFormPageDiv->insert($title);
+            $jFormPageDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new BFormElement('div', array(
+            $description = new JFormElement('div', array(
                 'class' => $this->descriptionClass
             ));
             $description->update($this->description);
-            $bFormPageDiv->insert($description);
+            $jFormPageDiv->insert($description);
         }
 
         // Add the form sections to the page
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $bFormPageDiv->insert($bFormSection);
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $jFormPageDiv->insert($jFormSection);
         }
 
         // Submit instructions
         if(!empty($this->submitInstructions)) {
-            $submitInstruction = new BFormElement('div', array(
+            $submitInstruction = new JFormElement('div', array(
                 'class' => $this->submitInstructionsClass
             ));
             $submitInstruction->update($this->submitInstructions);
-            $bFormPageDiv->insert($submitInstruction);
+            $jFormPageDiv->insert($submitInstruction);
         }
 
-        return $bFormPageDiv->__toString();
+        return $jFormPageDiv->__toString();
     }
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-class BFormComponentName extends BFormComponent {
+class JFormComponentName extends JFormComponent {
 	var $middleInitialHidden = false;
 	var $emptyValues = null;
 	var $showSublabels = true;
@@ -13,7 +13,7 @@ class BFormComponentName extends BFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'bFormComponentName form-group';
+		$this->class = 'jFormComponentName form-group';
 
 		// Input options
 		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
@@ -54,11 +54,11 @@ class BFormComponentName extends BFormComponent {
 		$div = $this->generateComponentDiv();
 
 
-		$firstNameDiv = new BFormElement('div', array(
+		$firstNameDiv = new JFormElement('div', array(
 			'class' => 'firstNameDiv form-group',
 		));
 		// Add the first name input tag
-		$firstName = new BFormElement('input', array(
+		$firstName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-firstName',
 			'name' => $this->name.'-firstName',
@@ -69,10 +69,10 @@ class BFormComponentName extends BFormComponent {
 		$firstNameDiv->insert($firstName);
 
 		// Add the middle initial input tag
-		$middleInitialDiv = new BFormElement('div', array(
+		$middleInitialDiv = new JFormElement('div', array(
 			'class' => 'middleInitialDiv form-group',
 		));
-		$middleInitial = new BFormElement('input', array(
+		$middleInitial = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-middleInitial',
 			'name' => $this->name.'-middleInitial',
@@ -88,10 +88,10 @@ class BFormComponentName extends BFormComponent {
 
 
 		// Add the last name input tag
-		$lastNameDiv = new BFormElement('div', array(
+		$lastNameDiv = new JFormElement('div', array(
 			'class' => 'lastNameDiv form-group',
 		));
-		$lastName = new BFormElement('input', array(
+		$lastName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-lastName',
 			'name' => $this->name.'-lastName',
@@ -123,9 +123,9 @@ class BFormComponentName extends BFormComponent {
 		}
 
 		if($this->showSublabels) {
-			$firstNameDiv->insert('<div class="bFormComponentSublabel"><p>First Name</p></div>');
-			$middleInitialDiv->insert('<div class="bFormComponentSublabel"><p>MI</p></div>');
-			$lastNameDiv->insert('<div class="bFormComponentSublabel"><p>Last Name</p></div>');
+			$firstNameDiv->insert('<div class="jFormComponentSublabel"><p>First Name</p></div>');
+			$middleInitialDiv->insert('<div class="jFormComponentSublabel"><p>MI</p></div>');
+			$lastNameDiv->insert('<div class="jFormComponentSublabel"><p>Last Name</p></div>');
 		}
 
 		$div->insert($firstNameDiv);

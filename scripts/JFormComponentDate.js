@@ -1,13 +1,13 @@
-BFormComponentDate = BFormComponent.extend({
-    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
-        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
+JFormComponentDate = JFormComponent.extend({
+    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
+        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
     },
 
     initialize: function() {
         var self = this;
         this.monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         this.addCalendar();
-        this.tipTarget = this.component.find('.bFormComponentDateSelector');
+        this.tipTarget = this.component.find('.jFormComponentDateSelector');
         if(this.tipTarget == undefined){
             this.tipTarget = this.component;
         }
@@ -85,9 +85,9 @@ BFormComponentDate = BFormComponent.extend({
     highlight: function() {
         var self = this
         // Add the highlight class and trigger the highlight
-        this.component.addClass('bFormComponentHighlight').trigger('bFormComponent:highlighted', this.component);
+        this.component.addClass('jFormComponentHighlight').trigger('jFormComponent:highlighted', this.component);
         setTimeout(function(){
-            self.component.trigger('bFormComponent:showTip', self.component);
+            self.component.trigger('jFormComponent:showTip', self.component);
         }, 1);
 
     },
@@ -105,7 +105,7 @@ BFormComponentDate = BFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
            return null;
         }
         var date = {'month': '' , 'day': '', 'year':''};

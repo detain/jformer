@@ -20,7 +20,7 @@
         var wrappedContent = ['<span class="tipArrow"></span><div class="tipContent">',conf.content.html(),'</div>'].join('');
 
         if(conf.persistent){
-            wrappedContent = ['<span class="tipArrow"></span><div class="tipContent">',conf.content.html(),'<span class="bformerTipClose">x</span></div>'].join('');
+            wrappedContent = ['<span class="tipArrow"></span><div class="tipContent">',conf.content.html(),'<span class="jformerTipClose">x</span></div>'].join('');
         }
         else {
             wrappedContent = ['<span class="tipArrow"></span><div class="tipContent">',conf.content.html(),'</div>'].join('');

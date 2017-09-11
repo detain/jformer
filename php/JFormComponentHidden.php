@@ -1,6 +1,6 @@
 <?php
 
-class BFormComponentHidden extends BFormComponent {
+class JFormComponentHidden extends JFormComponent {
     /*
      * Constructor
      */
@@ -8,7 +8,7 @@ class BFormComponentHidden extends BFormComponent {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentHidden';
+        $this->class = 'jFormComponentHidden';
 
         // Initialize the abstract FormComponent object
         $this->initialize($optionArray);
@@ -27,7 +27,7 @@ class BFormComponentHidden extends BFormComponent {
         $div->addToAttribute('style', 'display: none;');
 
         // Input tag
-        $input = new BFormElement('input', array(
+        $input = new JFormElement('input', array(
             'type' => 'hidden',
             'id' => $this->id,
             'name' => $this->name,

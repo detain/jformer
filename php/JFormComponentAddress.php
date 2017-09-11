@@ -1,6 +1,6 @@
 <?php
 
-class BFormComponentAddress extends BFormComponent {
+class JFormComponentAddress extends JFormComponent {
 	var $selectedCountry = null;
 	var $selectedState = null;
 	var $stateDropDown = false;
@@ -17,7 +17,7 @@ class BFormComponentAddress extends BFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'bFormComponentAddress';
+		$this->class = 'jFormComponentAddress';
 		
 		$this->initialValues = array('addressLine1' => '', 'addressLine2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '');
 
@@ -40,7 +40,7 @@ class BFormComponentAddress extends BFormComponent {
 	}
 
 	function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-		$option = new BFormElement('option', array('value' => $optionValue));
+		$option = new JFormElement('option', array('value' => $optionValue));
 		$option->update($optionLabel);
 
 		if($optionSelected) {
@@ -81,10 +81,10 @@ class BFormComponentAddress extends BFormComponent {
 		$componentDiv = $this->generateComponentDiv();
 
 		// Add the Address Line 1 input tag
-		$addressLine1Div = new BFormElement('div', array(
+		$addressLine1Div = new JFormElement('div', array(
 			'class' => 'addressLine1Div',
 		));
-		$addressLine1 = new BFormElement('input', array(
+		$addressLine1 = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-addressLine1',
 			'name' => $this->name.'-addressLine1',
@@ -95,10 +95,10 @@ class BFormComponentAddress extends BFormComponent {
 		$addressLine1Div->insert($addressLine1);
 
 		// Add the Address Line 2 input tag
-		$addressLine2Div = new BFormElement('div', array(
+		$addressLine2Div = new JFormElement('div', array(
 			'class' => 'addressLine2Div',
 		));
-		$addressLine2 = new BFormElement('input', array(
+		$addressLine2 = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-addressLine2',
 			'name' => $this->name.'-addressLine2',
@@ -109,10 +109,10 @@ class BFormComponentAddress extends BFormComponent {
 		$addressLine2Div->insert($addressLine2);
 
 		// Add the city input tag
-		$cityDiv = new BFormElement('div', array(
+		$cityDiv = new JFormElement('div', array(
 			'class' => 'cityDiv',
 		));
-		$city = new BFormElement('input', array(
+		$city = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-city',
 			'name' => $this->name.'-city',
@@ -124,18 +124,18 @@ class BFormComponentAddress extends BFormComponent {
 		$cityDiv->insert($city);
 
 		// Add the State input tag
-		$stateDiv = new BFormElement('div', array(
+		$stateDiv = new JFormElement('div', array(
 			'class' => 'stateDiv',
 		));
 		if($this->stateDropDown){
-			$state = new BFormElement('select', array(
+			$state = new JFormElement('select', array(
 				'id' => $this->id.'-state',
 				'name' => $this->name.'-state',
 				'class' => 'state',
 				'value' => $this->initialValues['state'],
 			));
 			// Add any options that are not in an opt group to the select
-			foreach(BFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
+			foreach(JFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
 				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
 				$optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
 				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
@@ -146,7 +146,7 @@ class BFormComponentAddress extends BFormComponent {
 			}
 		}
 		else {
-			$state = new BFormElement('input', array(
+			$state = new JFormElement('input', array(
 				'type' => 'text',
 				'id' => $this->id.'-state',
 				'name' => $this->name.'-state',
@@ -158,10 +158,10 @@ class BFormComponentAddress extends BFormComponent {
 		$stateDiv->insert($state);
 
 		// Add the Zip input tag
-		$zipDiv = new BFormElement('div', array(
+		$zipDiv = new JFormElement('div', array(
 			'class' => 'zipDiv',
 		));
-		$zip = new BFormElement('input', array(
+		$zip = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-zip',
 			'name' => $this->name.'-zip',
@@ -173,12 +173,12 @@ class BFormComponentAddress extends BFormComponent {
 		$zipDiv->insert($zip);
 
 		// Add the country input tag
-		$countryDiv = new BFormElement('div', array(
+		$countryDiv = new JFormElement('div', array(
 			'class' => 'countryDiv',
 		));
 		// Don't built a select list if you are United States only
 		if($this->unitedStatesOnly) {
-			$country = new BFormElement('input', array(
+			$country = new JFormElement('input', array(
 				'type' => 'hidden',
 				'id' => $this->id.'-country',
 				'name' => $this->name.'-country',
@@ -188,14 +188,14 @@ class BFormComponentAddress extends BFormComponent {
 			));
 		}
 		else {
-			$country = new BFormElement('select', array(
+			$country = new JFormElement('select', array(
 				'id' => $this->id.'-country',
 				'name' => $this->name.'-country',
 				'class' => 'country',
 				'value' => $this->initialValues['country'],
 			));
 			// Add any options that are not in an opt group to the select
-			foreach(BFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
+			foreach(JFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
 				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
 				$optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
 				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
@@ -239,25 +239,25 @@ class BFormComponentAddress extends BFormComponent {
 
 		// Put the sublabels in if the option allows for it
 		if($this->showSublabels) {
-			$addressLine1Div->insert('<div class="bFormComponentSublabel"><p>Street Address</p></div>');
-			$addressLine2Div->insert('<div class="bFormComponentSublabel"><p>Address Line 2</p></div>');
-			$cityDiv->insert('<div class="bFormComponentSublabel"><p>City</p></div>');
+			$addressLine1Div->insert('<div class="jFormComponentSublabel"><p>Street Address</p></div>');
+			$addressLine2Div->insert('<div class="jFormComponentSublabel"><p>Address Line 2</p></div>');
+			$cityDiv->insert('<div class="jFormComponentSublabel"><p>City</p></div>');
 
 			if($this->unitedStatesOnly) {
-				$stateDiv->insert('<div class="bFormComponentSublabel"><p>State</p></div>');
+				$stateDiv->insert('<div class="jFormComponentSublabel"><p>State</p></div>');
 			}
 			else {
-				$stateDiv->insert('<div class="bFormComponentSublabel"><p>State / Province / Region</p></div>');
+				$stateDiv->insert('<div class="jFormComponentSublabel"><p>State / Province / Region</p></div>');
 			}
 
 			if($this->unitedStatesOnly) {
-				$zipDiv->insert('<div class="bFormComponentSublabel"><p>Zip Code</p></div>');
+				$zipDiv->insert('<div class="jFormComponentSublabel"><p>Zip Code</p></div>');
 			}
 			else {
-				$zipDiv->insert('<div class="bFormComponentSublabel"><p>Postal / Zip Code</p></div>');
+				$zipDiv->insert('<div class="jFormComponentSublabel"><p>Postal / Zip Code</p></div>');
 			}
 
-			$countryDiv->insert('<div class="bFormComponentSublabel"><p>Country</p></div>');
+			$countryDiv->insert('<div class="jFormComponentSublabel"><p>Country</p></div>');
 		}
 
 		// United States only switch

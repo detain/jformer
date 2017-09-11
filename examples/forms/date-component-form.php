@@ -1,21 +1,21 @@
 <?php
-// Include the bFormer PHP (use an good path in your code)
-if(file_exists('../php/BFormer.php')) {
-    require_once('../php/BFormer.php');
+// Include the jFormer PHP (use an good path in your code)
+if(file_exists('../php/JFormer.php')) {
+    require_once('../php/JFormer.php');
 }
-else if(file_exists('../../php/BFormer.php')) {
-    require_once('../../php/BFormer.php');
+else if(file_exists('../../php/JFormer.php')) {
+    require_once('../../php/JFormer.php');
 }
 
 // Create the form
-$dateComponentForm = new BFormer('dateComponentForm', array(
+$dateComponentForm = new JFormer('dateComponentForm', array(
     'title' => '<h1>Date Component</h1>',
     'submitButtonText' => 'Test',
 ));
 
 // Add components to the form
-$dateComponentForm->addBFormComponentArray(array(
-    new BFormComponentDate('date1', 'Date:', array(
+$dateComponentForm->addJFormComponentArray(array(
+    new JFormComponentDate('date1', 'Date:', array(
         'tip' => '<p>This is a tip on a date component.</p>',
     )),
 ));

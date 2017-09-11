@@ -1,6 +1,6 @@
 <?php
 
-class BFormElement {
+class JFormElement {
     private $type;
     private $unaryTagArray = array('input', 'img', 'hr', 'br', 'meta', 'link');
     private $attributeArray;
@@ -138,22 +138,22 @@ class BFormElement {
 
 
 
-require_once('BFormElement.php');
-require_once('BFormPage.php');
-require_once('BFormSection.php');
-require_once('BFormComponent.php');
-require_once('BFormComponentSingleLineText.php');
-require_once('BFormComponentMultipleChoice.php');
-require_once('BFormComponentDropDown.php');
-require_once('BFormComponentTextArea.php');
-require_once('BFormComponentDate.php');
-require_once('BFormComponentFile.php');
-require_once('BFormComponentName.php');
-require_once('BFormComponentHidden.php');
-require_once('BFormComponentAddress.php');
-require_once('BFormComponentCreditCard.php');
-require_once('BFormComponentLikert.php');
-require_once('BFormComponentHtml.php');
+require_once('JFormElement.php');
+require_once('JFormPage.php');
+require_once('JFormSection.php');
+require_once('JFormComponent.php');
+require_once('JFormComponentSingleLineText.php');
+require_once('JFormComponentMultipleChoice.php');
+require_once('JFormComponentDropDown.php');
+require_once('JFormComponentTextArea.php');
+require_once('JFormComponentDate.php');
+require_once('JFormComponentFile.php');
+require_once('JFormComponentName.php');
+require_once('JFormComponentHidden.php');
+require_once('JFormComponentAddress.php');
+require_once('JFormComponentCreditCard.php');
+require_once('JFormComponentLikert.php');
+require_once('JFormComponentHtml.php');
 
 if (!function_exists('is_empty'))
 {
@@ -169,25 +169,25 @@ if (!function_exists('is_empty'))
 }
 
 
-class BFormer {
+class JFormer {
 
 	// General settings
 	public $id;
-	public $class = 'bFormer container-fluid';
+	public $class = 'jFormer container-fluid';
 	public $action;
 	public $form_type = 'horizontal';
 	public $style;
-	public $bFormPageArray = array();
-	public $bFormerId;
+	public $jFormPageArray = array();
+	public $jFormerId;
 	public $onSubmitFunctionServerSide = 'onSubmit';
 	public $disableAnalytics = false;
 	public $setupPageScroller = true;
 	public $data;
 	// Title, description, and submission button
 	public $title = '';
-	public $titleClass = 'bFormerTitle';
+	public $titleClass = 'jFormerTitle';
 	public $description = '';
-	public $descriptionClass = 'bFormerDescription';
+	public $descriptionClass = 'jFormerDescription';
 	public $submitButtonText = 'Submit';
 	public $submitProcessingButtonText = 'Processing...';
 	public $afterControl = '';
@@ -223,7 +223,7 @@ class BFormer {
 	/**
 	 * Constructor
 	 */
-	function __construct($id, $optionArray = array(), $bFormPageArray = array()) {
+	function __construct($id, $optionArray = array(), $jFormPageArray = array()) {
 		// Set the id
 		$this->id = $id;
 
@@ -252,74 +252,74 @@ class BFormer {
 			$this->splashPageEnabled = true;
 
 		// Add the pages from the constructor
-		foreach ($bFormPageArray as $bFormPage)
-			$this->addBFormPage($bFormPage);
+		foreach ($jFormPageArray as $jFormPage)
+			$this->addJFormPage($jFormPage);
 
 		return $this;
 	}
 
-	function addBFormPage($bFormPage) {
-		$bFormPage->bFormer = $this;
-		$this->bFormPageArray[$bFormPage->id] = $bFormPage;
+	function addJFormPage($jFormPage) {
+		$jFormPage->jFormer = $this;
+		$this->jFormPageArray[$jFormPage->id] = $jFormPage;
 		return $this;
 	}
 
-	function addBFormPages($bFormPages) {
-		if (is_array($bFormPages)) {
-			foreach ($bFormPages as $bFormPage) {
-				$bFormPage->bFormer = $this;
-				$this->bFormPageArray[$bFormPage->id] = $bFormPage;
+	function addJFormPages($jFormPages) {
+		if (is_array($jFormPages)) {
+			foreach ($jFormPages as $jFormPage) {
+				$jFormPage->jFormer = $this;
+				$this->jFormPageArray[$jFormPage->id] = $jFormPage;
 			}
 		}
-		$bFormPage->bFormer = $this;
-		$this->bFormPageArray[$bFormPage->id] = $bFormPage;
+		$jFormPage->jFormer = $this;
+		$this->jFormPageArray[$jFormPage->id] = $jFormPage;
 		return $this;
 	}
 
 	// Convenience method, no need to create a page or section to get components on the form
-	function addBFormComponent($bFormComponent) {
+	function addJFormComponent($jFormComponent) {
 		// Create an anonymous page if necessary
-		if (empty($this->bFormPageArray))
-			$this->addBFormPage(new BFormPage($this->id . '_page1', array('anonymous' => true)));
+		if (empty($this->jFormPageArray))
+			$this->addJFormPage(new JFormPage($this->id . '_page1', array('anonymous' => true)));
 
-		// Get the first page in the bFormPageArray
-		$currentBFormPage = current($this->bFormPageArray);
+		// Get the first page in the jFormPageArray
+		$currentJFormPage = current($this->jFormPageArray);
 
 		// Get the last section in the page
-		$lastBFormSection = end($currentBFormPage->bFormSectionArray);
+		$lastJFormSection = end($currentJFormPage->jFormSectionArray);
 
 		// If the last section exists and is anonymous, add the component to it
-		if (!empty($lastBFormSection) && $lastBFormSection->anonymous)
-			$lastBFormSection->addBFormComponent($bFormComponent);
+		if (!empty($lastJFormSection) && $lastJFormSection->anonymous)
+			$lastJFormSection->addJFormComponent($jFormComponent);
 		// If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
 		else {
 			// Create an anonymous section
-			$anonymousSection = new BFormSection($currentBFormPage->id . '_section' . (sizeof($currentBFormPage->bFormSectionArray) + 1), array('anonymous' => true));
+			$anonymousSection = new JFormSection($currentJFormPage->id . '_section' . (sizeof($currentJFormPage->jFormSectionArray) + 1), array('anonymous' => true));
 
 			// Add the anonymous section to the page
-			$currentBFormPage->addBFormSection($anonymousSection->addBFormComponent($bFormComponent));
+			$currentJFormPage->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
 		}
 
 		return $this;
 	}
 
-	function addBFormComponentArray($bFormComponentArray) {
-		foreach ($bFormComponentArray as $bFormComponent)
-			$this->addBFormComponent($bFormComponent);
+	function addJFormComponentArray($jFormComponentArray) {
+		foreach ($jFormComponentArray as $jFormComponent)
+			$this->addJFormComponent($jFormComponent);
 		return $this;
 	}
 
 	// Convenience method, no need to create a to get a section on the form
-	function addBFormSection($bFormSection) {
+	function addJFormSection($jFormSection) {
 		// Create an anonymous page if necessary
-		if (empty($this->bFormPageArray))
-			$this->addBFormPage(new BFormPage($this->id . '_page1', array('anonymous' => true)));
+		if (empty($this->jFormPageArray))
+			$this->addJFormPage(new JFormPage($this->id . '_page1', array('anonymous' => true)));
 
-		// Get the first page in the bFormPageArray
-		$currentBFormPage = current($this->bFormPageArray);
+		// Get the first page in the jFormPageArray
+		$currentJFormPage = current($this->jFormPageArray);
 
 		// Add the section to the first page
-		$currentBFormPage->addBFormSection($bFormSection);
+		$currentJFormPage->addJFormSection($jFormSection);
 
 		return $this;
 	}
@@ -346,26 +346,26 @@ class BFormer {
 		$this->validationResponse = array();
 
 		// Validate each page
-		foreach ($this->bFormPageArray as $bFormPage)
-			$this->validationResponse[$bFormPage->id] = $bFormPage->validate();
+		foreach ($this->jFormPageArray as $jFormPage)
+			$this->validationResponse[$jFormPage->id] = $jFormPage->validate();
 		// Walk through all of the pages to see if there are any errors
 		$this->validationPassed = true;
 
-		foreach ($this->validationResponse as $bFormPageKey => $bFormPage) {
-			foreach ($bFormPage as $bFormSectionKey => $bFormSection) {
+		foreach ($this->validationResponse as $jFormPageKey => $jFormPage) {
+			foreach ($jFormPage as $jFormSectionKey => $jFormSection) {
 				// If there are section instances
-				if ($bFormSection != null && array_key_exists(0, $bFormSection) && is_array($bFormSection[0])) {
-					foreach ($bFormSection as $bFormSectionInstanceIndex => $bFormSectionInstance) {
-						foreach ($bFormSectionInstance as $bFormComponentKey => $bFormComponentErrorMessageArray) {
+				if ($jFormSection != null && array_key_exists(0, $jFormSection) && is_array($jFormSection[0])) {
+					foreach ($jFormSection as $jFormSectionInstanceIndex => $jFormSectionInstance) {
+						foreach ($jFormSectionInstance as $jFormComponentKey => $jFormComponentErrorMessageArray) {
 							// If there are component instances
-							if ($bFormComponentErrorMessageArray != null && array_key_exists(0, $bFormComponentErrorMessageArray) && is_array($bFormComponentErrorMessageArray[0])) {
-								foreach ($bFormComponentErrorMessageArray as $bFormComponentInstanceErrorMessageArray) {
+							if ($jFormComponentErrorMessageArray != null && array_key_exists(0, $jFormComponentErrorMessageArray) && is_array($jFormComponentErrorMessageArray[0])) {
+								foreach ($jFormComponentErrorMessageArray as $jFormComponentInstanceErrorMessageArray) {
 									// If the first value is not empty, the component did not pass validation
-									if (!empty($bFormComponentInstanceErrorMessageArray[0]) || sizeof($bFormComponentInstanceErrorMessageArray) > 1)
+									if (!empty($jFormComponentInstanceErrorMessageArray[0]) || sizeof($jFormComponentInstanceErrorMessageArray) > 1)
 										$this->validationPassed = false;
 								}
 							} else {
-								if (!empty($bFormComponentErrorMessageArray))
+								if (!empty($jFormComponentErrorMessageArray))
 									$this->validationPassed = false;
 							}
 						}
@@ -373,16 +373,16 @@ class BFormer {
 				}
 				// No section instances
 				else {
-					foreach ($bFormSection as $bFormComponentErrorMessageArray) {
+					foreach ($jFormSection as $jFormComponentErrorMessageArray) {
 						// Component instances
-						if ($bFormComponentErrorMessageArray != null && array_key_exists(0, $bFormComponentErrorMessageArray) && is_array($bFormComponentErrorMessageArray[0])) {
-							foreach ($bFormComponentErrorMessageArray as $bFormComponentInstanceErrorMessageArray) {
+						if ($jFormComponentErrorMessageArray != null && array_key_exists(0, $jFormComponentErrorMessageArray) && is_array($jFormComponentErrorMessageArray[0])) {
+							foreach ($jFormComponentErrorMessageArray as $jFormComponentInstanceErrorMessageArray) {
 								// If the first value is not empty, the component did not pass validation
-								if (!empty($bFormComponentInstanceErrorMessageArray[0]) || sizeof($bFormComponentInstanceErrorMessageArray) > 1)
+								if (!empty($jFormComponentInstanceErrorMessageArray[0]) || sizeof($jFormComponentInstanceErrorMessageArray) > 1)
 									$this->validationPassed = false;
 							}
 						} else {
-							if (!empty($bFormComponentErrorMessageArray))
+							if (!empty($jFormComponentErrorMessageArray))
 								$this->validationPassed = false;
 						}
 					}
@@ -399,17 +399,17 @@ class BFormer {
 	function getData() {
 		$this->data = array();
 
-		foreach ($this->bFormPageArray as $bFormPageKey => $bFormPage) {
-			if (!$bFormPage->anonymous) {
-				$this->data[$bFormPageKey] = $bFormPage->getData();
+		foreach ($this->jFormPageArray as $jFormPageKey => $jFormPage) {
+			if (!$jFormPage->anonymous) {
+				$this->data[$jFormPageKey] = $jFormPage->getData();
 			} else {
-				foreach ($bFormPage->bFormSectionArray as $bFormSectionKey => $bFormSection) {
-					if (!$bFormSection->anonymous) {
-						$this->data[$bFormSectionKey] = $bFormSection->getData();
+				foreach ($jFormPage->jFormSectionArray as $jFormSectionKey => $jFormSection) {
+					if (!$jFormSection->anonymous) {
+						$this->data[$jFormSectionKey] = $jFormSection->getData();
 					} else {
-						foreach ($bFormSection->bFormComponentArray as $bFormComponentKey => $bFormComponent) {
-							if (get_class($bFormComponent) != 'BFormComponentHtml') { // Don't include HTML components
-								$this->data[$bFormComponentKey] = $bFormComponent->getValue();
+						foreach ($jFormSection->jFormComponentArray as $jFormComponentKey => $jFormComponent) {
+							if (get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
+								$this->data[$jFormComponentKey] = $jFormComponent->getValue();
 							}
 						}
 					}
@@ -420,8 +420,8 @@ class BFormer {
 	}
 
 	function updateRequiredText($requiredText) {
-		foreach($this->bFormPageArray as $bFormPage) {
-			$bFormPage->updateRequiredText($requiredText);
+		foreach($this->jFormPageArray as $jFormPage) {
+			$jFormPage->updateRequiredText($requiredText);
 		}
 	}
 
@@ -440,71 +440,71 @@ class BFormer {
 
 	function setData($data, $fileArray = array()) {
 		// Get the form data as an object, handle apache auto-add slashes on post requests
-		$bFormerData = json_decode(urldecode($data));
-		if (!is_object($bFormerData))
-			$bFormerData = json_decode(urldecode(stripslashes($data)));
+		$jFormerData = json_decode(urldecode($data));
+		if (!is_object($jFormerData))
+			$jFormerData = json_decode(urldecode(stripslashes($data)));
 
 		// Clear all of the component values
 		$this->clearData();
 
-		//print_r($bFormerData); exit();
+		//print_r($jFormerData); exit();
 		//print_r($fileArray);
 		// Update the form status
 		$this->setStatus('processing', 'Setting component values.');
 
 		// Assign all of the received JSON values to the form
-		foreach ($bFormerData as $bFormPageKey => $bFormPageData)
-			$this->bFormPageArray[$bFormPageKey]->setData($bFormPageData);
+		foreach ($jFormerData as $jFormPageKey => $jFormPageData)
+			$this->jFormPageArray[$jFormPageKey]->setData($jFormPageData);
 
 		// Handle files
 		if (!empty($fileArray)) {
-			foreach ($fileArray as $bFormComponentId => $fileDataArray) {
-				preg_match('/(-section([0-9])+)?(-instance([0-9])+)?:([A-Za-z0-9_-]+):([A-Za-z0-9_-]+)/', $bFormComponentId, $fileIdInfo);
+			foreach ($fileArray as $jFormComponentId => $fileDataArray) {
+				preg_match('/(-section([0-9])+)?(-instance([0-9])+)?:([A-Za-z0-9_-]+):([A-Za-z0-9_-]+)/', $jFormComponentId, $fileIdInfo);
 
-				$bFormComponentId = str_replace($fileIdInfo[0], '', $bFormComponentId);
-				$bFormPageId = $fileIdInfo[5];
-				$bFormSectionId = $fileIdInfo[6];
+				$jFormComponentId = str_replace($fileIdInfo[0], '', $jFormComponentId);
+				$jFormPageId = $fileIdInfo[5];
+				$jFormSectionId = $fileIdInfo[6];
 
 				// Inside section instances
-				if ($fileIdInfo[1] != null || ($fileIdInfo[1] == null && array_key_exists(0, $this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray))) {
+				if ($fileIdInfo[1] != null || ($fileIdInfo[1] == null && array_key_exists(0, $this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray))) {
 					// section instance
 					// set the instance index
 					if ($fileIdInfo[1] != null) {
-						$bFormSectionInstanceIndex = $fileIdInfo[2] - 1;
+						$jFormSectionInstanceIndex = $fileIdInfo[2] - 1;
 					} else {
 						// prime instance
-						$bFormSectionInstanceIndex = 0;
+						$jFormSectionInstanceIndex = 0;
 					}
 					// check to see if there is a component instance
-					if ($fileIdInfo[3] != null || ($fileIdInfo[3] == null && is_array($this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray[$bFormSectionInstanceIndex][$bFormComponentId]->value))) {
+					if ($fileIdInfo[3] != null || ($fileIdInfo[3] == null && is_array($this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray[$jFormSectionInstanceIndex][$jFormComponentId]->value))) {
 						// set the component instance index inside of a  section instance
 						if ($fileIdInfo[3] == null) {
-							$bFormComponentInstanceIndex = 0;
+							$jFormComponentInstanceIndex = 0;
 						} else {
-							$bFormComponentInstanceIndex = $fileIdInfo[4] - 1;
+							$jFormComponentInstanceIndex = $fileIdInfo[4] - 1;
 						}
 						// set the value with a section and a component instance
-						$this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray[$bFormSectionInstanceIndex][$bFormComponentId]->value[$bFormComponentInstanceIndex] = $fileDataArray;
+						$this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray[$jFormSectionInstanceIndex][$jFormComponentId]->value[$jFormComponentInstanceIndex] = $fileDataArray;
 					} else {
 						// set the value with a section instance
-						$this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray[$bFormSectionInstanceIndex][$bFormComponentId]->value = $fileDataArray;
+						$this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray[$jFormSectionInstanceIndex][$jFormComponentId]->value = $fileDataArray;
 					}
 				}
 
 				// Not section instances
 				else {
 					// has component instances
-					if ($fileIdInfo[3] != null || ($fileIdInfo[3] == null && is_array($this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray[$bFormComponentId]->value))) {
+					if ($fileIdInfo[3] != null || ($fileIdInfo[3] == null && is_array($this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray[$jFormComponentId]->value))) {
 						// set component  instance index
 						if ($fileIdInfo[3] == null) {
-							$bFormComponentInstanceIndex = 0;
+							$jFormComponentInstanceIndex = 0;
 						} else {
-							$bFormComponentInstanceIndex = $fileIdInfo[4] - 1;
+							$jFormComponentInstanceIndex = $fileIdInfo[4] - 1;
 						}
-						$this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray[$bFormComponentId]->value[$bFormComponentInstanceIndex] = $fileDataArray;
+						$this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray[$jFormComponentId]->value[$jFormComponentInstanceIndex] = $fileDataArray;
 					} else {
 						// no instances
-						$this->bFormPageArray[$bFormPageId]->bFormSectionArray[$bFormSectionId]->bFormComponentArray[$bFormComponentId]->value = $fileDataArray;
+						$this->jFormPageArray[$jFormPageId]->jFormSectionArray[$jFormSectionId]->jFormComponentArray[$jFormComponentId]->value = $fileDataArray;
 					}
 				}
 			}
@@ -514,37 +514,37 @@ class BFormer {
 	}
 
 	function clearData() {
-		foreach ($this->bFormPageArray as $bFormPage)
-			$bFormPage->clearData();
+		foreach ($this->jFormPageArray as $jFormPage)
+			$jFormPage->clearData();
 		$this->data = null;
 	}
 
 	function clearAllComponentValues() {
 		// Clear all of the components in the form
-		foreach ($this->bFormPageArray as $bFormPage) {
-			foreach ($bFormPage->bFormSectionArray as $bFormSection) {
-				foreach ($bFormSection->bFormComponentArray as $bFormComponent)
-					$bFormComponent->value = null;
+		foreach ($this->jFormPageArray as $jFormPage) {
+			foreach ($jFormPage->jFormSectionArray as $jFormSection) {
+				foreach ($jFormSection->jFormComponentArray as $jFormComponent)
+					$jFormComponent->value = null;
 			}
 		}
 	}
 
 	function select($id) {
-		foreach ($this->bFormPageArray as $bFormPageId => &$bFormPage) {
-			if ($id === $bFormPageId)
-				return $bFormPage;
-			foreach ($bFormPage->bFormSectionArray as $bFormSectionId => &$bFormSection) {
-				if ($id === $bFormSectionId)
-					return $bFormSection;
-				foreach ($bFormSection->bFormComponentArray as $bFormComponentId => &$bFormComponent) {
-					if (is_array($bFormComponent)) {
-						foreach ($bFormComponent as $sectionInstanceComponentId => &$sectionInstanceComponent) {
+		foreach ($this->jFormPageArray as $jFormPageId => &$jFormPage) {
+			if ($id === $jFormPageId)
+				return $jFormPage;
+			foreach ($jFormPage->jFormSectionArray as $jFormSectionId => &$jFormSection) {
+				if ($id === $jFormSectionId)
+					return $jFormSection;
+				foreach ($jFormSection->jFormComponentArray as $jFormComponentId => &$jFormComponent) {
+					if (is_array($jFormComponent)) {
+						foreach ($jFormComponent as $sectionInstanceComponentId => &$sectionInstanceComponent) {
 							if ($id === $sectionInstanceComponentId)
 								return $sectionInstanceComponent;
 						}
 					}
-					if ($id === $bFormComponentId)
-						return $bFormComponent;
+					if ($id === $jFormComponentId)
+						return $jFormComponent;
 				}
 			}
 		}
@@ -552,22 +552,22 @@ class BFormer {
 	}
 
 	function remove($id) {
-		foreach ($this->bFormPageArray as $bFormPageId => &$bFormPage) {
-			if ($id === $bFormPageId) {
-				$this->bFormPageArray[$bFormPageId] = null;
-				array_filter($this->bFormPageArray);
+		foreach ($this->jFormPageArray as $jFormPageId => &$jFormPage) {
+			if ($id === $jFormPageId) {
+				$this->jFormPageArray[$jFormPageId] = null;
+				array_filter($this->jFormPageArray);
 				return true;
 			}
-			foreach ($bFormPage->bFormSectionArray as $bFormSectionId => &$bFormSection) {
-				if ($id === $bFormSectionId) {
-					$bFormPage->bFormSectionArray[$bFormSectionId] = null;
-					array_filter($bFormPage->bFormSectionArray);
+			foreach ($jFormPage->jFormSectionArray as $jFormSectionId => &$jFormSection) {
+				if ($id === $jFormSectionId) {
+					$jFormPage->jFormSectionArray[$jFormSectionId] = null;
+					array_filter($jFormPage->jFormSectionArray);
 					return true;
 				}
-				foreach ($bFormSection->bFormComponentArray as $bFormComponentId => &$bFormComponent) {
-					if ($id === $bFormComponentId) {
-						$bFormSection->bFormComponentArray[$bFormComponentId] = null;
-						array_filter($bFormSection->bFormComponentArray);
+				foreach ($jFormSection->jFormComponentArray as $jFormComponentId => &$jFormComponent) {
+					if ($id === $jFormComponentId) {
+						$jFormSection->jFormComponentArray[$jFormComponentId] = null;
+						array_filter($jFormSection->jFormComponentArray);
 						return true;
 					}
 				}
@@ -589,14 +589,14 @@ class BFormer {
 		}
 
 		// Are they trying to post something to the form?
-		if (isset($_POST['bFormer']) && $this->id == $_POST['bFormerId'] || isset($_POST['bFormerTask'])) {
+		if (isset($_POST['jFormer']) && $this->id == $_POST['jFormerId'] || isset($_POST['jFormerTask'])) {
 			// Process the form, get the form state, or display the form
-			if (isset($_POST['bFormer'])) {
+			if (isset($_POST['jFormer'])) {
 				//echo json_encode($_POST);
 				$onSubmitErrorMessageArray = array();
 
 				// Set the form components and validate the form
-				$this->setData($_POST['bFormer'], $_FILES);
+				$this->setData($_POST['jFormer'], $_FILES);
 
 				//print_r($this->getData());
 				// Run validation
@@ -633,7 +633,7 @@ class BFormer {
 				exit();
 			}
 			// Get the form's status
-			else if (isset($_POST['bFormerTask']) && $_POST['bFormerTask'] == 'getFormStatus') {
+			else if (isset($_POST['jFormerTask']) && $_POST['jFormerTask'] == 'getFormStatus') {
 				$onSubmitResponse = $this->getStatus();
 				echo json_encode($onSubmitResponse);
 				$this->resetStatus();
@@ -649,11 +649,11 @@ class BFormer {
 	function getOptions() {
 		$options = array();
 		$options['options'] = array();
-		$options['bFormPages'] = array();
+		$options['jFormPages'] = array();
 
 		// Get all of the pages
-		foreach ($this->bFormPageArray as $bFormPage)
-			$options['bFormPages'][$bFormPage->id] = $bFormPage->getOptions();
+		foreach ($this->jFormPageArray as $jFormPage)
+			$options['jFormPages'][$jFormPage->id] = $jFormPage->getOptions();
 
 		// Set form options
 		if (!$this->clientSideValidation)
@@ -702,7 +702,7 @@ class BFormer {
 		$this->updateRequiredText($this->requiredText);
 		// Create the form
 		$target = $this->useIframeTarget ? $this->id . '-iframe' : '';
-		$bFormElement = new BFormElement('form', array(
+		$jFormElement = new JFormElement('form', array(
 					'id' => $this->id,
 					'target' => $target,
 					'enctype' => 'multipart/form-data',
@@ -711,34 +711,34 @@ class BFormer {
 					'action' => $this->action,
 				));
 		if (!empty($this->onMouseOver))
-			$formBFormElement->attr('onmouseover', $this->onMouseOver);
+			$formJFormElement->attr('onmouseover', $this->onMouseOver);
 
 		if (!empty($this->onMouseOut))
-			$formBFormElement->attr('onmouseout', $this->onMouseOut);
+			$formJFormElement->attr('onmouseout', $this->onMouseOut);
 
 		// Set the style
 		if (!empty($this->style))
-			$bFormElement->addToAttribute('style', $this->style);
+			$jFormElement->addToAttribute('style', $this->style);
 
 		// Global messages
 		if ($this->alertsEnabled) {
-			$bFormerAlertWrapperDiv = new BFormElement('div', array(
-						'class' => 'bFormerAlertWrapper',
+			$jFormerAlertWrapperDiv = new JFormElement('div', array(
+						'class' => 'jFormerAlertWrapper',
 						'style' => 'display: none;',
 					));
-			$alertDiv = new BFormElement('div', array(
-						'class' => 'bFormerAlert',
+			$alertDiv = new JFormElement('div', array(
+						'class' => 'jFormerAlert',
 					));
-			$bFormerAlertWrapperDiv->insert($alertDiv);
-			$bFormElement->insert($bFormerAlertWrapperDiv);
+			$jFormerAlertWrapperDiv->insert($alertDiv);
+			$jFormElement->insert($jFormerAlertWrapperDiv);
 		}
 
 		// If a splash is enabled
 		if ($this->splashPageEnabled) {
 			// Create a splash page div
-			$splashPageDiv = new BFormElement('div', array(
+			$splashPageDiv = new JFormElement('div', array(
 						'id' => $this->id . '-splash-page',
-						'class' => 'bFormerSplashPage bFormPage',
+						'class' => 'jFormerSplashPage jFormPage',
 					));
 
 			// Set defaults if they aren't set
@@ -747,12 +747,12 @@ class BFormer {
 			if (!isset($this->splashPage['splashButtonText']))
 				$this->splashPage['splashButtonText'] = 'Begin';
 
-			$splashPageDiv->insert('<div class="bFormerSplashPageContent">' . $this->splashPage['content'] . '</div>');
+			$splashPageDiv->insert('<div class="jFormerSplashPageContent">' . $this->splashPage['content'] . '</div>');
 
 			// Create a splash button if there is no custom button ID
 			if (!isset($this->splashPage['customButtonId'])) {
-				$splashLi = new BFormElement('li', array('class' => 'splashLi'));
-				$splashButton = new BFormElement('button', array('class' => 'splashButton'));
+				$splashLi = new JFormElement('li', array('class' => 'splashLi'));
+				$splashButton = new JFormElement('button', array('class' => 'splashButton'));
 				$splashButton->update($this->splashPage['splashButtonText']);
 				$splashLi->insert($splashButton);
 			}
@@ -760,62 +760,62 @@ class BFormer {
 
 		// Add a title to the form
 		if (!empty($this->title)) {
-			$title = new BFormElement('div', array(
+			$title = new JFormElement('div', array(
 						'class' => $this->titleClass
 					));
 			$title->update($this->title);
-			$bFormElement->insert($title);
+			$jFormElement->insert($title);
 		}
 
 		// Add a description to the form
 		if (!empty($this->description)) {
-			$description = new BFormElement('div', array(
+			$description = new JFormElement('div', array(
 						'class' => $this->descriptionClass
 					));
 			$description->update($this->description);
-			$bFormElement->insert($description);
+			$jFormElement->insert($description);
 		}
 
 		// Add the page navigator if enabled
 		if ($this->pageNavigatorEnabled) {
-			$pageNavigatorDiv = new BFormElement('div', array(
-						'class' => 'bFormPageNavigator',
+			$pageNavigatorDiv = new JFormElement('div', array(
+						'class' => 'jFormPageNavigator',
 					));
 			if (isset($this->pageNavigator['position']) && $this->pageNavigator['position'] == 'right') {
-				$pageNavigatorDiv->addToAttribute('class', ' bFormPageNavigatorRight');
+				$pageNavigatorDiv->addToAttribute('class', ' jFormPageNavigatorRight');
 			} else {
-				$pageNavigatorDiv->addToAttribute('class', ' bFormPageNavigatorTop');
+				$pageNavigatorDiv->addToAttribute('class', ' jFormPageNavigatorTop');
 			}
 
-			$pageNavigatorUl = new BFormElement('ul', array(
+			$pageNavigatorUl = new JFormElement('ul', array(
 					));
 
-			$bFormPageArrayCount = 0;
-			foreach ($this->bFormPageArray as $bFormPageKey => $bFormPage) {
-				$bFormPageArrayCount++;
+			$jFormPageArrayCount = 0;
+			foreach ($this->jFormPageArray as $jFormPageKey => $jFormPage) {
+				$jFormPageArrayCount++;
 
-				$pageNavigatorLabel = new BFormElement('li', array(
-							'id' => 'navigatePage' . $bFormPageArrayCount,
-							'class' => 'bFormPageNavigatorLink',
+				$pageNavigatorLabel = new JFormElement('li', array(
+							'id' => 'navigatePage' . $jFormPageArrayCount,
+							'class' => 'jFormPageNavigatorLink',
 						));
 
 				// If the label is numeric
 				if (isset($this->pageNavigator['label']) && $this->pageNavigator['label'] == 'numeric') {
-					$pageNavigatorLabelText = 'Page ' . $bFormPageArrayCount;
+					$pageNavigatorLabelText = 'Page ' . $jFormPageArrayCount;
 				} else {
 					// Add a link prefix if there is a title
-					if (!empty($bFormPage->title)) {
-						$pageNavigatorLabelText = '<span class="bFormNavigatorLinkPrefix">' . $bFormPageArrayCount . '</span> ' . strip_tags($bFormPage->title);
+					if (!empty($jFormPage->title)) {
+						$pageNavigatorLabelText = '<span class="jFormNavigatorLinkPrefix">' . $jFormPageArrayCount . '</span> ' . strip_tags($jFormPage->title);
 					} else {
-						$pageNavigatorLabelText = 'Page ' . $bFormPageArrayCount;
+						$pageNavigatorLabelText = 'Page ' . $jFormPageArrayCount;
 					}
 				}
 				$pageNavigatorLabel->update($pageNavigatorLabelText);
 
-				if ($bFormPageArrayCount != 1) {
-					$pageNavigatorLabel->addToAttribute('class', ' bFormPageNavigatorLinkLocked');
+				if ($jFormPageArrayCount != 1) {
+					$pageNavigatorLabel->addToAttribute('class', ' jFormPageNavigatorLinkLocked');
 				} else {
-					$pageNavigatorLabel->addToAttribute('class', ' bFormPageNavigatorLinkUnlocked bFormPageNavigatorLinkActive');
+					$pageNavigatorLabel->addToAttribute('class', ' jFormPageNavigatorLinkUnlocked jFormPageNavigatorLinkActive');
 				}
 
 				$pageNavigatorUl->insert($pageNavigatorLabel);
@@ -824,19 +824,19 @@ class BFormer {
 			// Add the page navigator ul to the div
 			$pageNavigatorDiv->insert($pageNavigatorUl);
 
-			$bFormElement->insert($pageNavigatorDiv);
+			$jFormElement->insert($pageNavigatorDiv);
 		}
 
-		// Add the bFormerControl UL
-		$bFormerControlUl = new BFormElement('ul', array(
-					'class' => 'bFormerControl col-xs-offset-4 col-xs-8',
+		// Add the jFormerControl UL
+		$jFormerControlUl = new JFormElement('ul', array(
+					'class' => 'jFormerControl col-xs-offset-4 col-xs-8',
 			'style' => 'list-style-type: none;',
 				));
 
 		// Create the cancel button
 		if ($this->cancelButton) {
-			$cancelButtonLi = new BFormElement('li', array('class' => 'cancelLi'));
-			$cancelButton = new BFormElement('button', array('class' => $this->cancelButtonClass));
+			$cancelButtonLi = new JFormElement('li', array('class' => 'cancelLi'));
+			$cancelButton = new JFormElement('button', array('class' => $this->cancelButtonClass));
 			$cancelButton->update($this->cancelButtonText);
 
 			if (!empty($this->cancelButtonOnClick))
@@ -846,14 +846,14 @@ class BFormer {
 		}
 
 		// Create the previous button
-		$previousButtonLi = new BFormElement('li', array('class' => 'previousLi', 'style' => 'display: none;'));
-		$previousButton = new BFormElement('button', array('class' => 'previousButton'));
+		$previousButtonLi = new JFormElement('li', array('class' => 'previousLi', 'style' => 'display: none;'));
+		$previousButton = new JFormElement('button', array('class' => 'previousButton'));
 		$previousButton->update('Previous');
 		$previousButtonLi->insert($previousButton);
 
 		// Create the next button
-		$nextButtonLi = new BFormElement('li', array('class' => 'nextLi'));
-		$nextButton = new BFormElement('button', array('class' => 'btn btn-primary nextButton'));
+		$nextButtonLi = new JFormElement('li', array('class' => 'nextLi'));
+		$nextButton = new JFormElement('button', array('class' => 'btn btn-primary nextButton'));
 		$nextButton->update($this->submitButtonText);
 		// Don't show the next button
 		if ($this->splashPageEnabled)
@@ -862,66 +862,66 @@ class BFormer {
 
 		// Add a splash page button if it exists
 		if (isset($splashLi))
-			$bFormerControlUl->insert($splashLi);
+			$jFormerControlUl->insert($splashLi);
 
 		// Add the previous and next buttons
-		$bFormerControlUl->insert($previousButtonLi);
+		$jFormerControlUl->insert($previousButtonLi);
 
 		if ($this->cancelButton && $this->cancelButtonLiBeforeNextButtonLi) {
 			echo 'one';
-			$bFormerControlUl->insert($cancelButtonLi);
-			$bFormerControlUl->insert($nextButtonLi);
+			$jFormerControlUl->insert($cancelButtonLi);
+			$jFormerControlUl->insert($nextButtonLi);
 		} else if ($this->cancelButton) {
 			echo 'two';
-			$bFormerControlUl->insert($nextButtonLi);
-			$bFormerControlUl->insert($cancelButtonLi);
+			$jFormerControlUl->insert($nextButtonLi);
+			$jFormerControlUl->insert($cancelButtonLi);
 		} else {
-			$bFormerControlUl->insert($nextButtonLi);
+			$jFormerControlUl->insert($nextButtonLi);
 		}
 
 		// Create the page wrapper and scrollers
-		$bFormPageWrapper = new BFormElement('div', array('class' => 'bFormPageWrapper'));
-		$bFormPageScroller = new BFormElement('div', array('class' => 'bFormPageScroller'));
+		$jFormPageWrapper = new JFormElement('div', array('class' => 'jFormPageWrapper'));
+		$jFormPageScroller = new JFormElement('div', array('class' => 'jFormPageScroller'));
 
 		// Add a splash page if it exists
 		if (isset($splashPageDiv))
-			$bFormPageScroller->insert($splashPageDiv);
+			$jFormPageScroller->insert($splashPageDiv);
 
 		// Add the form pages to the form
-		$bFormPageCount = 0;
-		foreach ($this->bFormPageArray as $bFormPage) {
+		$jFormPageCount = 0;
+		foreach ($this->jFormPageArray as $jFormPage) {
 			// Hide everything but the first page
-			if ($bFormPageCount != 0 || ($bFormPageCount == 0 && ($this->splashPageEnabled)))
-				$bFormPage->style .= 'display: none;';
+			if ($jFormPageCount != 0 || ($jFormPageCount == 0 && ($this->splashPageEnabled)))
+				$jFormPage->style .= 'display: none;';
 
-			$bFormPageScroller->insert($bFormPage);
-			$bFormPageCount++;
+			$jFormPageScroller->insert($jFormPage);
+			$jFormPageCount++;
 		}
 
 		// Page wrapper wrapper
-		$pageWrapperContainer = new BFormElement('div', array('class' => 'bFormWrapperContainer'));
+		$pageWrapperContainer = new JFormElement('div', array('class' => 'jFormWrapperContainer'));
 
-		// Insert the page wrapper and the bFormerControl UL to the form
-		$bFormElement->insert($pageWrapperContainer->insert($bFormPageWrapper->insert($bFormPageScroller) . '<div class="form-group" style="padding-top: 10px;">'.$bFormerControlUl.'</div>'));
+		// Insert the page wrapper and the jFormerControl UL to the form
+		$jFormElement->insert($pageWrapperContainer->insert($jFormPageWrapper->insert($jFormPageScroller) . '<div class="form-group" style="padding-top: 10px;">'.$jFormerControlUl.'</div>'));
 
-		// Create a script tag to initialize bFormer JavaScript
-		$script = new BFormElement('script', array(
+		// Create a script tag to initialize jFormer JavaScript
+		$script = new JFormElement('script', array(
 					'type' => 'text/javascript',
 					'language' => 'javascript'
 				));
 
 		// Update the script tag
-		$script->update('$(document).ready(function () { ' . $this->id . 'Object = new BFormer(\'' . $this->id . '\', ' . json_encode($this->getOptions()) . '); });');
-		$bFormElement->insert($script);
+		$script->update('$(document).ready(function () { ' . $this->id . 'Object = new JFormer(\'' . $this->id . '\', ' . json_encode($this->getOptions()) . '); });');
+		$jFormElement->insert($script);
 
 		// Add a hidden iframe to handle the form posts
-		$iframe = new BFormElement('iframe', array(
+		$iframe = new JFormElement('iframe', array(
 					'id' => $this->id . '-iframe',
 					'name' => $this->id . '-iframe',
-					'class' => 'bFormerIFrame',
+					'class' => 'jFormerIFrame',
 					'frameborder' => 0,
 					'height' => '0px;',
-					'src' => (defined('URLDIR') ? URLDIR : '') . '/js/bformer-detain-git/php/BFormer.php?iframe=true',
+					'src' => (defined('URLDIR') ? URLDIR : '') . '/js/jformer-detain-git/php/JFormer.php?iframe=true',
 					//'src' => '/empty.html',
 						//'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
 				));
@@ -929,17 +929,17 @@ class BFormer {
 		if ($this->debugMode)
 			$iframe->addToAttribute('style', 'display:block;');
 
-		$bFormElement->insert($iframe);
+		$jFormElement->insert($iframe);
 
 
 		// After control
 		if (!empty($this->afterControl)) {
-			$subSubmitInstructions = new BFormElement('div', array('class' => 'bFormerAfterControl'));
+			$subSubmitInstructions = new JFormElement('div', array('class' => 'jFormerAfterControl'));
 			$subSubmitInstructions->update($this->afterControl);
-			$bFormElement->insert($subSubmitInstructions);
+			$jFormElement->insert($subSubmitInstructions);
 		}
 
-		return $bFormElement;
+		return $jFormElement;
 	}
 
 }
@@ -953,25 +953,25 @@ if (isset($_GET['iframe']))
 /**
  * A FormPage object contains FormSection objects and belongs to a Form object
  */
-class BFormPage {
+class JFormPage {
     
     // General settings
     var $id;
-    var $class = 'bFormPage';
+    var $class = 'jFormPage';
     var $style = '';
-    var $bFormer;
-    var $bFormSectionArray = array();
+    var $jFormer;
+    var $jFormSectionArray = array();
     var $onBeforeScrollTo; // array('function', 'notificationHtml')
     var $data;
     var $anonymous = false;
 
     // Title, description, submit instructions
     var $title = '';
-    var $titleClass = 'bFormPageTitle';
+    var $titleClass = 'jFormPageTitle';
     var $description = '';
-    var $descriptionClass = 'bFormPageDescription';
+    var $descriptionClass = 'jFormPageDescription';
     var $submitInstructions = '';
-    var $submitInstructionsClass = 'bFormPageSubmitInstructions';
+    var $submitInstructionsClass = 'jFormPageSubmitInstructions';
 
     // Validation
     var $errorMessageArray = array();
@@ -982,7 +982,7 @@ class BFormPage {
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $bFormSectionArray = array()) {
+    function __construct($id, $optionArray = array(), $jFormSectionArray = array()) {
         // Set the id
         $this->id = $id;
 
@@ -994,80 +994,80 @@ class BFormPage {
         }
 
         // Add the sections from the constructor
-        foreach($bFormSectionArray as $bFormSection) {
-            $this->addBFormSection($bFormSection);
+        foreach($jFormSectionArray as $jFormSection) {
+            $this->addJFormSection($jFormSection);
         }
 
         return $this;
     }
 
-    function addBFormSection($bFormSection) {
-        $bFormSection->parentBFormPage = $this;
-        $this->bFormSectionArray[$bFormSection->id] = $bFormSection;
+    function addJFormSection($jFormSection) {
+        $jFormSection->parentJFormPage = $this;
+        $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
 
-    function addBFormSections($bFormSections) {
-        if (is_array($bFormSections)) {
-            foreach ($bFormSections as $bFormSection) {
-                $bFormSection->parentBFormPage = $this;
-                $this->bFormSectionArray[$bFormSection->id] = $bFormSection;
+    function addJFormSections($jFormSections) {
+        if (is_array($jFormSections)) {
+            foreach ($jFormSections as $jFormSection) {
+                $jFormSection->parentJFormPage = $this;
+                $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
             }
         }
-        $bFormSection->parentBFormPage = $this;
-        $this->bFormSectionArray[$bFormSection->id] = $bFormSection;
+        $jFormSection->parentJFormPage = $this;
+        $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
     
     // Convenience method, no need to create a section to get components on the page
-    function addBFormComponent($bFormComponent) {
+    function addJFormComponent($jFormComponent) {
         // Create an anonymous section if necessary
-        if(empty($this->bFormSectionArray)) {
-            $this->addBFormSection(new BFormSection($this->id.'_section1', array('anonymous' => true)));
+        if(empty($this->jFormSectionArray)) {
+            $this->addJFormSection(new JFormSection($this->id.'_section1', array('anonymous' => true)));
         }
 
         // Get the last section in the page
-        $lastBFormSection = end($this->bFormSectionArray);
+        $lastJFormSection = end($this->jFormSectionArray);
 
         // If the last section exists and is anonymous, add the component to it
-        if(!empty($lastBFormSection) && $lastBFormSection->anonymous) {
-            $lastBFormSection->addBFormComponent($bFormComponent);
+        if(!empty($lastJFormSection) && $lastJFormSection->anonymous) {
+            $lastJFormSection->addJFormComponent($jFormComponent);
         }
         // If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
         else {
             // Create an anonymous section
-            $anonymousSection = new BFormSection($this->id.'_section'.(sizeof($this->bFormSectionArray) + 1), array('anonymous' => true));
+            $anonymousSection = new JFormSection($this->id.'_section'.(sizeof($this->jFormSectionArray) + 1), array('anonymous' => true));
 
             // Add the anonymous section to the page
-            $this->addBFormSection($anonymousSection->addBFormComponent($bFormComponent));
+            $this->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
         }
 
         return $this;
     }
-    function addBFormComponentArray($bFormComponentArray) {
-        foreach($bFormComponentArray as $bFormComponent) {
-            $this->addBFormComponent($bFormComponent);
+    function addJFormComponentArray($jFormComponentArray) {
+        foreach($jFormComponentArray as $jFormComponent) {
+            $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
     function getData() {
         $this->data = array();
-        foreach($this->bFormSectionArray as $bFormSectionKey => $bFormSection) {
-            $this->data[$bFormSectionKey] = $bFormSection->getData();
+        foreach($this->jFormSectionArray as $jFormSectionKey => $jFormSection) {
+            $this->data[$jFormSectionKey] = $jFormSection->getData();
         }
         return $this->data;
     }
 
-    function setData($bFormPageData) {
-        foreach($bFormPageData as $bFormSectionKey => $bFormSectionData) {
-            $this->bFormSectionArray[$bFormSectionKey]->setData($bFormSectionData);
+    function setData($jFormPageData) {
+        foreach($jFormPageData as $jFormSectionKey => $jFormSectionData) {
+            $this->jFormSectionArray[$jFormSectionKey]->setData($jFormSectionData);
         }
     }
 
     function clearData() {
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $bFormSection->clearData();
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $jFormSection->clearData();
         }
         $this->data = null;
     }
@@ -1077,8 +1077,8 @@ class BFormPage {
         $this->errorMessageArray = array();
 
         // Validate each section
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $this->errorMessageArray[$bFormSection->id] = $bFormSection->validate();
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $this->errorMessageArray[$jFormSection->id] = $jFormSection->validate();
         }
 
         return $this->errorMessageArray;
@@ -1087,10 +1087,10 @@ class BFormPage {
     function getOptions() {
         $options = array();
         $options['options'] = array();
-        $options['bFormSections'] = array();
+        $options['jFormSections'] = array();
 
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $options['bFormSections'][$bFormSection->id] = $bFormSection->getOptions();
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $options['jFormSections'][$jFormSection->id] = $jFormSection->getOptions();
         }
 
         if(!empty($this->onScrollTo)) {
@@ -1114,8 +1114,8 @@ class BFormPage {
     }
 
     function updateRequiredText($requiredText) {
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $bFormSection->updateRequiredText($requiredText);
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $jFormSection->updateRequiredText($requiredText);
         }
     }
 
@@ -1125,49 +1125,49 @@ class BFormPage {
      */
     function __toString() {
         // Page div
-        $bFormPageDiv = new BFormElement('div', array(
+        $jFormPageDiv = new JFormElement('div', array(
             'id' => $this->id,
             'class' => $this->class
         ));
 
         // Set the styile
         if(!empty($this->style)) {
-            $bFormPageDiv->addToAttribute('style', $this->style);
+            $jFormPageDiv->addToAttribute('style', $this->style);
         }
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new BFormElement('div', array(
+            $title = new JFormElement('div', array(
                 'class' => $this->titleClass
             ));
             $title->update($this->title);
-            $bFormPageDiv->insert($title);
+            $jFormPageDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new BFormElement('div', array(
+            $description = new JFormElement('div', array(
                 'class' => $this->descriptionClass
             ));
             $description->update($this->description);
-            $bFormPageDiv->insert($description);
+            $jFormPageDiv->insert($description);
         }
 
         // Add the form sections to the page
-        foreach($this->bFormSectionArray as $bFormSection) {
-            $bFormPageDiv->insert($bFormSection);
+        foreach($this->jFormSectionArray as $jFormSection) {
+            $jFormPageDiv->insert($jFormSection);
         }
 
         // Submit instructions
         if(!empty($this->submitInstructions)) {
-            $submitInstruction = new BFormElement('div', array(
+            $submitInstruction = new JFormElement('div', array(
                 'class' => $this->submitInstructionsClass
             ));
             $submitInstruction->update($this->submitInstructions);
-            $bFormPageDiv->insert($submitInstruction);
+            $jFormPageDiv->insert($submitInstruction);
         }
 
-        return $bFormPageDiv->__toString();
+        return $jFormPageDiv->__toString();
     }
 }
 
@@ -1175,22 +1175,22 @@ class BFormPage {
 /**
  * A FormSection object contains FormComponent objects and belongs to a FormPage object
  */
-class BFormSection {
+class JFormSection {
 
     // General settings
     var $id;
-    var $class = 'bFormSection';
+    var $class = 'jFormSection';
     var $style = '';
-    var $parentBFormPage;
-    var $bFormComponentArray = array();
+    var $parentJFormPage;
+    var $jFormComponentArray = array();
     var $data;
     var $anonymous = false;
 
     // Title, description, submit instructions
     var $title = '';
-    var $titleClass = 'bFormSectionTitle';
+    var $titleClass = 'jFormSectionTitle';
     var $description = '';
-    var $descriptionClass = 'bFormSectionDescription';
+    var $descriptionClass = 'jFormSectionDescription';
 
     // Options
     var $instanceOptions = null;
@@ -1202,7 +1202,7 @@ class BFormSection {
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $bFormComponentArray = array()) {
+    function __construct($id, $optionArray = array(), $jFormComponentArray = array()) {
         // Set the id
         $this->id = $id;
      
@@ -1214,34 +1214,34 @@ class BFormSection {
         }
 
         // Add the components from the constructor
-        $this->addBFormComponentArray($bFormComponentArray);
+        $this->addJFormComponentArray($jFormComponentArray);
 
         return $this;
     }
 
-    function addBFormComponent($bFormComponent) {
-        $bFormComponent->parentBFormSection = $this;
-        $this->bFormComponentArray[$bFormComponent->id] = $bFormComponent;
+    function addJFormComponent($jFormComponent) {
+        $jFormComponent->parentJFormSection = $this;
+        $this->jFormComponentArray[$jFormComponent->id] = $jFormComponent;
 
         return $this;
     }
 
-    function addBFormComponents($bFormComponents) {
-        if (is_array($bFormComponents)) {
-            foreach ($bFormComponentArray as $bFormComponent) {
-                $bFormComponent->parentBFormSection = $this;
-                $this->addBFormComponent($bFormComponent);
+    function addJFormComponents($jFormComponents) {
+        if (is_array($jFormComponents)) {
+            foreach ($jFormComponentArray as $jFormComponent) {
+                $jFormComponent->parentJFormSection = $this;
+                $this->addJFormComponent($jFormComponent);
             }
         } else {
-            $bFormComponent->parentBFormSection = $this;
-            $this->bFormComponentArray[$bFormComponent->id] = $bFormComponent;
+            $jFormComponent->parentJFormSection = $this;
+            $this->jFormComponentArray[$jFormComponent->id] = $jFormComponent;
         }
         return $this;
     }
 
-    function addBFormComponentArray($bFormComponentArray) {
-        foreach($bFormComponentArray as $bFormComponent) {
-            $this->addBFormComponent($bFormComponent);
+    function addJFormComponentArray($jFormComponentArray) {
+        foreach($jFormComponentArray as $jFormComponent) {
+            $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
@@ -1249,21 +1249,21 @@ class BFormSection {
     function getData() {
         $this->data = array();
 
-        // Check to see if bFormComponent array contains instances
-        if(array_key_exists(0, $this->bFormComponentArray) && is_array($this->bFormComponentArray[0])) {
-            foreach($this->bFormComponentArray as $bFormComponentArrayInstanceIndex => $bFormComponentArrayInstance) {
-                foreach($bFormComponentArrayInstance as $bFormComponentKey => $bFormComponent) {
-                    if(get_class($bFormComponent) != 'BFormComponentHtml') { // Don't include HTML components
-                        $this->data[$bFormComponentArrayInstanceIndex][$bFormComponentKey] = $bFormComponent->getValue();
+        // Check to see if jFormComponent array contains instances
+        if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
+            foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
+                foreach($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
+                    if(get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
+                        $this->data[$jFormComponentArrayInstanceIndex][$jFormComponentKey] = $jFormComponent->getValue();
                     }
                 }
             }
         }
         // If the section does not have instances
         else {
-            foreach($this->bFormComponentArray as $bFormComponentKey => $bFormComponent) {
-                if(get_class($bFormComponent) != 'BFormComponentHtml') { // Don't include HTML components
-                    $this->data[$bFormComponentKey] = $bFormComponent->getValue();
+            foreach($this->jFormComponentArray as $jFormComponentKey => $jFormComponent) {
+                if(get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
+                    $this->data[$jFormComponentKey] = $jFormComponent->getValue();
                 }
             }
         }
@@ -1271,48 +1271,48 @@ class BFormSection {
         return $this->data;
     }
 
-    function setData($bFormSectionData) {
+    function setData($jFormSectionData) {
         // Handle multiple instances
-        if(is_array($bFormSectionData)) {
-            $newBFormComponentArray = array();
+        if(is_array($jFormSectionData)) {
+            $newJFormComponentArray = array();
             
             // Go through each section instance
-            foreach($bFormSectionData as $bFormSectionIndex => $bFormSection) {
-                // Create a clone of the bFormComponentArray
-                $newBFormComponentArray[$bFormSectionIndex] = unserialize(serialize($this->bFormComponentArray));
+            foreach($jFormSectionData as $jFormSectionIndex => $jFormSection) {
+                // Create a clone of the jFormComponentArray
+                $newJFormComponentArray[$jFormSectionIndex] = unserialize(serialize($this->jFormComponentArray));
 
                 // Go through each component in the instanced section
-                foreach($bFormSection as $bFormComponentKey => $bFormComponentValue) {
+                foreach($jFormSection as $jFormComponentKey => $jFormComponentValue) {
                     // Set the value of the clone
-                    $newBFormComponentArray[$bFormSectionIndex][$bFormComponentKey]->setValue($bFormComponentValue);
+                    $newJFormComponentArray[$jFormSectionIndex][$jFormComponentKey]->setValue($jFormComponentValue);
                 }
             }
-            $this->bFormComponentArray = $newBFormComponentArray;
+            $this->jFormComponentArray = $newJFormComponentArray;
         }
         // Single instance
         else {
             // Go through each component
-            foreach($bFormSectionData as $bFormComponentKey => $bFormComponentValue) {
-                if (!is_null($this->bFormComponentArray[$bFormComponentKey])) {
-                    $this->bFormComponentArray[$bFormComponentKey]->setValue($bFormComponentValue);
+            foreach($jFormSectionData as $jFormComponentKey => $jFormComponentValue) {
+                if (!is_null($this->jFormComponentArray[$jFormComponentKey])) {
+                    $this->jFormComponentArray[$jFormComponentKey]->setValue($jFormComponentValue);
                 }
             }
         }
     }
 
     function clearData() {
-        // Check to see if bFormComponent array contains instances
-        if(array_key_exists(0, $this->bFormComponentArray) && is_array($this->bFormComponentArray[0])) {
-            foreach($this->bFormComponentArray as $bFormComponentArrayInstanceIndex => $bFormComponentArrayInstance) {
-                foreach($bFormComponentArrayInstance as $bFormComponentKey => $bFormComponent) {
-                    $bFormComponent->clearValue();
+        // Check to see if jFormComponent array contains instances
+        if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
+            foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
+                foreach($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
+                    $jFormComponent->clearValue();
                 }
             }
         }
         // If the section does not have instances
         else {
-            foreach($this->bFormComponentArray as $bFormComponent) {
-                $bFormComponent->clearValue();
+            foreach($this->jFormComponentArray as $jFormComponent) {
+                $jFormComponent->clearValue();
             }
         }
         $this->data = null;
@@ -1323,17 +1323,17 @@ class BFormSection {
         $this->errorMessageArray = array();
 
         // If we have instances, return an array
-        if(array_key_exists(0, $this->bFormComponentArray) && is_array($this->bFormComponentArray[0])) {
-            foreach($this->bFormComponentArray as $bFormComponentArrayInstanceIndex => $bFormComponentArrayInstance) {
-                foreach($bFormComponentArrayInstance as $bFormComponentKey => $bFormComponent) {
-                    $this->errorMessageArray[$bFormComponentArrayInstanceIndex][$bFormComponent->id] = $bFormComponent->validate();
+        if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
+            foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
+                foreach($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
+                    $this->errorMessageArray[$jFormComponentArrayInstanceIndex][$jFormComponent->id] = $jFormComponent->validate();
                 }
             }
         }
         // If the section does not have instances, return an single dimension array
         else {
-            foreach($this->bFormComponentArray as $bFormComponent) {
-                $this->errorMessageArray[$bFormComponent->id] = $bFormComponent->validate();
+            foreach($this->jFormComponentArray as $jFormComponent) {
+                $this->errorMessageArray[$jFormComponent->id] = $jFormComponent->validate();
             }
         }
 
@@ -1341,15 +1341,15 @@ class BFormSection {
     }
 
     function updateRequiredText($requiredText) {
-        foreach($this->bFormComponentArray as $bFormComponent) {
-            $bFormComponent->updateRequiredText($requiredText);
+        foreach($this->jFormComponentArray as $jFormComponent) {
+            $jFormComponent->updateRequiredText($requiredText);
         }
     }
 
     function getOptions() {
         $options = array();
         $options['options'] = array();
-        $options['bFormComponents'] = array();
+        $options['jFormComponents'] = array();
         
         // Instances
         if(!empty($this->instanceOptions)) {
@@ -1371,11 +1371,11 @@ class BFormSection {
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
 
-        // Get options for each of the bFormComponents
-        foreach($this->bFormComponentArray as $bFormComponent) {
-            // Don't get options for BFormComponentHtml objects
-            if(get_class($bFormComponent) != 'BFormComponentHtml') {
-                $options['bFormComponents'][$bFormComponent->id] = $bFormComponent->getOptions();
+        // Get options for each of the jFormComponents
+        foreach($this->jFormComponentArray as $jFormComponent) {
+            // Don't get options for JFormComponentHtml objects
+            if(get_class($jFormComponent) != 'JFormComponentHtml') {
+                $options['jFormComponents'][$jFormComponent->id] = $jFormComponent->getOptions();
             }
         }
 
@@ -1392,7 +1392,7 @@ class BFormSection {
      */
     function __toString() {
         // Section fieldset
-        $bFormSectionDiv = new BFormElement('div', array(
+        $jFormSectionDiv = new JFormElement('div', array(
             'id' => $this->id,
             'class' => $this->class
         ));
@@ -1400,38 +1400,38 @@ class BFormSection {
         // This causes issues with things that are dependent and should display by default
         // If the section has dependencies and the display type is hidden, hide by default
         //if($this->dependencyOptions !== null && isset($this->dependencyOptions['display']) && $this->dependencyOptions['display'] == 'hide') {
-        //    $bFormSectionDiv->setAttribute('style', 'display: none;');
+        //    $jFormSectionDiv->setAttribute('style', 'display: none;');
         //}
 
         // Set the style
         if(!empty($this->style)) {
-            $bFormSectionDiv->addToAttribute('style', $this->style);
+            $jFormSectionDiv->addToAttribute('style', $this->style);
         }
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new BFormElement('div', array(
+            $title = new JFormElement('div', array(
                 'class' => $this->titleClass
             ));
             $title->update($this->title);
-            $bFormSectionDiv->insert($title);
+            $jFormSectionDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new BFormElement('div', array(
+            $description = new JFormElement('div', array(
                 'class' => $this->descriptionClass
             ));
             $description->update($this->description);
-            $bFormSectionDiv->insert($description);
+            $jFormSectionDiv->insert($description);
         }
 
         // Add the form sections to the page
-        foreach($this->bFormComponentArray as $bFormComponentArray) {
-            $bFormSectionDiv->insert($bFormComponentArray);
+        foreach($this->jFormComponentArray as $jFormComponentArray) {
+            $jFormSectionDiv->insert($jFormComponentArray);
         }
         
-        return $bFormSectionDiv->__toString();
+        return $jFormSectionDiv->__toString();
     }
 }
 
@@ -1439,26 +1439,26 @@ class BFormSection {
 /**
  * An abstract FormComponent object, cannot be instantiated
  */
-abstract class BFormComponent {
+abstract class JFormComponent {
     // General settings
     var $id;
     var $class = null;
     var $value = null;
     var $style = null;
-    var $parentBFormSection;
+    var $parentJFormSection;
     var $anonymous = false;
 
     // Label
     var $label = null;  // Must be implemented by child class
-    var $labelClass = 'bFormComponentLabel';
-    var $labelRequiredStarClass = 'bFormComponentLabelRequiredStar';
+    var $labelClass = 'jFormComponentLabel';
+    var $labelRequiredStarClass = 'jFormComponentLabelRequiredStar';
     var $requiredText = ' *'; // can be overridden at the form level;
 
     // Helpers
     var $tip = null;
-    var $tipClass = 'bFormComponentTip';
+    var $tipClass = 'jFormComponentTip';
     var $description = null;
-    var $descriptionClass = 'bFormComponentDescription';
+    var $descriptionClass = 'jFormComponentDescription';
 
     // Options
     var $instanceOptions = null;
@@ -1672,9 +1672,9 @@ abstract class BFormComponent {
 
     function generateComponentDiv($includeLabel = true) {
         // Div tag contains everything about the component
-        $componentDiv = new BFormElement('div', array(
+        $componentDiv = new JFormElement('div', array(
             'id' => $this->id.'-wrapper',
-            'class' => 'form-group bFormComponent '.$this->class,
+            'class' => 'form-group jFormComponent '.$this->class,
         ));
 
         // This causes issues with things that are dependent and should display by default
@@ -1706,7 +1706,7 @@ abstract class BFormComponent {
             return '';
         }
 	
-        $label = new BFormElement('label', array(
+        $label = new JFormElement('label', array(
             'id' => $this->id.'-label',
             'for' => $this->id,
             'class' => $this->labelClass . ' control-label col-xs-4'
@@ -1714,7 +1714,7 @@ abstract class BFormComponent {
         $label->update($this->label);
         // Add the required star to the label
         if(in_array('required', $this->validationOptions)) {
-            $labelRequiredStarSpan = new BFormElement('span', array(
+            $labelRequiredStarSpan = new JFormElement('span', array(
                 'class' => $this->labelRequiredStarClass
             ));
             $labelRequiredStarSpan->update($this->requiredText);
@@ -1727,7 +1727,7 @@ abstract class BFormComponent {
     function insertComponentDescription($div) {
         // Description
         if(!empty($this->description)) {
-            $description = new BFormElement('div', array(
+            $description = new JFormElement('div', array(
                 'id' => $this->id.'-description',
                 'class' => $this->descriptionClass
             ));
@@ -1742,7 +1742,7 @@ abstract class BFormComponent {
     function insertComponentTip($div) {
         // Create the tip div if not empty
         if(!empty($this->tip)) {
-            $tipDiv = new BFormElement('div', array(
+            $tipDiv = new JFormElement('div', array(
                 'id' => $this->id.'-tip',
                 'style' => 'display: none;',
                 'class' => $this->tipClass,
@@ -1765,7 +1765,7 @@ abstract class BFormComponent {
 
 
 
-class BFormComponentAddress extends BFormComponent {
+class JFormComponentAddress extends JFormComponent {
 	var $selectedCountry = null;
 	var $selectedState = null;
 	var $stateDropDown = false;
@@ -1782,7 +1782,7 @@ class BFormComponentAddress extends BFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'bFormComponentAddress';
+		$this->class = 'jFormComponentAddress';
 		
 		$this->initialValues = array('addressLine1' => '', 'addressLine2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '');
 
@@ -1805,7 +1805,7 @@ class BFormComponentAddress extends BFormComponent {
 	}
 
 	function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-		$option = new BFormElement('option', array('value' => $optionValue));
+		$option = new JFormElement('option', array('value' => $optionValue));
 		$option->update($optionLabel);
 
 		if($optionSelected) {
@@ -1846,10 +1846,10 @@ class BFormComponentAddress extends BFormComponent {
 		$componentDiv = $this->generateComponentDiv();
 
 		// Add the Address Line 1 input tag
-		$addressLine1Div = new BFormElement('div', array(
+		$addressLine1Div = new JFormElement('div', array(
 			'class' => 'addressLine1Div',
 		));
-		$addressLine1 = new BFormElement('input', array(
+		$addressLine1 = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-addressLine1',
 			'name' => $this->name.'-addressLine1',
@@ -1860,10 +1860,10 @@ class BFormComponentAddress extends BFormComponent {
 		$addressLine1Div->insert($addressLine1);
 
 		// Add the Address Line 2 input tag
-		$addressLine2Div = new BFormElement('div', array(
+		$addressLine2Div = new JFormElement('div', array(
 			'class' => 'addressLine2Div',
 		));
-		$addressLine2 = new BFormElement('input', array(
+		$addressLine2 = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-addressLine2',
 			'name' => $this->name.'-addressLine2',
@@ -1874,10 +1874,10 @@ class BFormComponentAddress extends BFormComponent {
 		$addressLine2Div->insert($addressLine2);
 
 		// Add the city input tag
-		$cityDiv = new BFormElement('div', array(
+		$cityDiv = new JFormElement('div', array(
 			'class' => 'cityDiv',
 		));
-		$city = new BFormElement('input', array(
+		$city = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-city',
 			'name' => $this->name.'-city',
@@ -1889,18 +1889,18 @@ class BFormComponentAddress extends BFormComponent {
 		$cityDiv->insert($city);
 
 		// Add the State input tag
-		$stateDiv = new BFormElement('div', array(
+		$stateDiv = new JFormElement('div', array(
 			'class' => 'stateDiv',
 		));
 		if($this->stateDropDown){
-			$state = new BFormElement('select', array(
+			$state = new JFormElement('select', array(
 				'id' => $this->id.'-state',
 				'name' => $this->name.'-state',
 				'class' => 'state',
 				'value' => $this->initialValues['state'],
 			));
 			// Add any options that are not in an opt group to the select
-			foreach(BFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
+			foreach(JFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
 				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
 				$optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
 				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
@@ -1911,7 +1911,7 @@ class BFormComponentAddress extends BFormComponent {
 			}
 		}
 		else {
-			$state = new BFormElement('input', array(
+			$state = new JFormElement('input', array(
 				'type' => 'text',
 				'id' => $this->id.'-state',
 				'name' => $this->name.'-state',
@@ -1923,10 +1923,10 @@ class BFormComponentAddress extends BFormComponent {
 		$stateDiv->insert($state);
 
 		// Add the Zip input tag
-		$zipDiv = new BFormElement('div', array(
+		$zipDiv = new JFormElement('div', array(
 			'class' => 'zipDiv',
 		));
-		$zip = new BFormElement('input', array(
+		$zip = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-zip',
 			'name' => $this->name.'-zip',
@@ -1938,12 +1938,12 @@ class BFormComponentAddress extends BFormComponent {
 		$zipDiv->insert($zip);
 
 		// Add the country input tag
-		$countryDiv = new BFormElement('div', array(
+		$countryDiv = new JFormElement('div', array(
 			'class' => 'countryDiv',
 		));
 		// Don't built a select list if you are United States only
 		if($this->unitedStatesOnly) {
-			$country = new BFormElement('input', array(
+			$country = new JFormElement('input', array(
 				'type' => 'hidden',
 				'id' => $this->id.'-country',
 				'name' => $this->name.'-country',
@@ -1953,14 +1953,14 @@ class BFormComponentAddress extends BFormComponent {
 			));
 		}
 		else {
-			$country = new BFormElement('select', array(
+			$country = new JFormElement('select', array(
 				'id' => $this->id.'-country',
 				'name' => $this->name.'-country',
 				'class' => 'country',
 				'value' => $this->initialValues['country'],
 			));
 			// Add any options that are not in an opt group to the select
-			foreach(BFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
+			foreach(JFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
 				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
 				$optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
 				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
@@ -2004,25 +2004,25 @@ class BFormComponentAddress extends BFormComponent {
 
 		// Put the sublabels in if the option allows for it
 		if($this->showSublabels) {
-			$addressLine1Div->insert('<div class="bFormComponentSublabel"><p>Street Address</p></div>');
-			$addressLine2Div->insert('<div class="bFormComponentSublabel"><p>Address Line 2</p></div>');
-			$cityDiv->insert('<div class="bFormComponentSublabel"><p>City</p></div>');
+			$addressLine1Div->insert('<div class="jFormComponentSublabel"><p>Street Address</p></div>');
+			$addressLine2Div->insert('<div class="jFormComponentSublabel"><p>Address Line 2</p></div>');
+			$cityDiv->insert('<div class="jFormComponentSublabel"><p>City</p></div>');
 
 			if($this->unitedStatesOnly) {
-				$stateDiv->insert('<div class="bFormComponentSublabel"><p>State</p></div>');
+				$stateDiv->insert('<div class="jFormComponentSublabel"><p>State</p></div>');
 			}
 			else {
-				$stateDiv->insert('<div class="bFormComponentSublabel"><p>State / Province / Region</p></div>');
+				$stateDiv->insert('<div class="jFormComponentSublabel"><p>State / Province / Region</p></div>');
 			}
 
 			if($this->unitedStatesOnly) {
-				$zipDiv->insert('<div class="bFormComponentSublabel"><p>Zip Code</p></div>');
+				$zipDiv->insert('<div class="jFormComponentSublabel"><p>Zip Code</p></div>');
 			}
 			else {
-				$zipDiv->insert('<div class="bFormComponentSublabel"><p>Postal / Zip Code</p></div>');
+				$zipDiv->insert('<div class="jFormComponentSublabel"><p>Postal / Zip Code</p></div>');
 			}
 
-			$countryDiv->insert('<div class="bFormComponentSublabel"><p>Country</p></div>');
+			$countryDiv->insert('<div class="jFormComponentSublabel"><p>Country</p></div>');
 		}
 
 		// United States only switch
@@ -2077,7 +2077,7 @@ class BFormComponentAddress extends BFormComponent {
 
 
 
-class BFormComponentCreditCard extends BFormComponent {
+class JFormComponentCreditCard extends JFormComponent {
     var $emptyValues = null; // cardNumber, securityCode
     var $showSublabels = true;
     var $showCardType = true;
@@ -2094,7 +2094,7 @@ class BFormComponentCreditCard extends BFormComponent {
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
-        $this->class = 'bFormComponentCreditCard';
+        $this->class = 'jFormComponentCreditCard';
         
         // Initialize the abstract FormComponent object
         $this->initialize($optionArray);
@@ -2106,7 +2106,7 @@ class BFormComponentCreditCard extends BFormComponent {
     }
 
     function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new BFormElement('option', array('value' => $optionValue));
+        $option = new JFormElement('option', array('value' => $optionValue));
         $option->update($optionLabel);
 
         if($optionSelected) {
@@ -2144,10 +2144,10 @@ class BFormComponentCreditCard extends BFormComponent {
 
          // Add the card type select tag
         if($this->showCardType) {
-            $cardTypeDiv = new BFormElement('div', array(
+            $cardTypeDiv = new JFormElement('div', array(
                 'class' => 'cardTypeDiv',
             ));
-            $cardType = new BFormElement('select', array(
+            $cardType = new JFormElement('select', array(
                 'id' => $this->id.'-cardType',
                 'name' => $this->name.'-cardType',
                 'class' => 'cardType',
@@ -2164,10 +2164,10 @@ class BFormComponentCreditCard extends BFormComponent {
         }
 
         // Add the card number input tag
-        $cardNumberDiv = new BFormElement('div', array(
+        $cardNumberDiv = new JFormElement('div', array(
             'class' => 'cardNumberDiv',
         ));
-        $cardNumber = new BFormElement('input', array(
+        $cardNumber = new JFormElement('input', array(
             'type' => 'text',
             'id' => $this->id.'-cardNumber',
             'name' => $this->name.'-cardNumber',
@@ -2177,10 +2177,10 @@ class BFormComponentCreditCard extends BFormComponent {
         $cardNumberDiv->insert($cardNumber);
 
         // Add the expiration month select tag
-        $expirationDateDiv = new BFormElement('div', array(
+        $expirationDateDiv = new JFormElement('div', array(
             'class' => 'expirationDateDiv',
         ));
-        $expirationMonth = new BFormElement('select', array(
+        $expirationMonth = new JFormElement('select', array(
             'id' => $this->id.'-expirationMonth',
             'name' => $this->name.'-expirationMonth',
             'class' => 'expirationMonth',
@@ -2190,7 +2190,7 @@ class BFormComponentCreditCard extends BFormComponent {
             $expirationMonth->insert($this->getOption('', 'Month', true, true));
         }
         // Add the months
-        foreach(BFormComponentDropDown::getMonthArray() as $dropDownOption) {
+        foreach(JFormComponentDropDown::getMonthArray() as $dropDownOption) {
             $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
             $optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
             $optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
@@ -2207,7 +2207,7 @@ class BFormComponentCreditCard extends BFormComponent {
         }
         $expirationDateDiv->insert($expirationMonth);
         // Add the expiration year select tag
-        $expirationYear = new BFormElement('select', array(
+        $expirationYear = new JFormElement('select', array(
             'id' => $this->id.'-expirationYear',
             'name' => $this->name.'-expirationYear',
             'class' => 'expirationYear',
@@ -2232,10 +2232,10 @@ class BFormComponentCreditCard extends BFormComponent {
         $expirationDateDiv->insert($expirationYear);
 
         // Add the security code input tag
-        $securityCodeDiv = new BFormElement('div', array(
+        $securityCodeDiv = new JFormElement('div', array(
             'class' => 'securityCodeDiv',
         ));
-        $securityCode = new BFormElement('input', array(
+        $securityCode = new JFormElement('input', array(
             'type' => 'text',
             'id' => $this->id.'-securityCode',
             'name' => $this->name.'-securityCode',
@@ -2261,12 +2261,12 @@ class BFormComponentCreditCard extends BFormComponent {
         // Put the sublabels in if the option allows for it
         if($this->showSublabels) {
             if($this->showCardType) {
-                $cardTypeDiv->insert('<div class="bFormComponentSublabel"><p>Card Type</p></div>');
+                $cardTypeDiv->insert('<div class="jFormComponentSublabel"><p>Card Type</p></div>');
             }
-            $cardNumberDiv->insert('<div class="bFormComponentSublabel"><p>Card Number</p></div>');
-            $expirationDateDiv->insert('<div class="bFormComponentSublabel"><p>Expiration Date</p></div>');
+            $cardNumberDiv->insert('<div class="jFormComponentSublabel"><p>Card Number</p></div>');
+            $expirationDateDiv->insert('<div class="jFormComponentSublabel"><p>Expiration Date</p></div>');
             if($this->showSecurityCode) {
-                $securityCodeDiv->insert('<div class="bFormComponentSublabel"><p>Security Code</p></div>');
+                $securityCodeDiv->insert('<div class="jFormComponentSublabel"><p>Security Code</p></div>');
             }
         }
 
@@ -2330,7 +2330,7 @@ class BFormComponentCreditCard extends BFormComponent {
 
 
 
-class BFormComponentDate extends BFormComponentSingleLineText {
+class JFormComponentDate extends JFormComponentSingleLineText {
     /*
      * Constructor
      */
@@ -2339,7 +2339,7 @@ class BFormComponentDate extends BFormComponentSingleLineText {
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
-        $this->class = 'bFormComponentDate';
+        $this->class = 'jFormComponentDate';
 
         // Input options
         $this->initialValue = '';
@@ -2478,7 +2478,7 @@ class BFormComponentDate extends BFormComponentSingleLineText {
 
 
 
-class BFormComponentDropDown extends BFormComponent {
+class JFormComponentDropDown extends JFormComponent {
     var $dropDownOptionArray = array();
 
     var $disabled = false;
@@ -2493,7 +2493,7 @@ class BFormComponentDropDown extends BFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentDropDown';
+        $this->class = 'jFormComponentDropDown';
         $this->label = $label;
         $this->dropDownOptionArray = $dropDownOptionArray;
 
@@ -2502,7 +2502,7 @@ class BFormComponentDropDown extends BFormComponent {
     }
 
     function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new BFormElement('option', array('value' => $optionValue));
+        $option = new JFormElement('option', array('value' => $optionValue));
         $option->update($optionLabel);
 
         if($optionSelected) {
@@ -2573,7 +2573,7 @@ class BFormComponentDropDown extends BFormComponent {
         $div = parent::generateComponentDiv();
 
         // Select tag
-        $select = new BFormElement('select', array(
+        $select = new JFormElement('select', array(
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->class . ' form-control',
@@ -2604,7 +2604,7 @@ class BFormComponentDropDown extends BFormComponent {
 
         // Create the optgroup elements
         foreach($optGroupArray as $optGroup) {
-            ${$optGroup} = new BFormElement('optgroup', array('label' => $optGroup));
+            ${$optGroup} = new JFormElement('optgroup', array('label' => $optGroup));
         }
 
         // Add any options to their appropriate optgroup
@@ -2655,7 +2655,7 @@ class BFormComponentDropDown extends BFormComponent {
 
 
 
-class BFormComponentFile extends BFormComponent {
+class JFormComponentFile extends JFormComponent {
     /*
      * Constructor
      */
@@ -2663,7 +2663,7 @@ class BFormComponentFile extends BFormComponent {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentFile';
+        $this->class = 'jFormComponentFile';
         $this->label = $label;
         $this->inputClass = 'file';
 
@@ -2703,17 +2703,17 @@ class BFormComponentFile extends BFormComponent {
         $div = $this->generateComponentDiv();
 
         // Add the input tag
-        $pseudoFileWrapper = new BFormElement('div', array(
+        $pseudoFileWrapper = new JFormElement('div', array(
             'class' => 'pseudoFile',
             'style' => 'position:absolute;'
         ));
 
-        $pseudoFileInput = new BFormElement('input', array (
+        $pseudoFileInput = new JFormElement('input', array (
            'type'=> 'text',
            'disabled' => 'disabled',
         ));
 
-        $pseudoFileButton = new BFormElement('button', array (
+        $pseudoFileButton = new JFormElement('button', array (
            'onclick' => 'return false;',
            'disabled' => 'disabled'
         ));
@@ -2721,7 +2721,7 @@ class BFormComponentFile extends BFormComponent {
         $pseudoFileWrapper->insert($pseudoFileInput);
         $pseudoFileWrapper->insert($pseudoFileButton);
 
-        $input = new BFormElement('input', array(
+        $input = new JFormElement('input', array(
             'type' => $this->type,
             'id' => $this->id,
             'name' => $this->name,
@@ -2840,7 +2840,7 @@ class BFormComponentFile extends BFormComponent {
 
 
 
-class BFormComponentHidden extends BFormComponent {
+class JFormComponentHidden extends JFormComponent {
     /*
      * Constructor
      */
@@ -2848,7 +2848,7 @@ class BFormComponentHidden extends BFormComponent {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentHidden';
+        $this->class = 'jFormComponentHidden';
 
         // Initialize the abstract FormComponent object
         $this->initialize($optionArray);
@@ -2867,7 +2867,7 @@ class BFormComponentHidden extends BFormComponent {
         $div->addToAttribute('style', 'display: none;');
 
         // Input tag
-        $input = new BFormElement('input', array(
+        $input = new JFormElement('input', array(
             'type' => 'hidden',
             'id' => $this->id,
             'name' => $this->name,
@@ -2881,7 +2881,7 @@ class BFormComponentHidden extends BFormComponent {
 
 
 
-class BFormComponentHtml extends BFormComponent {
+class JFormComponentHtml extends JFormComponent {
     var $html;
 
     function __construct($html) {
@@ -2912,7 +2912,7 @@ class BFormComponentHtml extends BFormComponent {
 
 
 
-class BFormComponentLikert extends BFormComponent {
+class JFormComponentLikert extends JFormComponent {
     var $choiceArray = array();
     var $statementArray = array();
     var $showTableHeading = true;
@@ -2925,7 +2925,7 @@ class BFormComponentLikert extends BFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentLikert';
+        $this->class = 'jFormComponentLikert';
         $this->label = $label;
 
         $this->choiceArray = $choiceArray;
@@ -2970,24 +2970,24 @@ class BFormComponentLikert extends BFormComponent {
         $componentDiv = parent::generateComponentDiv(!$this->collapseLabelIntoTableHeading);
 
         // Create the table
-        $table = new BFormElement('table', array('class' => 'bFormComponentLikertTable'));
+        $table = new JFormElement('table', array('class' => 'jFormComponentLikertTable'));
 
         // Generate the first row
         if($this->showTableHeading) {
-            $tableHeadingRow = new BFormElement('tr', array('class' => 'bFormComponentLikertTableHeading'));
+            $tableHeadingRow = new JFormElement('tr', array('class' => 'jFormComponentLikertTableHeading'));
 
-            $tableHeading = new BFormElement('th', array(
-                'class' => 'bFormComponentLikertStatementColumn',
+            $tableHeading = new JFormElement('th', array(
+                'class' => 'jFormComponentLikertStatementColumn',
             ));
             // Collapse the label into the heading if the option is set
             if($this->collapseLabelIntoTableHeading) {
-                $tableHeadingLabel = new BFormElement('label', array(
-                    'class' => 'bFormComponentLikertStatementLabel',
+                $tableHeadingLabel = new JFormElement('label', array(
+                    'class' => 'jFormComponentLikertStatementLabel',
                 ));
                 $tableHeadingLabel->update($this->label);
                 // Add the required star to the label
                 if(in_array('required', $this->validationOptions)) {
-                    $labelRequiredStarSpan = new BFormElement('span', array(
+                    $labelRequiredStarSpan = new JFormElement('span', array(
                         'class' => $this->labelRequiredStarClass
                     ));
                     $labelRequiredStarSpan->update(' *');
@@ -3008,33 +3008,33 @@ class BFormComponentLikert extends BFormComponent {
         foreach($this->statementArray as $statement) {
             // Set the row style
             if($statementCount % 2 == 0) {
-                $statementRowClass = 'bFormComponentLikertTableRowEven';
+                $statementRowClass = 'jFormComponentLikertTableRowEven';
             }
             else {
-                $statementRowClass = 'bFormComponentLikertTableRowOdd';
+                $statementRowClass = 'jFormComponentLikertTableRowOdd';
             }
 
             // Set the statement
-            $statementRow = new BFormElement('tr', array('class' => $statementRowClass));
-            $statementColumn = new BFormElement('td', array('class' => 'bFormComponentLikertStatementColumn'));
-            $statementLabel = new BFormElement('label', array(
-                'class' => 'bFormComponentLikertStatementLabel',
+            $statementRow = new JFormElement('tr', array('class' => $statementRowClass));
+            $statementColumn = new JFormElement('td', array('class' => 'jFormComponentLikertStatementColumn'));
+            $statementLabel = new JFormElement('label', array(
+                'class' => 'jFormComponentLikertStatementLabel',
                 'for' => $statement['name'].'-choice1',
             ));
             $statementColumn->insert($statementLabel->insert($statement['statement']));
 
             // Set the statement description (optional)
             if(!empty($statement['description'])) {
-                $statementDescription = new BFormElement('div', array(
-                    'class' => 'bFormComponentLikertStatementDescription',
+                $statementDescription = new JFormElement('div', array(
+                    'class' => 'jFormComponentLikertStatementDescription',
                 ));
                 $statementColumn->insert($statementDescription->update($statement['description']));
             }
 
             // Insert a tip (optional)
             if(!empty($statement['tip'])) {
-                $statementTip = new BFormElement('div', array(
-                    'class' => 'bFormComponentLikertStatementTip',
+                $statementTip = new JFormElement('div', array(
+                    'class' => 'jFormComponentLikertStatementTip',
                     'style' => 'display: none;',
                 ));
                 $statementColumn->insert($statementTip->update($statement['tip']));
@@ -3044,9 +3044,9 @@ class BFormComponentLikert extends BFormComponent {
 
             $choiceCount = 1;
             foreach($this->choiceArray as $choice) {
-                $choiceColumn = new BFormElement('td');
+                $choiceColumn = new JFormElement('td');
 
-                $choiceInput = new BFormElement('input', array(
+                $choiceInput = new JFormElement('input', array(
                     'id' => $statement['name'].'-choice'.$choiceCount,
                     'type' => 'radio',
                     'value' => $choice['value'],
@@ -3062,8 +3062,8 @@ class BFormComponentLikert extends BFormComponent {
 
                 // Choice sub labels
                 if(!empty($choice['sublabel'])) {
-                    $choiceSublabel = new BFormElement('label', array(
-                        'class' => 'bFormComponentLikertSublabel',
+                    $choiceSublabel = new JFormElement('label', array(
+                        'class' => 'jFormComponentLikertSublabel',
                         'for' => $statement['name'].'-choice'.$choiceCount,
                     ));
                     $choiceSublabel->update($choice['sublabel']);
@@ -3104,7 +3104,7 @@ class BFormComponentLikert extends BFormComponent {
     }
 }
 
-class BFormComponentLikertStatement extends BFormComponent {
+class JFormComponentLikertStatement extends JFormComponent {
     /**
      * Constructor
      */
@@ -3112,7 +3112,7 @@ class BFormComponentLikertStatement extends BFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentLikertStatement';
+        $this->class = 'jFormComponentLikertStatement';
         $this->label = $label;
         // Initialize the abstract FormComponent object
         $this->initialize($optionsArray);
@@ -3126,7 +3126,7 @@ class BFormComponentLikertStatement extends BFormComponent {
 
 
 
-class BFormComponentMultipleChoice extends BFormComponent {
+class JFormComponentMultipleChoice extends JFormComponent {
     var $multipleChoiceType = 'checkbox'; // radio, checkbox
     var $multipleChoiceClass = 'choice';
     var $multipleChoiceLabelClass = 'choiceLabel';
@@ -3140,7 +3140,7 @@ class BFormComponentMultipleChoice extends BFormComponent {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
-        $this->class = 'bFormComponentMultipleChoice';
+        $this->class = 'jFormComponentMultipleChoice';
         $this->label = $label;
         $this->multipleChoiceArray = $multipleChoiceArray;
 
@@ -3234,13 +3234,13 @@ class BFormComponentMultipleChoice extends BFormComponent {
 
     function getMultipleChoiceWrapper($multipleChoiceValue, $multipleChoiceLabel, $multipleChoiceChecked, $multipleChoiceTip, $multipleChoiceDisabled, $multipleChoiceInputHidden, $multipleChoiceCount) {
         // Make a wrapper div for the input and label
-        $multipleChoiceWrapperDiv = new BFormElement('div', array(
+        $multipleChoiceWrapperDiv = new JFormElement('div', array(
             'id' => $this->id.'-choice'.$multipleChoiceCount.'-wrapper',
             'class' => $this->multipleChoiceClass.'Wrapper',
         ));
 
         // Input tag
-        $input = new BFormElement('input', array(
+        $input = new JFormElement('input', array(
             'type' => $this->multipleChoiceType,
             'id' => $this->id.'-choice'.$multipleChoiceCount,
             'name' => $this->name,
@@ -3260,14 +3260,14 @@ class BFormComponentMultipleChoice extends BFormComponent {
         $multipleChoiceWrapperDiv->insert($input);
 
         // Multiple choice label
-        $multipleChoiceLabelElement = new BFormElement('label', array(
+        $multipleChoiceLabelElement = new JFormElement('label', array(
             'for' => $this->id.'-choice'.$multipleChoiceCount,
             'class' => $this->multipleChoiceLabelClass,
             'style' => 'display: inline;',
         ));
         // Add an image to the label if there is a tip
         if(!empty($multipleChoiceTip) && $this->showMultipleChoiceTipIcons) {
-            $multipleChoiceLabelElement->update($multipleChoiceLabel.' <span class="bFormComponentMultipleChoiceTipIcon">&nbsp;</span>');
+            $multipleChoiceLabelElement->update($multipleChoiceLabel.' <span class="jFormComponentMultipleChoiceTipIcon">&nbsp;</span>');
         }
         else {
             $multipleChoiceLabelElement->update($multipleChoiceLabel);
@@ -3276,7 +3276,7 @@ class BFormComponentMultipleChoice extends BFormComponent {
         if(sizeof($this->multipleChoiceArray) == 1) {
             // Add the required star to the label
             if(in_array('required', $this->validationOptions)) {
-                $labelRequiredStarSpan = new BFormElement('span', array(
+                $labelRequiredStarSpan = new JFormElement('span', array(
                     'class' => $this->labelRequiredStarClass
                 ));
                 $labelRequiredStarSpan->update(' *');
@@ -3287,10 +3287,10 @@ class BFormComponentMultipleChoice extends BFormComponent {
 
         // Multiple choice tip
         if(!empty($multipleChoiceTip)) {
-            $multipleChoiceTipDiv = new BFormElement('div', array(
+            $multipleChoiceTipDiv = new JFormElement('div', array(
                 'id' => $this->id.'-'.$multipleChoiceValue.'-tip',
                 'style' => 'display: none;',
-                'class' => 'bFormComponentMultipleChoiceTip'
+                'class' => 'jFormComponentMultipleChoiceTip'
             ));
             $multipleChoiceTipDiv->update($multipleChoiceTip);
             $multipleChoiceWrapperDiv->insert($multipleChoiceTipDiv);
@@ -3318,7 +3318,7 @@ class BFormComponentMultipleChoice extends BFormComponent {
 
 
 
-class BFormComponentName extends BFormComponent {
+class JFormComponentName extends JFormComponent {
 	var $middleInitialHidden = false;
 	var $emptyValues = null;
 	var $showSublabels = true;
@@ -3331,7 +3331,7 @@ class BFormComponentName extends BFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'bFormComponentName form-group';
+		$this->class = 'jFormComponentName form-group';
 
 		// Input options
 		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
@@ -3372,11 +3372,11 @@ class BFormComponentName extends BFormComponent {
 		$div = $this->generateComponentDiv();
 
 
-		$firstNameDiv = new BFormElement('div', array(
+		$firstNameDiv = new JFormElement('div', array(
 			'class' => 'firstNameDiv form-group',
 		));
 		// Add the first name input tag
-		$firstName = new BFormElement('input', array(
+		$firstName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-firstName',
 			'name' => $this->name.'-firstName',
@@ -3387,10 +3387,10 @@ class BFormComponentName extends BFormComponent {
 		$firstNameDiv->insert($firstName);
 
 		// Add the middle initial input tag
-		$middleInitialDiv = new BFormElement('div', array(
+		$middleInitialDiv = new JFormElement('div', array(
 			'class' => 'middleInitialDiv form-group',
 		));
-		$middleInitial = new BFormElement('input', array(
+		$middleInitial = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-middleInitial',
 			'name' => $this->name.'-middleInitial',
@@ -3406,10 +3406,10 @@ class BFormComponentName extends BFormComponent {
 
 
 		// Add the last name input tag
-		$lastNameDiv = new BFormElement('div', array(
+		$lastNameDiv = new JFormElement('div', array(
 			'class' => 'lastNameDiv form-group',
 		));
-		$lastName = new BFormElement('input', array(
+		$lastName = new JFormElement('input', array(
 			'type' => 'text',
 			'id' => $this->id.'-lastName',
 			'name' => $this->name.'-lastName',
@@ -3441,9 +3441,9 @@ class BFormComponentName extends BFormComponent {
 		}
 
 		if($this->showSublabels) {
-			$firstNameDiv->insert('<div class="bFormComponentSublabel"><p>First Name</p></div>');
-			$middleInitialDiv->insert('<div class="bFormComponentSublabel"><p>MI</p></div>');
-			$lastNameDiv->insert('<div class="bFormComponentSublabel"><p>Last Name</p></div>');
+			$firstNameDiv->insert('<div class="jFormComponentSublabel"><p>First Name</p></div>');
+			$middleInitialDiv->insert('<div class="jFormComponentSublabel"><p>MI</p></div>');
+			$lastNameDiv->insert('<div class="jFormComponentSublabel"><p>Last Name</p></div>');
 		}
 
 		$div->insert($firstNameDiv);
@@ -3474,7 +3474,7 @@ class BFormComponentName extends BFormComponent {
 
 
 
-class BFormComponentSingleLineText extends BFormComponent {
+class JFormComponentSingleLineText extends JFormComponent {
 	var $sublabel;
 
 	/*
@@ -3485,7 +3485,7 @@ class BFormComponentSingleLineText extends BFormComponent {
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
-		$this->class = 'bFormComponentSingleLineText';
+		$this->class = 'jFormComponentSingleLineText';
 		$this->widthArray = array('shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em');
 
 		// Input options
@@ -3542,7 +3542,7 @@ class BFormComponentSingleLineText extends BFormComponent {
 		$div = $this->generateComponentDiv();
 
 		// Add the input tag
-		$input = new BFormElement('input', array(
+		$input = new JFormElement('input', array(
 			'type' => $this->type,
 			'id' => $this->id,
 			'name' => $this->name,
@@ -3575,12 +3575,12 @@ class BFormComponentSingleLineText extends BFormComponent {
 		}
 		$input->addToAttribute('class', ' form-control');
 		if($this->enterSubmits) {
-			$input->addToAttribute('class', ' bFormComponentEnterSubmits');
+			$input->addToAttribute('class', ' jFormComponentEnterSubmits');
 		}
 		$div->insert('<div class="col-xs-8">'.$input.'</div>');
 
 		if(!empty($this->sublabel)) {
-			$div->insert('<div class="bFormComponentSublabel">'.$this->sublabel.'</div>');
+			$div->insert('<div class="jFormComponentSublabel">'.$this->sublabel.'</div>');
 		}
 
 		// Add any description (optional)
@@ -3733,7 +3733,7 @@ class BFormComponentSingleLineText extends BFormComponent {
 	}
 
 	public function matches($options) {
-		$componentToMatch = $this->parentBFormSection->parentBFormPage->bFormer->select($options['matches']);
+		$componentToMatch = $this->parentJFormSection->parentJFormPage->jFormer->select($options['matches']);
 		if($componentToMatch && $componentToMatch->value == $options['value']) {
 			return 'success';
 		}
@@ -3924,7 +3924,7 @@ class BFormComponentSingleLineText extends BFormComponent {
 
 
 
-class BFormComponentTextArea extends BFormComponent {
+class JFormComponentTextArea extends JFormComponent {
     /*
      * Constructor
      */
@@ -3933,7 +3933,7 @@ class BFormComponentTextArea extends BFormComponent {
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
-        $this->class = 'bFormComponentTextArea';
+        $this->class = 'jFormComponentTextArea';
         $this->inputClass = 'textArea';
         $this->widthArray = array('shortest' => '5em', 'short' => '10em', 'medium' => '20em', 'long' => '30em', 'longest' => '40em');
         $this->heightArray = array('short' => '6em', 'medium' => '12em', 'tall' => '18em');
@@ -3988,7 +3988,7 @@ class BFormComponentTextArea extends BFormComponent {
         $div = $this->generateComponentDiv();
 
         // Add the input tag
-        $textArea = new BFormElement('textarea', array(
+        $textArea = new JFormElement('textarea', array(
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->inputClass,

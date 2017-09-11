@@ -1,6 +1,6 @@
-BFormComponentCreditCard = BFormComponent.extend({
-    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
-        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
+JFormComponentCreditCard = JFormComponent.extend({
+    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
+        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
     },
 
     initialize: function(){
@@ -86,7 +86,7 @@ BFormComponentCreditCard = BFormComponent.extend({
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
            return null;
         }
         var creditCardInfo = {};
@@ -113,7 +113,7 @@ BFormComponentCreditCard = BFormComponent.extend({
     },
 
     validate: function(){
-        if(!this.parentBFormSection.parentBFormPage.bFormer.options.clientSideValidation) {
+        if(!this.parentJFormSection.parentJFormPage.jFormer.options.clientSideValidation) {
             return;
         }
 
@@ -123,7 +123,7 @@ BFormComponentCreditCard = BFormComponent.extend({
         }
         
         setTimeout(function() {
-            if(!self.component.hasClass('bFormComponentHighlight')){
+            if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){
                     return true;
                 }

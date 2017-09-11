@@ -1,12 +1,12 @@
 /**
- * bFormer is the steward of the form. Holds base functions which are not specific to any page, section, or component.
- * bFormer is initialized on top of the existing HTML and handles validation, tool tip management, dependencies, instances, triggers, pages, and form submission.
+ * jFormer is the steward of the form. Holds base functions which are not specific to any page, section, or component.
+ * jFormer is initialized on top of the existing HTML and handles validation, tool tip management, dependencies, instances, triggers, pages, and form submission.
  *
  * @author Kirk Ouimet <kirk@kirkouimet.com>
  * @author Seth Jensen <seth@sethjdesign.com>
  * @version .5
  */
-BFormer = Class.extend({
+JFormer = Class.extend({
 	init: function(formId, options) {
 		var self = this;
 
@@ -66,26 +66,26 @@ BFormer = Class.extend({
 		this.id = formId;
 		this.form = $(['form#',this.id].join(''));
 		this.formData = {};
-		this.bFormPageWrapper = this.form.find('div.bFormPageWrapper');
-		this.bFormPageScroller = this.form.find('div.bFormPageScroller');
-		this.bFormPageNavigator = null;
-		this.bFormPages = {};
-		this.currentBFormPage = null;
-		this.maxBFormPageIdArrayIndexReached = null;
-		this.bFormPageIdArray = [];
-		this.currentBFormPageIdArrayIndex = null;
+		this.jFormPageWrapper = this.form.find('div.jFormPageWrapper');
+		this.jFormPageScroller = this.form.find('div.jFormPageScroller');
+		this.jFormPageNavigator = null;
+		this.jFormPages = {};
+		this.currentJFormPage = null;
+		this.maxJFormPageIdArrayIndexReached = null;
+		this.jFormPageIdArray = [];
+		this.currentJFormPageIdArrayIndex = null;
 		this.blurredTips = [];
 		this.lastEnabledPage = false;
 
 		// Controls
-		this.control = this.form.find('ul.bFormerControl');
-		this.controlNextLi = this.form.find('ul.bFormerControl li.nextLi');
+		this.control = this.form.find('ul.jFormerControl');
+		this.controlNextLi = this.form.find('ul.jFormerControl li.nextLi');
 		this.controlNextButton = this.controlNextLi.find('button.nextButton');
-		this.controlPreviousLi = this.form.find('ul.bFormerControl li.previousLi');
+		this.controlPreviousLi = this.form.find('ul.jFormerControl li.previousLi');
 		this.controlPreviousButton = this.controlPreviousLi.find('button.previousButton');
 
 		// Initialize all of the pages
-		this.initPages(options.bFormPages);
+		this.initPages(options.jFormPages);
 
 		// Add a splash page if enabled
 		if(this.options.splashPage !== false) {
@@ -96,10 +96,10 @@ BFormer = Class.extend({
 		}
 		// Set the current page
 		else {
-			this.currentBFormPageIdArrayIndex = 0;
-			this.maxBFormPageIdArrayIndexReached = 0;
-			this.currentBFormPage = this.bFormPages[this.bFormPageIdArray[0]];
-			this.currentBFormPage.active = true;
+			this.currentJFormPageIdArrayIndex = 0;
+			this.maxJFormPageIdArrayIndexReached = 0;
+			this.currentJFormPage = this.jFormPages[this.jFormPageIdArray[0]];
+			this.currentJFormPage.active = true;
 			// Add the page navigator
 			if(this.options.pageNavigator !== false) {
 				this.addPageNavigator();
@@ -141,18 +141,18 @@ BFormer = Class.extend({
 		});
 	},
 
-	initPages: function(bFormPages) {
+	initPages: function(jFormPages) {
 		var self = this
 		var each = $.each;
 		var dependencies = {};
 		
-		each(bFormPages, function(bFormPageKey, bFormPageValue) {
-			var bFormPage = new BFormPage(self, bFormPageKey, bFormPageValue.options);
-			bFormPage.show();
+		each(jFormPages, function(jFormPageKey, jFormPageValue) {
+			var jFormPage = new JFormPage(self, jFormPageKey, jFormPageValue.options);
+			jFormPage.show();
 			
 			// Handle page level dependencies
-			if(bFormPage.options.dependencyOptions !== null) {
-				$.each(bFormPage.options.dependencyOptions.dependentOn, function(index, componentId) {
+			if(jFormPage.options.dependencyOptions !== null) {
+				$.each(jFormPage.options.dependencyOptions.dependentOn, function(index, componentId) {
 					if(dependencies[componentId] === undefined) {
 						dependencies[componentId] = {
 							pages:[],
@@ -161,17 +161,17 @@ BFormer = Class.extend({
 						};
 					}
 					dependencies[componentId].pages.push({
-						bFormPageId:bFormPageKey
+						jFormPageId:jFormPageKey
 					});
 				});
 			}
 
-			each(bFormPageValue.bFormSections, function(bFormSectionKey, bFormSectionValue) {
-				var bFormSection = new BFormSection(bFormPage, bFormSectionKey, bFormSectionValue.options);
+			each(jFormPageValue.jFormSections, function(jFormSectionKey, jFormSectionValue) {
+				var jFormSection = new JFormSection(jFormPage, jFormSectionKey, jFormSectionValue.options);
 
 				// Handle section level dependencies
-				if(bFormSection.options.dependencyOptions !== null) {
-					$.each(bFormSection.options.dependencyOptions.dependentOn, function(index, componentId) {
+				if(jFormSection.options.dependencyOptions !== null) {
+					$.each(jFormSection.options.dependencyOptions.dependentOn, function(index, componentId) {
 						if(dependencies[componentId] === undefined) {
 							dependencies[componentId] = {
 								pages:[],
@@ -180,24 +180,24 @@ BFormer = Class.extend({
 							};
 						}
 						dependencies[componentId].sections.push({
-							bFormPageId:bFormPageKey,
-							bFormSectionId:bFormSectionKey
+							jFormPageId:jFormPageKey,
+							jFormSectionId:jFormSectionKey
 						});
 					});
 				}
 
-				each(bFormSectionValue.bFormComponents, function(bFormComponentKey, bFormComponentValue) {
-					var bFormComponent = new window[bFormComponentValue.type](bFormSection, bFormComponentKey, bFormComponentValue.type, bFormComponentValue.options);
-					bFormSection.addComponent(bFormComponent);
+				each(jFormSectionValue.jFormComponents, function(jFormComponentKey, jFormComponentValue) {
+					var jFormComponent = new window[jFormComponentValue.type](jFormSection, jFormComponentKey, jFormComponentValue.type, jFormComponentValue.options);
+					jFormSection.addComponent(jFormComponent);
 
 					// Check if there are pregenerated instances and add them
-					bFormComponent.addInitialInstances();
+					jFormComponent.addInitialInstances();
 
-					bFormSection.addComponent(bFormComponent);
+					jFormSection.addComponent(jFormComponent);
 
 					// Handle component level dependencies
-					if(bFormComponent.options.dependencyOptions !== null) {
-						$.each(bFormComponent.options.dependencyOptions.dependentOn, function(index, componentId) {
+					if(jFormComponent.options.dependencyOptions !== null) {
+						$.each(jFormComponent.options.dependencyOptions.dependentOn, function(index, componentId) {
 							if(dependencies[componentId] === undefined) {
 								dependencies[componentId] = {
 									pages:[],
@@ -206,21 +206,21 @@ BFormer = Class.extend({
 								};
 							}
 							dependencies[componentId].components.push({
-								bFormPageId:bFormPageKey,
-								bFormSectionId:bFormSectionKey,
-								bFormComponentId:bFormComponentKey
+								jFormPageId:jFormPageKey,
+								jFormSectionId:jFormSectionKey,
+								jFormComponentId:jFormComponentKey
 							});
 						});
 					}
 				});
 
 				// Check if there are pregenerated instances and add them
-				bFormSection.addInitialSectionInstances();
+				jFormSection.addInitialSectionInstances();
 
 				// Add the section to the page
-				bFormPage.addSection(bFormSection);
+				jFormPage.addSection(jFormSection);
 			});
-			self.addBFormPage(bFormPage);
+			self.addJFormPage(jFormPage);
 		});
 
 		// Add listeners for all of the components that are being dependent on
@@ -229,28 +229,28 @@ BFormer = Class.extend({
 			
 			$('#'+componentId+':text, textarea#'+componentId).bind('keyup', function(event) {
 				$.each(dependentTypes.pages, function(index, object) {
-					self.bFormPages[object.bFormPageId].checkDependencies();
+					self.jFormPages[object.jFormPageId].checkDependencies();
 				});
 				$.each(dependentTypes.sections, function(index, object) {
-					self.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].checkDependencies();
+					self.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].checkDependencies();
 				});
 				$.each(dependentTypes.components, function(index, object) {
-					self.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].bFormComponents[object.bFormComponentId].checkDependencies();
+					self.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].jFormComponents[object.jFormComponentId].checkDependencies();
 				});
 			});
 
-			$('#'+componentId+'-wrapper').bind('bFormComponent:changed', function(event) {
+			$('#'+componentId+'-wrapper').bind('jFormComponent:changed', function(event) {
 				//console.log('running depend check');
 
 				$.each(dependentTypes.pages, function(index, object) {
-					self.bFormPages[object.bFormPageId].checkDependencies();
+					self.jFormPages[object.jFormPageId].checkDependencies();
 				});
 				$.each(dependentTypes.sections, function(index, object) {
-					self.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].checkDependencies();
+					self.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].checkDependencies();
 				});
 				$.each(dependentTypes.components, function(index, object) {
-					//console.log('running a check', componentId, 'for', object.bFormComponentId);
-					self.bFormPages[object.bFormPageId].bFormSections[object.bFormSectionId].bFormComponents[object.bFormComponentId].checkDependencies();
+					//console.log('running a check', componentId, 'for', object.jFormComponentId);
+					self.jFormPages[object.jFormPageId].jFormSections[object.jFormSectionId].jFormComponents[object.jFormComponentId].checkDependencies();
 				});
 			});
 
@@ -263,13 +263,13 @@ BFormer = Class.extend({
 		});
 	},
 
-	select: function(bFormComponentId) {
+	select: function(jFormComponentId) {
 		var componentFound = false,
 		component = null;
-		$.each(this.bFormPages, function(bFormPageKey, bFormPage){
-			$.each(bFormPage.bFormSections, function(sectionKey, sectionObject){
-				$.each(sectionObject.bFormComponents, function(componentKey, componentObject){
-					if (componentObject.id == bFormComponentId){
+		$.each(this.jFormPages, function(jFormPageKey, jFormPage){
+			$.each(jFormPage.jFormSections, function(sectionKey, sectionObject){
+				$.each(sectionObject.jFormComponents, function(componentKey, componentObject){
+					if (componentObject.id == jFormComponentId){
 						component = componentObject;
 						componentFound = true;
 					}
@@ -283,14 +283,14 @@ BFormer = Class.extend({
 	},
 
 	checkDependencies: function(onInit) {
-		$.each(this.bFormPages, function(bFormPageKey, bFormPage) {
-			bFormPage.checkDependencies();
+		$.each(this.jFormPages, function(jFormPageKey, jFormPage) {
+			jFormPage.checkDependencies();
 
-			$.each(bFormPage.bFormSections, function(bFormSectionKey, bFormSection) {
-				bFormSection.checkDependencies();
+			$.each(jFormPage.jFormSections, function(jFormSectionKey, jFormSection) {
+				jFormSection.checkDependencies();
 
-				$.each(bFormSection.bFormComponents, function(bFormComponentKey, bFormComponent) {
-					bFormComponent.checkDependencies();
+				$.each(jFormSection.jFormComponents, function(jFormComponentKey, jFormComponent) {
+					jFormComponent.checkDependencies();
 				});
 			});
 		});
@@ -305,17 +305,17 @@ BFormer = Class.extend({
 			this.options.splashPage.options = {};
 		}
 
-		// Setup the bFormPage for the splash page
-		this.options.splashPage.bFormPage = new BFormPage(this, this.form.find('div.bFormerSplashPage').attr('id'));
-		this.options.splashPage.bFormPage.addSection(new BFormSection(this.options.splashPage.bFormPage, this.form.find('div.bFormerSplashPage').attr('id') + '-section'));
-		this.options.splashPage.bFormPage.page.width(this.form.width());
-		this.options.splashPage.bFormPage.active = true;
+		// Setup the jFormPage for the splash page
+		this.options.splashPage.jFormPage = new JFormPage(this, this.form.find('div.jFormerSplashPage').attr('id'));
+		this.options.splashPage.jFormPage.addSection(new JFormSection(this.options.splashPage.jFormPage, this.form.find('div.jFormerSplashPage').attr('id') + '-section'));
+		this.options.splashPage.jFormPage.page.width(this.form.width());
+		this.options.splashPage.jFormPage.active = true;
 
 		// Set the splash page as the current page
-		this.currentBFormPage = this.options.splashPage.bFormPage;
+		this.currentJFormPage = this.options.splashPage.jFormPage;
 
 		// Set the height of the page wrapper to the height of the splash page
-		this.bFormPageWrapper.height(this.options.splashPage.bFormPage.page.outerHeight());
+		this.jFormPageWrapper.height(this.options.splashPage.jFormPage.page.outerHeight());
 
 		// If they have a custom button
 		if(this.options.splashPage.customButtonId) {
@@ -341,31 +341,31 @@ BFormer = Class.extend({
 		var self = this;
 
 		// Add the page navigator
-		if(this.options.pageNavigator !== false && this.bFormPageNavigator == null) {
+		if(this.options.pageNavigator !== false && this.jFormPageNavigator == null) {
 			this.addPageNavigator();
-			this.bFormPageNavigator.show();
+			this.jFormPageNavigator.show();
 		}
 		else if(this.options.pageNavigator !== false) {
-			this.bFormPageNavigator.show();
+			this.jFormPageNavigator.show();
 		}
 
 		// Find all of the pages
-		var pages = this.form.find('.bFormPage');
+		var pages = this.form.find('.jFormPage');
 
 		// Set the width of each page
-		pages.css('width', this.form.find('.bFormWrapperContainer').width());
+		pages.css('width', this.form.find('.jFormWrapperContainer').width());
 		
 		// Mark the splash page as inactive
-		self.options.splashPage.bFormPage.active = false;
+		self.options.splashPage.jFormPage.active = false;
 
 		if(!loadForm){
 			// Set the current page index
-			self.currentBFormPageIdArrayIndex = 0;
+			self.currentJFormPageIdArrayIndex = 0;
 
 			// Scroll to the new page, hide the old page when it is finished
-			self.bFormPages[self.bFormPageIdArray[0]].scrollTo({
+			self.jFormPages[self.jFormPageIdArray[0]].scrollTo({
 				onAfter: function() {
-					self.options.splashPage.bFormPage.hide();
+					self.options.splashPage.jFormPage.hide();
 					self.renumberPageNavigator();
 				}
 			});
@@ -375,14 +375,14 @@ BFormer = Class.extend({
 addPageNavigator: function(){
 	var self = this;
 
-	this.bFormPageNavigator = this.form.find('.bFormPageNavigator');
+	this.jFormPageNavigator = this.form.find('.jFormPageNavigator');
 
-	this.bFormPageNavigator.find('.bFormPageNavigatorLink:first').click(function(event) {
+	this.jFormPageNavigator.find('.jFormPageNavigatorLink:first').click(function(event) {
 		// Don't scroll to the page if you already on it
-		if(self.currentBFormPageIdArrayIndex != 0) {
-			self.currentBFormPageIdArrayIndex = 0;
+		if(self.currentJFormPageIdArrayIndex != 0) {
+			self.currentJFormPageIdArrayIndex = 0;
 
-			self.scrollToPage(self.bFormPageIdArray[0], {
+			self.scrollToPage(self.jFormPageIdArray[0], {
 				//onAfter: function() {
 				//}
 				});
@@ -391,31 +391,31 @@ addPageNavigator: function(){
 
 	// Update the style is right aligned
 	if(this.options.pageNavigator.position == 'right'){
-		this.form.find('.bFormWrapperContainer').width(this.form.width() - this.bFormPageNavigator.width() - 30);
+		this.form.find('.jFormWrapperContainer').width(this.form.width() - this.jFormPageNavigator.width() - 30);
 	}
 },
 
 updatePageNavigator: function() {
 	var self = this, pageCount, pageIndex;
-	for(var i = 1; i <= this.maxBFormPageIdArrayIndexReached + 1; i++) {
+	for(var i = 1; i <= this.maxJFormPageIdArrayIndexReached + 1; i++) {
 		pageCount = i;
-		var bFormPageNavigatorLink = $('#navigatePage'+pageCount);
+		var jFormPageNavigatorLink = $('#navigatePage'+pageCount);
 
 		// Remove the active class from the page you aren't on
-		if(this.currentBFormPageIdArrayIndex != pageCount - 1) {
-			bFormPageNavigatorLink.removeClass('bFormPageNavigatorLinkActive');
+		if(this.currentJFormPageIdArrayIndex != pageCount - 1) {
+			jFormPageNavigatorLink.removeClass('jFormPageNavigatorLinkActive');
 		}
 		// Add the active class to the page you are on
 		else {
-			bFormPageNavigatorLink.addClass('bFormPageNavigatorLinkActive');
+			jFormPageNavigatorLink.addClass('jFormPageNavigatorLinkActive');
 		}
 
 		// If the page is currently locked
-		if(bFormPageNavigatorLink.hasClass('bFormPageNavigatorLinkLocked')){
+		if(jFormPageNavigatorLink.hasClass('jFormPageNavigatorLinkLocked')){
 			// Remove the lock
-			bFormPageNavigatorLink.removeClass('bFormPageNavigatorLinkLocked').addClass('bFormPageNavigatorLinkUnlocked');
+			jFormPageNavigatorLink.removeClass('jFormPageNavigatorLinkLocked').addClass('jFormPageNavigatorLinkUnlocked');
 
-			bFormPageNavigatorLink.click(function(event) {
+			jFormPageNavigatorLink.click(function(event) {
 				var target = $(event.target);
 				if(!target.is('li')){
 					target = target.closest('li');
@@ -428,11 +428,11 @@ updatePageNavigator: function() {
 				self.getActivePage().validate(true);
 
 				// Don't scroll to the page if you already on it
-				if(self.currentBFormPageIdArrayIndex != pageIndex) {
-					self.scrollToPage(self.bFormPageIdArray[pageIndex]);
+				if(self.currentJFormPageIdArrayIndex != pageIndex) {
+					self.scrollToPage(self.jFormPageIdArray[pageIndex]);
 				}
 
-				self.currentBFormPageIdArrayIndex = pageIndex;
+				self.currentJFormPageIdArrayIndex = pageIndex;
 					
 			});
 		}
@@ -440,7 +440,7 @@ updatePageNavigator: function() {
 },
 
 renumberPageNavigator: function() {
-	$('.bFormPageNavigatorLink:visible').each(function(index, element) {
+	$('.jFormPageNavigatorLink:visible').each(function(index, element) {
 		// Renumber page link icons
 		if($(element).find('span').length > 0) {
 			$(element).find('span').html(index+1);
@@ -452,21 +452,21 @@ renumberPageNavigator: function() {
 	});
 },
 	
-addBFormPage: function(bFormPage) {
-	this.bFormPageIdArray.push(bFormPage.id);
-	this.bFormPages[bFormPage.id] = bFormPage;
+addJFormPage: function(jFormPage) {
+	this.jFormPageIdArray.push(jFormPage.id);
+	this.jFormPages[jFormPage.id] = jFormPage;
 },
 
-removeBFormPage: function(bFormPageId) {
+removeJFormPage: function(jFormPageId) {
 	var self = this;
 
 	// Remove the HTML
-	$('#'+bFormPageId).remove();
+	$('#'+jFormPageId).remove();
 
-	this.bFormPageIdArray = $.grep(self.bFormPageIdArray, function(value) {
-		return value != bFormPageId;
+	this.jFormPageIdArray = $.grep(self.jFormPageIdArray, function(value) {
+		return value != jFormPageId;
 	});
-	delete this.bFormPages[bFormPageId];
+	delete this.jFormPages[jFormPageId];
 },
 
 addEnterKeyListener: function() {
@@ -504,7 +504,7 @@ addEnterKeyListener: function() {
 				target.trigger('click').blur();
 			}
 			// If you are on a field where pressing enter submits
-			else if(target.is('.bFormComponentEnterSubmits')){
+			else if(target.is('.jFormComponentEnterSubmits')){
 				event.preventDefault();
 				target.blur();
 				self.controlNextButton.trigger('click');
@@ -520,7 +520,7 @@ addEnterKeyListener: function() {
 				target.blur();
 
 				// Handle if you are on the splash page
-				if(self.options.splashPage !== null && self.currentBFormPage.id == self.options.splashPage.bFormPage.id) {
+				if(self.options.splashPage !== null && self.currentJFormPage.id == self.options.splashPage.jFormPage.id) {
 					self.options.splashPage.controlSplashButton.trigger('click');
 				}
 				else {
@@ -545,8 +545,8 @@ addSubmitListener: function(){
 getData: function() {
 	var self = this;
 	this.formData = {};
-	$.each(this.bFormPages, function(bFormKey, bFormPage) {
-		self.formData[bFormKey] = bFormPage.getData();
+	$.each(this.jFormPages, function(jFormKey, jFormPage) {
+		self.formData[jFormKey] = jFormPage.getData();
 	});
 	return this.formData;
 },
@@ -555,8 +555,8 @@ setData: function(data) {
 	var self = this;
 	this.formData = data;
 	$.each(data, function(key, page) {
-		if(self.bFormPages[key] != undefined){
-			self.bFormPages[key].setData(page);
+		if(self.jFormPages[key] != undefined){
+			self.jFormPages[key].setData(page);
 		} else {
 			return;
 		}
@@ -570,14 +570,14 @@ setupPageScroller: function(options) {
 	// Set some default values for the options
 	var defaultOptions = {
 		adjustHeightDuration: 0,
-		bFormWrapperContainerWidth : self.form.find('.bFormWrapperContainer').width(),
-		bFormPageWrapperWidth : self.bFormPageWrapper.width(),
+		jFormWrapperContainerWidth : self.form.find('.jFormWrapperContainer').width(),
+		jFormPageWrapperWidth : self.jFormPageWrapper.width(),
 		activePageOuterHeight : self.getActivePage().page.outerHeight()
 	};
 	options = $.extend(defaultOptions, options);
 		
 	// Find all of the pages
-	var pages = this.form.find('.bFormPage');
+	var pages = this.form.find('.jFormPage');
 
 	// Count the total number of pages
 	var pageCount = pages.length;
@@ -592,19 +592,19 @@ setupPageScroller: function(options) {
 	// Don't set width's if they are 0 (the form is hidden)
 	if(options.formWrapperContainerWidth != 0) {
 		// Set the width of the scroller
-		self.bFormPageScroller.css('width', options.bFormPageWrapperWidth * (pageCount));
-		self.bFormPageWrapper.parent().css('width', options.bFormPageWrapperWidth);
+		self.jFormPageScroller.css('width', options.jFormPageWrapperWidth * (pageCount));
+		self.jFormPageWrapper.parent().css('width', options.jFormPageWrapperWidth);
 	}
 
 	// Don't set height if it is 0 (the form is hidden)
 	if(options.activePageOuterHeight != 0) {
 		// Set the height of the wrapper
-		self.bFormPageWrapper.height(options.activePageOuterHeight);
+		self.jFormPageWrapper.height(options.activePageOuterHeight);
 	}
 
 	// Scroll to the current page (prevent weird Firefox bug where the page does not display on soft refresh
 	if(options.scrollToPage) {
-		self.scrollToPage(self.currentBFormPage.id, options);
+		self.scrollToPage(self.currentJFormPage.id, options);
 	}
 },
 
@@ -612,7 +612,7 @@ setupControl: function() {
 	//console.log('setting up control');
 
 	var self = this;
-	// console.log(this.currentBFormPageIdArrayIndex);
+	// console.log(this.currentJFormPageIdArrayIndex);
 	// Setup event listener for next button
 	this.controlNextButton.unbind().click(function(event) {
 		event.preventDefault();
@@ -622,8 +622,8 @@ setupControl: function() {
 
 	//check to see if this is the last enabled page.
 	this.lastEnabledPage = false;
-	for(i = this.bFormPageIdArray.length - 1 ; i > this.currentBFormPageIdArrayIndex; i--){
-		if(!this.bFormPages[this.bFormPageIdArray[i]].disabledByDependency){
+	for(i = this.jFormPageIdArray.length - 1 ; i > this.currentJFormPageIdArrayIndex; i--){
+		if(!this.jFormPages[this.jFormPageIdArray[i]].disabledByDependency){
 			this.lastEnabledPage = false;
 			break;
 		}
@@ -635,57 +635,57 @@ setupControl: function() {
 		event.preventDefault();
 
 		// Be able to return to the splash page
-		if(self.options.splashPage !== false && self.currentBFormPageIdArrayIndex === 0) {
-			self.currentBFormPageIdArrayIndex = null;
-			if(self.bFormPageNavigator){
-				self.bFormPageNavigator.hide();
+		if(self.options.splashPage !== false && self.currentJFormPageIdArrayIndex === 0) {
+			self.currentJFormPageIdArrayIndex = null;
+			if(self.jFormPageNavigator){
+				self.jFormPageNavigator.hide();
 			}
-			self.options.splashPage.bFormPage.scrollTo();
+			self.options.splashPage.jFormPage.scrollTo();
 		}
 		// Scroll to the previous page
 		else {
-			if(self.bFormPages[self.bFormPageIdArray[self.currentBFormPageIdArrayIndex - 1]].disabledByDependency){
-				for(var i = 1; i <= self.currentBFormPageIdArrayIndex; i++){
-					var nextIndex  = self.currentBFormPageIdArrayIndex - i;
-					if(nextIndex == 0 && self.options.splashPage !== false && self.bFormPages[self.bFormPageIdArray[nextIndex]].disabledByDependency ){
-						if(self.bFormPageNavigator){
-							self.bFormPageNavigator.hide();
+			if(self.jFormPages[self.jFormPageIdArray[self.currentJFormPageIdArrayIndex - 1]].disabledByDependency){
+				for(var i = 1; i <= self.currentJFormPageIdArrayIndex; i++){
+					var nextIndex  = self.currentJFormPageIdArrayIndex - i;
+					if(nextIndex == 0 && self.options.splashPage !== false && self.jFormPages[self.jFormPageIdArray[nextIndex]].disabledByDependency ){
+						if(self.jFormPageNavigator){
+							self.jFormPageNavigator.hide();
 						}
-						self.options.splashPage.bFormPage.scrollTo();
+						self.options.splashPage.jFormPage.scrollTo();
 						break;
 					}
-					else if(!self.bFormPages[self.bFormPageIdArray[nextIndex]].disabledByDependency){
-						self.currentBFormPageIdArrayIndex = nextIndex;
+					else if(!self.jFormPages[self.jFormPageIdArray[nextIndex]].disabledByDependency){
+						self.currentJFormPageIdArrayIndex = nextIndex;
 						break;
 					}
 				}
 			} else {
-				self.currentBFormPageIdArrayIndex = self.currentBFormPageIdArrayIndex - 1;
+				self.currentJFormPageIdArrayIndex = self.currentJFormPageIdArrayIndex - 1;
 			}
-			self.scrollToPage(self.bFormPageIdArray[self.currentBFormPageIdArrayIndex]);
+			self.scrollToPage(self.jFormPageIdArray[self.currentJFormPageIdArrayIndex]);
 		}
 	});
 	   
 	// First page with more pages after, or splash page
-	if(this.currentBFormPageIdArrayIndex === 0 && this.currentBFormPageIdArrayIndex != this.bFormPageIdArray.length - 1 && this.lastEnabledPage === false) {
+	if(this.currentJFormPageIdArrayIndex === 0 && this.currentJFormPageIdArrayIndex != this.jFormPageIdArray.length - 1 && this.lastEnabledPage === false) {
 		this.controlNextButton.html('Next');
 		this.controlNextLi.show();
 		this.controlPreviousLi.hide();
 		this.controlPreviousButton.attr('disabled', 'disabled');
 	}
 	// Last page
-	else if(self.currentBFormPageIdArrayIndex == this.bFormPageIdArray.length - 1 || this.lastEnabledPage === true) {
+	else if(self.currentJFormPageIdArrayIndex == this.jFormPageIdArray.length - 1 || this.lastEnabledPage === true) {
 		this.controlNextButton.html(this.options.submitButtonText);
 		this.controlNextLi.show();
 
 		// First page is the last page
-		if(self.currentBFormPageIdArrayIndex === 0 ) {
+		if(self.currentJFormPageIdArrayIndex === 0 ) {
 			// Hide the previous button
 			this.controlPreviousLi.hide();
 			this.controlPreviousButton.attr('disabled', '');
 		}
 		// There is a previous page
-		else if(self.currentBFormPageIdArrayIndex > 0) {
+		else if(self.currentJFormPageIdArrayIndex > 0) {
 			this.controlPreviousButton.removeAttr('disabled');
 			this.controlPreviousLi.show();
 		}
@@ -701,7 +701,7 @@ setupControl: function() {
 	// Splash page
 	if(this.options.splashPage !== false) {
 		// If you are on the splash page
-		if(this.options.splashPage.bFormPage.active) {
+		if(this.options.splashPage.jFormPage.active) {
 			this.options.splashPage.controlSplashLi.show();
 			this.controlNextLi.hide();
 			this.controlPreviousLi.hide();
@@ -713,7 +713,7 @@ setupControl: function() {
 		}
 
 		// If you are on the first page
-		if(this.currentBFormPageIdArrayIndex === 0  && this.options.saveState == false) {
+		if(this.currentJFormPageIdArrayIndex === 0  && this.options.saveState == false) {
 			this.controlPreviousButton.removeAttr('disabled');
 			this.controlPreviousLi.show();
 		}
@@ -728,23 +728,23 @@ setupControl: function() {
 		// Bind an event listener to the start over button
 		this.control.find('.startOver').one('click', function(event){
 			event.preventDefault();
-			self.currentBFormPageIdArrayIndex = 0;
-			self.scrollToPage(self.bFormPageIdArray[0], {
+			self.currentJFormPageIdArrayIndex = 0;
+			self.scrollToPage(self.jFormPageIdArray[0], {
 				onAfter: function(){
 					// Remove the start over button
 					$(event.target).parent().remove();
-					self.removeBFormPage(self.id+'bFormPageFailure');
+					self.removeJFormPage(self.id+'jFormPageFailure');
 				}
 			});
 		});
 	}
 },
 	
-scrollToPage: function(bFormPageId, options) {
-	//console.log('BFormer('+this.id+'):scrollToPage', bFormPageId, options);
+scrollToPage: function(jFormPageId, options) {
+	//console.log('JFormer('+this.id+'):scrollToPage', jFormPageId, options);
 
 	// Prevent scrolling to dependency disabled pages
-	if(this.bFormPages[bFormPageId] && this.bFormPages[bFormPageId].disabledByDependency) {
+	if(this.jFormPages[jFormPageId] && this.jFormPages[jFormPageId].disabledByDependency) {
 		return false;
 	}
 
@@ -756,47 +756,47 @@ scrollToPage: function(bFormPageId, options) {
 
 	// Handle page specific onScrollTo onBefore custom function
 	var formPage = null;
-	if(self.options.splashPage !== false && bFormPageId == self.options.splashPage.formPage.id) {
+	if(self.options.splashPage !== false && jFormPageId == self.options.splashPage.formPage.id) {
 		formPage = self.options.splashPage.formPage;
 	}
 	else {
-		formPage = this.bFormPages[bFormPageId];
+		formPage = this.jFormPages[jFormPageId];
 	}
 
 	if(formPage && formPage.options.onScrollTo.onBefore !== null) {
 		// put a notice up if defined
-		if(this.bFormPages[bFormPageId].options.onScrollTo.notificationHtml !== undefined) {
-			if(self.control.find('.bformerScrollToNotification').length != 0 ){
-				self.control.find('.bformerScrollToNotification').html(this.bFormPages[bFormPageId].options.onScrollTo.notificationHtml);
+		if(this.jFormPages[jFormPageId].options.onScrollTo.notificationHtml !== undefined) {
+			if(self.control.find('.jformerScrollToNotification').length != 0 ){
+				self.control.find('.jformerScrollToNotification').html(this.jFormPages[jFormPageId].options.onScrollTo.notificationHtml);
 			} else {
-				self.control.append('<li class="bformerScrollToNotification">'+this.bFormPages[bFormPageId].options.onScrollTo.notificationHtml+'<li>');
+				self.control.append('<li class="jformerScrollToNotification">'+this.jFormPages[jFormPageId].options.onScrollTo.notificationHtml+'<li>');
 			}
 				
 		}
-		this.bFormPages[bFormPageId].options.onScrollTo.onBefore();
+		this.jFormPages[jFormPageId].options.onScrollTo.onBefore();
 	}
 
 	// Remember the active duration time of the page
-	var oldBFormPage = this.getActivePage();
+	var oldJFormPage = this.getActivePage();
 
 	// Show every page so you can see them as you scroll through
-	$.each(this.bFormPages, function(bFormPageKey, bFormPage) {
-		bFormPage.show();
-		bFormPage.active = false;
+	$.each(this.jFormPages, function(jFormPageKey, jFormPage) {
+		jFormPage.show();
+		jFormPage.active = false;
 	});
 
 	// If on the splash page, set the current page to the splash page
-	if(self.options.splashPage !== false && bFormPageId == self.options.splashPage.bFormPage.id) {
-		self.currentBFormPage = self.options.splashPage.bFormPage;
-		self.currentBFormPage.show();
+	if(self.options.splashPage !== false && jFormPageId == self.options.splashPage.jFormPage.id) {
+		self.currentJFormPage = self.options.splashPage.jFormPage;
+		self.currentJFormPage.show();
 	}
 	// Set the current page to the new page
 	else {
-		this.currentBFormPage = this.bFormPages[bFormPageId];
+		this.currentJFormPage = this.jFormPages[jFormPageId];
 	}
 
 	// Mark the current page as active
-	this.currentBFormPage.active = true;
+	this.currentJFormPage.active = true;
 
 	// Adjust the height of the page wrapper
 	// If there is a custom adjust height duration
@@ -810,33 +810,33 @@ scrollToPage: function(bFormPageId, options) {
 	}
 
 	// Run the next animation immediately
-	this.bFormPageWrapper.dequeue();
+	this.jFormPageWrapper.dequeue();
 
 	// Scroll the document the top of the form
 	this.scrollToTop();
 		
 	// PageWrapper is like a viewport - this scrolls to the top of the new page, but the document needs to be scrolled too
 	var initializing = this.initializing;
-	this.bFormPageWrapper.scrollTo(
-		self.currentBFormPage.page,
+	this.jFormPageWrapper.scrollTo(
+		self.currentJFormPage.page,
 		self.options.animationOptions.pageScroll.duration,
 		{
 			onAfter: function() {
 				// Don't hide any pages while scrolling
-				if($(self.bFormPageWrapper).queue('fx').length <= 1 ) {
+				if($(self.jFormPageWrapper).queue('fx').length <= 1 ) {
 					self.hideInactivePages(self.getActivePage());
 				}
 
 				// Set the max page reach indexed
-				if(self.maxBFormPageIdArrayIndexReached < self.currentBFormPageIdArrayIndex) {
-					self.maxBFormPageIdArrayIndexReached = self.currentBFormPageIdArrayIndex;
+				if(self.maxJFormPageIdArrayIndexReached < self.currentJFormPageIdArrayIndex) {
+					self.maxJFormPageIdArrayIndexReached = self.currentJFormPageIdArrayIndex;
 				}
 
 				// Update the page navigator
 				self.updatePageNavigator();
 
 				// Start the time for the new page
-				self.currentBFormPage.startTime = (new Date().getTime()/1000);
+				self.currentJFormPage.startTime = (new Date().getTime()/1000);
 
 				// Run any special functions
 				if(options && options.onAfter) {
@@ -844,9 +844,9 @@ scrollToPage: function(bFormPageId, options) {
 				}
 
 				// Run any specific page functions
-				//console.log(self.currentBFormPage);
-				if(self.currentBFormPage.options.onScrollTo.onAfter) {
-					self.currentBFormPage.options.onScrollTo.onAfter();
+				//console.log(self.currentJFormPage);
+				if(self.currentJFormPage.options.onScrollTo.onAfter) {
+					self.currentJFormPage.options.onScrollTo.onAfter();
 				}
 
 				// Setup the controls
@@ -857,15 +857,15 @@ scrollToPage: function(bFormPageId, options) {
 				self.controlPreviousButton.removeAttr('disabled').blur();
 
 				// Focus on the first failed component, if it is failed,
-				if(self.currentBFormPage.validationPassed === false && !initializing){
-					self.currentBFormPage.focusOnFirstFailedComponent();
+				if(self.currentJFormPage.validationPassed === false && !initializing){
+					self.currentJFormPage.focusOnFirstFailedComponent();
 				}
 
 				// Handle page specific onScrollTo onAfter custom function
-				if(self.bFormPages[bFormPageId] && self.bFormPages[bFormPageId].options.onScrollTo.onAfter !== null) {
-					self.bFormPages[bFormPageId].options.onScrollTo.onAfter();
-					if(self.bFormPages[bFormPageId].options.onScrollTo.notificationHtml !== null) {
-						self.control.find('li.bFormerScrollToNotification').remove();
+				if(self.jFormPages[jFormPageId] && self.jFormPages[jFormPageId].options.onScrollTo.onAfter !== null) {
+					self.jFormPages[jFormPageId].options.onScrollTo.onAfter();
+					if(self.jFormPages[jFormPageId].options.onScrollTo.notificationHtml !== null) {
+						self.control.find('li.jFormerScrollToNotification').remove();
 					}
 				}
 			}
@@ -893,18 +893,18 @@ scrollToTop: function() {
 
 getActivePage: function() {
 	// if active page has not been set
-	return this.currentBFormPage;
+	return this.currentJFormPage;
 },
 
 hideInactivePages: function(){
-	$.each(this.bFormPages, function(bFormPageKey, bFormPage){
-		bFormPage.hide();
+	$.each(this.jFormPages, function(jFormPageKey, jFormPage){
+		jFormPage.hide();
 	});
 },
 
 clearValidation: function() {
-	$.each(this.bFormPages, function(bFormPageKey, bFormPage){
-		bFormPage.clearValidation();
+	$.each(this.jFormPages, function(jFormPageKey, jFormPage){
+		jFormPage.clearValidation();
 	});
 },
 
@@ -916,8 +916,8 @@ submitEvent: function(event) {
 	event.preventDefault();
 
 	// Remove any failure notices
-	self.control.find('.bFormerFailureNotice').remove();
-	self.form.find('.bFormerFailure').remove();
+	self.control.find('.jFormerFailureNotice').remove();
+	self.form.find('.jFormerFailure').remove();
 
 	// Run a custom function at beginning of the form submission
 	var onSubmitStartResult;
@@ -931,7 +931,7 @@ submitEvent: function(event) {
 	// Validate the current page if you are not the last page
 	var clientSideValidationPassed = false;
 	if(this.options.clientSideValidation) {
-		if(self.currentBFormPageIdArrayIndex < self.bFormPageIdArray.length - 1 && !self.lastEnabledPage) {
+		if(self.currentJFormPageIdArrayIndex < self.jFormPageIdArray.length - 1 && !self.lastEnabledPage) {
 			//console.log('Validating single page.');
 			clientSideValidationPassed = self.getActivePage().validate();
 		}
@@ -952,25 +952,25 @@ submitEvent: function(event) {
 	// If the custom finish function returns false, do not submit the form
 	if(onSubmitFinishResult) {
 		// Last page, submit the form
-		//console.log(clientSideValidationPassed && (self.currentBFormPageIdArrayIndex == self.bFormPageIdArray.length - 1) || (self.lastEnabledPage === true ));
-		if(clientSideValidationPassed && (self.currentBFormPageIdArrayIndex == self.bFormPageIdArray.length - 1) || (self.lastEnabledPage === true )) {
+		//console.log(clientSideValidationPassed && (self.currentJFormPageIdArrayIndex == self.jFormPageIdArray.length - 1) || (self.lastEnabledPage === true ));
+		if(clientSideValidationPassed && (self.currentJFormPageIdArrayIndex == self.jFormPageIdArray.length - 1) || (self.lastEnabledPage === true )) {
 			self.submitForm(event);
 		}
 		// Not last page, scroll to the next page
-		else if(clientSideValidationPassed && self.currentBFormPageIdArrayIndex < self.bFormPageIdArray.length - 1) {
+		else if(clientSideValidationPassed && self.currentJFormPageIdArrayIndex < self.jFormPageIdArray.length - 1) {
 			// if the next page is disabled by dependency, loop through till you find a good page.
-			if(self.bFormPages[self.bFormPageIdArray[self.currentBFormPageIdArrayIndex + 1]].disabledByDependency){
-				for(var i = self.currentBFormPageIdArrayIndex + 1; i <= self.bFormPageIdArray.length - 1; i++){
+			if(self.jFormPages[self.jFormPageIdArray[self.currentJFormPageIdArrayIndex + 1]].disabledByDependency){
+				for(var i = self.currentJFormPageIdArrayIndex + 1; i <= self.jFormPageIdArray.length - 1; i++){
 					// page is enabled, set the proper index, and break out of the loop.
-					if(!self.bFormPages[self.bFormPageIdArray[self.currentBFormPageIdArrayIndex + i]].disabledByDependency){
-						self.currentBFormPageIdArrayIndex = self.currentBFormPageIdArrayIndex + i;
+					if(!self.jFormPages[self.jFormPageIdArray[self.currentJFormPageIdArrayIndex + i]].disabledByDependency){
+						self.currentJFormPageIdArrayIndex = self.currentJFormPageIdArrayIndex + i;
 						break;
 					}
 				}
 			} else {
-				self.currentBFormPageIdArrayIndex = self.currentBFormPageIdArrayIndex + 1;
+				self.currentJFormPageIdArrayIndex = self.currentJFormPageIdArrayIndex + 1;
 			}
-			self.scrollToPage(self.bFormPageIdArray[self.currentBFormPageIdArrayIndex]);
+			self.scrollToPage(self.jFormPageIdArray[self.currentJFormPageIdArrayIndex]);
 		}
 	}
 },
@@ -979,14 +979,14 @@ validateAll: function(){
 	var self = this;
 	var validationPassed = true;
 	var index = 0;
-	$.each(this.bFormPages, function(bFormPageKey, bFormPage) {
-		var passed = bFormPage.validate();
-		//console.log(bFormPage.id, 'passed', passed);
+	$.each(this.jFormPages, function(jFormPageKey, jFormPage) {
+		var passed = jFormPage.validate();
+		//console.log(jFormPage.id, 'passed', passed);
 		if(passed === false) {
 			//console.log('something went wrong' );
-			self.currentBFormPageIdArrayIndex = index;
-			if(self.currentBFormPage.id != bFormPage.id) {
-				bFormPage.scrollTo();
+			self.currentJFormPageIdArrayIndex = index;
+			if(self.currentJFormPage.id != jFormPage.id) {
+				jFormPage.scrollTo();
 			}
 			validationPassed = false;
 			return false; // Break out of the .each
@@ -997,7 +997,7 @@ validateAll: function(){
 },
 
 adjustHeight: function(options) {
-	//console.log('bFormer:adjustHeight', options)
+	//console.log('jFormer:adjustHeight', options)
 
 	var self = this;
 	var duration = this.options.animationOptions.pageScroll.adjustHeightDuration;
@@ -1011,7 +1011,7 @@ adjustHeight: function(options) {
 	}
 
 	if(!this.initializing) {
-		this.bFormPageWrapper.animate({
+		this.jFormPageWrapper.animate({
 			'height' : self.getActivePage().page.outerHeight()
 		}, duration);
 	}
@@ -1026,9 +1026,9 @@ submitForm: function(event) {
 	formClone.attr('style', 'display: none;');
 	formClone.empty();
 	formClone.appendTo($(this.form).parent());
-	// Wrap all of the form responses into an object based on the component bFormComponentType
-	var formData = $('<input type="hidden" name="bFormer" />').attr('value', encodeURIComponent(bFormerUtility.jsonEncode(this.getData()))); // Set all non-file values in one form object
-	var formIdentifier = $('<input type="hidden" name="bFormerId" value="'+this.id+'" />');
+	// Wrap all of the form responses into an object based on the component jFormComponentType
+	var formData = $('<input type="hidden" name="jFormer" />').attr('value', encodeURIComponent(jFormerUtility.jsonEncode(this.getData()))); // Set all non-file values in one form object
+	var formIdentifier = $('<input type="hidden" name="jFormerId" value="'+this.id+'" />');
 	formClone.append(formData);
 	formClone.append(formIdentifier);
 
@@ -1036,19 +1036,19 @@ submitForm: function(event) {
 	this.form.find('input:file').each(function(index, fileInput) {
 		if($(fileInput).val() != '') {
 			// grab the IDs needed to pass
-			var sectionId = $(fileInput).closest('.bFormSection').attr('id');
-			var pageId = $(fileInput).closest('.bFormPage').attr('id');
+			var sectionId = $(fileInput).closest('.jFormSection').attr('id');
+			var pageId = $(fileInput).closest('.jFormPage').attr('id');
 			//var fileInput = $(fileInput).clone()
 
 			// do find out the section instance index
 			if($(fileInput).attr('id').match(/-section[0-9]+/)){
 				var sectionInstance = null;
-				var section = $(fileInput).closest('.bFormSection');
+				var section = $(fileInput).closest('.jFormSection');
 				// grab the base id of the section to find all sister sections
 				var sectionBaseId = section.attr('id').replace(/-section[0-9]+/, '') ;
 				sectionId = sectionId.replace(/-section[0-9]+/, '');
 				// Find out which instance it is
-				section.closest('.bFormPage').find('div[id*='+sectionBaseId+']').each(function(index, fileSection){
+				section.closest('.jFormPage').find('div[id*='+sectionBaseId+']').each(function(index, fileSection){
 					if(section.attr('id') == $(fileSection).attr('id')){
 						sectionInstance = index + 1;
 						return false;
@@ -1064,7 +1064,7 @@ submitForm: function(event) {
 				var baseId = $(fileInput).attr('id').replace(/-instance[0-9]+/, '')
 				var instance = null;
 				// Find out which instance it is
-				$(fileInput).closest('.bFormSection').find('input[id*='+baseId+']').each(function(index, fileComponent){
+				$(fileInput).closest('.jFormSection').find('input[id*='+baseId+']').each(function(index, fileComponent){
 					if($(fileComponent).attr('id') == $(fileInput).attr('id')){
 						instance = index + 1;
 						return false;
@@ -1105,27 +1105,27 @@ handleFormSubmissionResponse: function(json) {
 	if(json.status == 'failure') {
 		// Handle validation failures
 		if(json.response.validationFailed) {
-			$.each(json.response.validationFailed, function(bFormPageKey, bFormPageValues){
-				$.each(bFormPageValues, function(bFormSectionKey, bFormSectionValues){
+			$.each(json.response.validationFailed, function(jFormPageKey, jFormPageValues){
+				$.each(jFormPageValues, function(jFormSectionKey, jFormSectionValues){
 					// Handle section instances
-					if($.isArray(bFormSectionValues)) {
-						$.each(bFormSectionValues, function(bFormSectionInstanceIndex, bFormSectionInstanceValues){
+					if($.isArray(jFormSectionValues)) {
+						$.each(jFormSectionValues, function(jFormSectionInstanceIndex, jFormSectionInstanceValues){
 							var sectionKey;
-							if(bFormSectionInstanceIndex != 0) {
-								sectionKey = '-section'+(bFormSectionInstanceIndex + 1);
+							if(jFormSectionInstanceIndex != 0) {
+								sectionKey = '-section'+(jFormSectionInstanceIndex + 1);
 							}
 							else {
 								sectionKey = '';
 							}
-							$.each(bFormSectionInstanceValues, function(bFormComponentKey, bFormComponentErrors) {
-								self.bFormPages[bFormPageKey].bFormSections[bFormSectionKey].instanceArray[bFormSectionInstanceIndex].bFormComponents[bFormComponentKey + sectionKey].handleServerValidationResponse(bFormComponentErrors);
+							$.each(jFormSectionInstanceValues, function(jFormComponentKey, jFormComponentErrors) {
+								self.jFormPages[jFormPageKey].jFormSections[jFormSectionKey].instanceArray[jFormSectionInstanceIndex].jFormComponents[jFormComponentKey + sectionKey].handleServerValidationResponse(jFormComponentErrors);
 							});
 						});
 					}
 					// There are no section instances
 					else {
-						$.each(bFormSectionValues, function(bFormComponentKey, bFormComponentErrors){
-							self.bFormPages[bFormPageKey].bFormSections[bFormSectionKey].bFormComponents[bFormComponentKey].handleServerValidationResponse(bFormComponentErrors);
+						$.each(jFormSectionValues, function(jFormComponentKey, jFormComponentErrors){
+							self.jFormPages[jFormPageKey].jFormSections[jFormSectionKey].jFormComponents[jFormComponentKey].handleServerValidationResponse(jFormComponentErrors);
 						});
 					}
 				});
@@ -1135,14 +1135,14 @@ handleFormSubmissionResponse: function(json) {
 		// Show the failureHtml if there was a problem
 		if(json.response.failureHtml) {
 			// Update the failure HTML
-			this.control.find('.bFormerFailure').remove();
-			this.control.after('<div class="bFormerFailure">'+json.response.failureHtml+'</div>');
+			this.control.find('.jFormerFailure').remove();
+			this.control.after('<div class="jFormerFailure">'+json.response.failureHtml+'</div>');
 		}
 
 		// Strip the script out of the iframe
 		this.form.find('iframe').contents().find('body script').remove();
 		if(this.form.find('iframe').contents().find('body').html() !== null) {
-			this.form.find('.bFormerFailure').append('<p>Output:</p>'+this.form.find('iframe').contents().find('body').html().trim());
+			this.form.find('.jFormerFailure').append('<p>Output:</p>'+this.form.find('iframe').contents().find('body').html().trim());
 		}
 
 		// Reset the page, focus on the first failed component
@@ -1158,53 +1158,53 @@ handleFormSubmissionResponse: function(json) {
 			clearInterval(this.saveIntervalSetTimeoutId);
 
 			// Create the success page html
-			var successPageDiv = $('<div id="'+this.id+'bFormPageSuccess" class="bFormPage bFormPageSuccess">'+json.response.successPageHtml+'</div>');
-			successPageDiv.css('width', this.bFormPages[this.bFormPageIdArray[0]].page.width());
-			this.bFormPageScroller.css('width', this.bFormPageScroller.width() + this.bFormPages[this.bFormPageIdArray[0]].page.width());
-			this.bFormPageScroller.append(successPageDiv);
+			var successPageDiv = $('<div id="'+this.id+'jFormPageSuccess" class="jFormPage jFormPageSuccess">'+json.response.successPageHtml+'</div>');
+			successPageDiv.css('width', this.jFormPages[this.jFormPageIdArray[0]].page.width());
+			this.jFormPageScroller.css('width', this.jFormPageScroller.width() + this.jFormPages[this.jFormPageIdArray[0]].page.width());
+			this.jFormPageScroller.append(successPageDiv);
 
 			// Create the success page
-			var bFormPageSuccess = new BFormPage(this, this.id+'bFormPageSuccess');
-			this.addBFormPage(bFormPageSuccess);
+			var jFormPageSuccess = new JFormPage(this, this.id+'jFormPageSuccess');
+			this.addJFormPage(jFormPageSuccess);
 
 			// Hide the page navigator and controls
 			this.control.hide();
-			if(this.bFormPageNavigator) {
-				this.bFormPageNavigator.hide();
+			if(this.jFormPageNavigator) {
+				this.jFormPageNavigator.hide();
 			}
 
 			// Scroll to the page
-			bFormPageSuccess.scrollTo();
+			jFormPageSuccess.scrollTo();
 		}
 		// Show a failure page that allows you to go back
 		else if(json.response.failurePageHtml){
 			// Create the failure page html
-			var failurePageDiv = $('<div id="'+this.id+'bFormPageFailure" class="bFormPage bFormPageFailure">'+json.response.failurePageHtml+'</div>');
-			failurePageDiv.width(this.bFormPages[this.bFormPageIdArray[0]].page.width());
-			this.bFormPageScroller.append(failurePageDiv);
+			var failurePageDiv = $('<div id="'+this.id+'jFormPageFailure" class="jFormPage jFormPageFailure">'+json.response.failurePageHtml+'</div>');
+			failurePageDiv.width(this.jFormPages[this.jFormPageIdArray[0]].page.width());
+			this.jFormPageScroller.append(failurePageDiv);
 
 			// Create the failure page
-			var bFormPageFailure = new BFormPage(this, this.id+'bFormPageFailure');
-			this.addBFormPage(bFormPageFailure);
+			var jFormPageFailure = new JFormPage(this, this.id+'jFormPageFailure');
+			this.addJFormPage(jFormPageFailure);
 
 			// Create a start over button
 			this.control.append($('<li class="startOver"><button class="startOverButton">Start Over</button></li>'));
 
 			// Scroll to the failure page
-			bFormPageFailure.scrollTo();
+			jFormPageFailure.scrollTo();
 		}
 		// Show a failure notice on the same page
 		if(json.response.failureNoticeHtml){
-			this.control.find('.bFormerFailureNotice').remove();
-			this.control.append('<li class="bFormerFailureNotice">'+json.response.failureNoticeHtml+'</li>');
+			this.control.find('.jFormerFailureNotice').remove();
+			this.control.append('<li class="jFormerFailureNotice">'+json.response.failureNoticeHtml+'</li>');
 			this.controlNextButton.text(this.options.submitButtonText);
 			this.controlNextButton.removeAttr('disabled');
 		}
 
 		// Show a large failure response on the same page
 		if(json.response.failureHtml){
-			this.control.find('.bFormerFailure').remove();
-			this.control.after('<div class="bFormerFailure">'+json.response.failureHtml+'</div>');
+			this.control.find('.jFormerFailure').remove();
+			this.control.after('<div class="jFormerFailure">'+json.response.failureHtml+'</div>');
 			this.controlNextButton.text(this.options.submitButtonText);
 			this.controlNextButton.removeAttr('disabled');
 		}
@@ -1232,23 +1232,23 @@ handleFormSubmissionResponse: function(json) {
 },
 
 reset: function() {
-	this.control.find('.bFormFailureNotice').remove();
-	this.control.find('.bFormFailure').remove();
+	this.control.find('.jFormFailureNotice').remove();
+	this.control.find('.jFormFailure').remove();
 	this.controlNextButton.text(this.options.submitButtonText);
 	this.controlNextButton.removeAttr('disabled');
 },
 
-showAlert: function(message, bFormComponentType, modal, options){
+showAlert: function(message, jFormComponentType, modal, options){
 	if(!this.options.alertsEnabled){
 		return;
 	}
 	var animationOptions = $.extend(this.options.animationOptions.alert, options);
 
 
-	var alertWrapper = this.form.find('.bFormerAlertWrapper');
-	var alertDiv = this.form.find('.bFormerAlert');
+	var alertWrapper = this.form.find('.jFormerAlertWrapper');
+	var alertDiv = this.form.find('.jFormerAlert');
 
-	alertDiv.addClass(bFormComponentType);
+	alertDiv.addClass(jFormComponentType);
 	alertDiv.text(message);
 
 	// Show the message
@@ -1278,19 +1278,19 @@ showAlert: function(message, bFormComponentType, modal, options){
 
 showModal: function(header, content, className, options) {
 	// Get the modal wrapper div element
-	var modalWrapper = this.form.find('.bFormerModalWrapper');
+	var modalWrapper = this.form.find('.jFormerModalWrapper');
 
 	// set animation options
 	var animationOptions = $.extend(this.options.animationOptions.modal, options);
 
 	// If there is no modal wrapper, add it
 	if(modalWrapper.length == 0) {
-		var modalTransparency = $('<div class="bFormerModalTransparency"></div>');
-		modalWrapper = $('<div style="display: none;" class="bFormerModalWrapper"><div class="bFormerModal"><div class="bFormerModalHeader">'+header+'</div><div class="bFormerModalContent">'+content+'</div><div class="bFormerModalFooter"><button>Okay</button></div></div></div>');
+		var modalTransparency = $('<div class="jFormerModalTransparency"></div>');
+		modalWrapper = $('<div style="display: none;" class="jFormerModalWrapper"><div class="jFormerModal"><div class="jFormerModalHeader">'+header+'</div><div class="jFormerModalContent">'+content+'</div><div class="jFormerModalFooter"><button>Okay</button></div></div></div>');
 
 		// Add the modal wrapper after the alert
-		this.form.find('.bFormerAlertWrapper').after(modalTransparency);
-		this.form.find('.bFormerAlertWrapper').after(modalWrapper);
+		this.form.find('.jFormerAlertWrapper').after(modalTransparency);
+		this.form.find('.jFormerAlertWrapper').after(modalWrapper);
 
 		// Add any custom classes
 		if(className != '') {
@@ -1299,16 +1299,16 @@ showModal: function(header, content, className, options) {
 
 		// Add the onclick event for the Okay button
 		modalWrapper.find('button').click(function(event) {
-			$('.bFormerModalWrapper').hide(animationOptions.hideDuration);
-			$('.bFormerModalTransparency').hide(animationOptions.hideDuration);
-			$('.bFormerModalWrapper').remove();
-			$('.bFormerModalTransparency').remove();
+			$('.jFormerModalWrapper').hide(animationOptions.hideDuration);
+			$('.jFormerModalTransparency').hide(animationOptions.hideDuration);
+			$('.jFormerModalWrapper').remove();
+			$('.jFormerModalTransparency').remove();
 			$('body').css('overflow','auto');
 		});
 	}
 
 	// Get the modal div element
-	var modal = modalWrapper.find('.bFormerModal');
+	var modal = modalWrapper.find('.jFormerModal');
 	modal.css({
 		'position':'absolute'
 	});
@@ -1322,16 +1322,16 @@ showModal: function(header, content, className, options) {
 			'top': topMargin,
 			'left': leftMargin
 		});
-		$('.bFormerModalTransparency').width(varWindow.width()).height(varWindow.height());
+		$('.jFormerModalTransparency').width(varWindow.width()).height(varWindow.height());
 	});
 
 	// If they click away from the modal (on the modal wrapper), remove it
-	$('.bFormerModalTransparency').click(function(event) {
-		if($(event.target).is('.bFormerModalTransparency')) {
+	$('.jFormerModalTransparency').click(function(event) {
+		if($(event.target).is('.jFormerModalTransparency')) {
 			modalWrapper.hide(animationOptions.hideDuration);
 			modalWrapper.remove();
-			$('.bFormerModalTransparency').hide(animationOptions.hideDuration);
-			$('.bFormerModalTransparency').remove();
+			$('.jFormerModalTransparency').hide(animationOptions.hideDuration);
+			$('.jFormerModalTransparency').remove();
 			$('body').css('overflow','auto');
 		}
 	});
@@ -1343,7 +1343,7 @@ showModal: function(header, content, className, options) {
 	// Set the position
 	var leftMargin = (varWindow.width() / 2) - (modal.width() / 2);
 	var topMargin = (varWindow.height() / 2) - (modal.height() / 2) + varWindow.scrollTop();
-	$('.bFormerModalTransparency').width(varWindow.width()).height(varWindow.height()*1.1).css('top', varWindow.scrollTop());
+	$('.jFormerModalTransparency').width(varWindow.width()).height(varWindow.height()*1.1).css('top', varWindow.scrollTop());
 	modal.css({
 		'top': topMargin,
 		'left': leftMargin
@@ -1362,16 +1362,16 @@ addBlurTipListener: function(){
 				}
 			});
 			if(self.blurredTips[self.blurredTips.length-1] != undefined){
-				self.blurredTips[self.blurredTips.length-1].removeClass('bFormerTipBlurred');
+				self.blurredTips[self.blurredTips.length-1].removeClass('jFormerTipBlurred');
 			}
 		} else if(action == 'show'){
 			if(self.blurredTips.length > 0){
 				$.each(self.blurredTips, function(index, tip){
-					$(tip).addClass('bFormerTipBlurred')
+					$(tip).addClass('jFormerTipBlurred')
 				})
 			}
 			self.blurredTips.push(tipElement)
-			tipElement.removeClass('bFormerTipBlurred');
+			tipElement.removeClass('jFormerTipBlurred');
 		}
 	});
 }

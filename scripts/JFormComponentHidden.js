@@ -1,10 +1,10 @@
-BFormComponentHidden = BFormComponent.extend({
-    init: function(parentBFormSection, bFormComponentId, bFormComponentType, options) {
-        this._super(parentBFormSection, bFormComponentId, bFormComponentType, options);
+JFormComponentHidden = JFormComponent.extend({
+    init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
+        this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
     },
 
     getValue: function() {
-        if(this.disabledByDependency || this.parentBFormSection.disabledByDependency){
+        if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
            return null;
         }
         return $('#'+this.id).val();

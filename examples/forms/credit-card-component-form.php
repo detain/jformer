@@ -1,21 +1,21 @@
 <?php
-// Include the bFormer PHP (use an good path in your code)
-if(file_exists('../php/BFormer.php')) {
-    require_once('../php/BFormer.php');
+// Include the jFormer PHP (use an good path in your code)
+if(file_exists('../php/JFormer.php')) {
+    require_once('../php/JFormer.php');
 }
-else if(file_exists('../../php/BFormer.php')) {
-    require_once('../../php/BFormer.php');
+else if(file_exists('../../php/JFormer.php')) {
+    require_once('../../php/JFormer.php');
 }
 
 // Create the form
-$creditCardComponentForm = new BFormer('creditCardComponentForm', array(
+$creditCardComponentForm = new JFormer('creditCardComponentForm', array(
     'title' => '<h1>Credit Card Component</h1>',
     'submitButtonText' => 'Test',
 ));
 
 // Add components to the form
-$creditCardComponentForm->addBFormComponentArray(array(
-    new BFormComponentCreditCard('creditCard1', 'Credit card:', array(
+$creditCardComponentForm->addJFormComponentArray(array(
+    new JFormComponentCreditCard('creditCard1', 'Credit card:', array(
         'tip' => '<p>This is a tip on a credit card component.</p>',
     )),
 ));

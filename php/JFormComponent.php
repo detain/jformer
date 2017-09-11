@@ -2,26 +2,26 @@
 /**
  * An abstract FormComponent object, cannot be instantiated
  */
-abstract class BFormComponent {
+abstract class JFormComponent {
     // General settings
     var $id;
     var $class = null;
     var $value = null;
     var $style = null;
-    var $parentBFormSection;
+    var $parentJFormSection;
     var $anonymous = false;
 
     // Label
     var $label = null;  // Must be implemented by child class
-    var $labelClass = 'bFormComponentLabel';
-    var $labelRequiredStarClass = 'bFormComponentLabelRequiredStar';
+    var $labelClass = 'jFormComponentLabel';
+    var $labelRequiredStarClass = 'jFormComponentLabelRequiredStar';
     var $requiredText = ' *'; // can be overridden at the form level;
 
     // Helpers
     var $tip = null;
-    var $tipClass = 'bFormComponentTip';
+    var $tipClass = 'jFormComponentTip';
     var $description = null;
-    var $descriptionClass = 'bFormComponentDescription';
+    var $descriptionClass = 'jFormComponentDescription';
 
     // Options
     var $instanceOptions = null;
@@ -235,9 +235,9 @@ abstract class BFormComponent {
 
     function generateComponentDiv($includeLabel = true) {
         // Div tag contains everything about the component
-        $componentDiv = new BFormElement('div', array(
+        $componentDiv = new JFormElement('div', array(
             'id' => $this->id.'-wrapper',
-            'class' => 'form-group bFormComponent '.$this->class,
+            'class' => 'form-group jFormComponent '.$this->class,
         ));
 
         // This causes issues with things that are dependent and should display by default
@@ -269,7 +269,7 @@ abstract class BFormComponent {
             return '';
         }
 	
-        $label = new BFormElement('label', array(
+        $label = new JFormElement('label', array(
             'id' => $this->id.'-label',
             'for' => $this->id,
             'class' => $this->labelClass . ' control-label col-xs-4'
@@ -277,7 +277,7 @@ abstract class BFormComponent {
         $label->update($this->label);
         // Add the required star to the label
         if(in_array('required', $this->validationOptions)) {
-            $labelRequiredStarSpan = new BFormElement('span', array(
+            $labelRequiredStarSpan = new JFormElement('span', array(
                 'class' => $this->labelRequiredStarClass
             ));
             $labelRequiredStarSpan->update($this->requiredText);
@@ -290,7 +290,7 @@ abstract class BFormComponent {
     function insertComponentDescription($div) {
         // Description
         if(!empty($this->description)) {
-            $description = new BFormElement('div', array(
+            $description = new JFormElement('div', array(
                 'id' => $this->id.'-description',
                 'class' => $this->descriptionClass
             ));
@@ -305,7 +305,7 @@ abstract class BFormComponent {
     function insertComponentTip($div) {
         // Create the tip div if not empty
         if(!empty($this->tip)) {
-            $tipDiv = new BFormElement('div', array(
+            $tipDiv = new JFormElement('div', array(
                 'id' => $this->id.'-tip',
                 'style' => 'display: none;',
                 'class' => $this->tipClass,
