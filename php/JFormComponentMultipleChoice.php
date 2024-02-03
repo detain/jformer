@@ -1,16 +1,16 @@
 <?php
 
 class JFormComponentMultipleChoice extends JFormComponent {
-    var $multipleChoiceType = 'checkbox'; // radio, checkbox
-    var $multipleChoiceClass = 'choice';
-    var $multipleChoiceLabelClass = 'choiceLabel';
-    var $multipleChoiceArray = array();
-    var $showMultipleChoiceTipIcons = true;
+    public $multipleChoiceType = 'checkbox'; // radio, checkbox
+    public $multipleChoiceClass = 'choice';
+    public $multipleChoiceLabelClass = 'choiceLabel';
+    public $multipleChoiceArray = [];
+    public $showMultipleChoiceTipIcons = true;
 
     /**
      * Constructor
      */
-    function __construct($id, $label, $multipleChoiceArray, $optionArray = array()) {
+    public function __construct($id, $label, $multipleChoiceArray, $optionArray = []) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -22,7 +22,7 @@ class JFormComponentMultipleChoice extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    function hasInstanceValues() {
+    public function hasInstanceValues() {
         if($this->multipleChoiceType == 'radio' ){
             return is_array($this->value);
         } else {
@@ -37,9 +37,9 @@ class JFormComponentMultipleChoice extends JFormComponent {
      * MultipleChoice Specific Instance Handling for validation
      *
      */
-     function validateComponent() {
+     public function validateComponent() {
         $this->passedValidation = true;
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         if(is_array($this->value[0])){
             foreach($this->value as $value){
@@ -51,12 +51,12 @@ class JFormComponentMultipleChoice extends JFormComponent {
         }
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
         // Make sure you have an options array to manipulate
         if(!isset($options['options'])) {
-            $options['options']  = array();
+            $options['options']  = [];
         }
 
         // Set the multiple choice type
@@ -69,7 +69,7 @@ class JFormComponentMultipleChoice extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         if(sizeof($this->multipleChoiceArray) > 1) {
             $div = parent::generateComponentDiv();
@@ -77,18 +77,18 @@ class JFormComponentMultipleChoice extends JFormComponent {
         else {
             $div = parent::generateComponentDiv(false);
         }
-        
+
         // Case
         // array(array('value' => 'option1', 'label' => 'Option 1', 'checked' => 'checked', 'tip' => 'This is a tip'))
         $multipleChoiceCount = 0;
         foreach($this->multipleChoiceArray as $multipleChoice) {
-            
-            $multipleChoiceValue = isset($multipleChoice['value']) ? $multipleChoice['value'] : '';
-            $multipleChoiceLabel =  isset($multipleChoice['label']) ? $multipleChoice['label'] : '';
-            $multipleChoiceChecked =  isset($multipleChoice['checked']) ? $multipleChoice['checked'] : false;
-            $multipleChoiceTip =  isset($multipleChoice['tip']) ? $multipleChoice['tip'] : '';
-            $multipleChoiceDisabled =  isset($multipleChoice['disabled']) ? $multipleChoice['disabled'] : '';
-            $multipleChoiceInputHidden =  isset($multipleChoice['inputHidden']) ? $multipleChoice['inputHidden'] : '';
+
+            $multipleChoiceValue = $multipleChoice['value'] ?? '';
+            $multipleChoiceLabel =  $multipleChoice['label'] ?? '';
+            $multipleChoiceChecked =  $multipleChoice['checked'] ?? false;
+            $multipleChoiceTip =  $multipleChoice['tip'] ?? '';
+            $multipleChoiceDisabled =  $multipleChoice['disabled'] ?? '';
+            $multipleChoiceInputHidden =  $multipleChoice['inputHidden'] ?? '';
 
             $multipleChoiceCount++;
 
@@ -103,25 +103,25 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
         return $div->__toString();
     }
-    
+
     //function to insert tips onto the wrappers
 
-    function getMultipleChoiceWrapper($multipleChoiceValue, $multipleChoiceLabel, $multipleChoiceChecked, $multipleChoiceTip, $multipleChoiceDisabled, $multipleChoiceInputHidden, $multipleChoiceCount) {
+    public function getMultipleChoiceWrapper($multipleChoiceValue, $multipleChoiceLabel, $multipleChoiceChecked, $multipleChoiceTip, $multipleChoiceDisabled, $multipleChoiceInputHidden, $multipleChoiceCount) {
         // Make a wrapper div for the input and label
-        $multipleChoiceWrapperDiv = new JFormElement('div', array(
+        $multipleChoiceWrapperDiv = new JFormElement('div', [
             'id' => $this->id.'-choice'.$multipleChoiceCount.'-wrapper',
             'class' => $this->multipleChoiceClass.'Wrapper',
-        ));
+        ]);
 
         // Input tag
-        $input = new JFormElement('input', array(
+        $input = new JFormElement('input', [
             'type' => $this->multipleChoiceType,
             'id' => $this->id.'-choice'.$multipleChoiceCount,
             'name' => $this->name,
             'value' => $multipleChoiceValue,
             'class' => $this->multipleChoiceClass,
             'style' => 'display: inline;',
-        ));
+        ]);
         if($multipleChoiceChecked == 'checked') {
             $input->setAttribute('checked', 'checked');
         }
@@ -134,11 +134,11 @@ class JFormComponentMultipleChoice extends JFormComponent {
         $multipleChoiceWrapperDiv->insert($input);
 
         // Multiple choice label
-        $multipleChoiceLabelElement = new JFormElement('label', array(
+        $multipleChoiceLabelElement = new JFormElement('label', [
             'for' => $this->id.'-choice'.$multipleChoiceCount,
             'class' => $this->multipleChoiceLabelClass,
             'style' => 'display: inline;',
-        ));
+        ]);
         // Add an image to the label if there is a tip
         if(!empty($multipleChoiceTip) && $this->showMultipleChoiceTipIcons) {
             $multipleChoiceLabelElement->update($multipleChoiceLabel.' <span class="jFormComponentMultipleChoiceTipIcon">&nbsp;</span>');
@@ -150,9 +150,9 @@ class JFormComponentMultipleChoice extends JFormComponent {
         if(sizeof($this->multipleChoiceArray) == 1) {
             // Add the required star to the label
             if(in_array('required', $this->validationOptions)) {
-                $labelRequiredStarSpan = new JFormElement('span', array(
+                $labelRequiredStarSpan = new JFormElement('span', [
                     'class' => $this->labelRequiredStarClass
-                ));
+                ]);
                 $labelRequiredStarSpan->update(' *');
                 $multipleChoiceLabelElement->insert($labelRequiredStarSpan);
             }
@@ -161,11 +161,11 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
         // Multiple choice tip
         if(!empty($multipleChoiceTip)) {
-            $multipleChoiceTipDiv = new JFormElement('div', array(
+            $multipleChoiceTipDiv = new JFormElement('div', [
                 'id' => $this->id.'-'.$multipleChoiceValue.'-tip',
                 'style' => 'display: none;',
                 'class' => 'jFormComponentMultipleChoiceTip'
-            ));
+            ]);
             $multipleChoiceTipDiv->update($multipleChoiceTip);
             $multipleChoiceWrapperDiv->insert($multipleChoiceTipDiv);
         }
@@ -176,15 +176,15 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
     // Validations
     public function required($options) {
-        $errorMessageArray = array('Required.');
+        $errorMessageArray = ['Required.'];
         return  sizeof($options['value']) > 0 ? 'success' : $errorMessageArray;
     }
     public function minOptions($options) {
-        $errorMessageArray = array('You must select more than '. $options['minOptions'] .' options');
+        $errorMessageArray = ['You must select more than '. $options['minOptions'] .' options'];
         return sizeof($options['value']) == 0 || sizeof($options['value']) > $options['minOptions'] ? 'success' : $errorMessageArray;
     }
     public function maxOptions($options) {
-        $errorMessageArray = array('You may select up to '. $options['maxOptions'] .' options. You have selected '. sizeof($options['value']) . '.');
+        $errorMessageArray = ['You may select up to '. $options['maxOptions'] .' options. You have selected '. sizeof($options['value']) . '.'];
         return sizeof($options['value']) == 0 || sizeof($options['value']) <= $options['maxOptions'] ? 'success' : $errorMessageArray;
     }
 }

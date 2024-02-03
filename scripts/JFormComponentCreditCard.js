@@ -17,7 +17,7 @@ JFormComponentCreditCard = JFormComponent.extend({
                 }
                 if(options.value.cardNumber == '') {
                     errorMessageArray.push(['Credit card number is required.']);
-                } 
+                }
                 if(options.value.cardNumber != '' && options.value.cardNumber.match(/[^\d]/)){
                     errorMessageArray.push(['Card number may only contain numbers.']);
                 }
@@ -42,7 +42,7 @@ JFormComponentCreditCard = JFormComponent.extend({
                 return errorMessageArray.length < 1 ? 'success' : errorMessageArray;
             }
         }
-        
+
         this.changed = false;
     },
 
@@ -54,7 +54,7 @@ JFormComponentCreditCard = JFormComponent.extend({
             }
             if(data.cardNumber != this.options.emptyValues.cardNumber){
                 self.component.find(':input[id*=cardNumber]').removeClass('defaultValue').val(data.cardNumber).blur();
-            }            
+            }
             self.component.find(':input[id*=expirationMonth]').removeClass('defaultValue').val(data.expirationMonth).blur();
             self.component.find(':input[id*=expirationYear]').removeClass('defaultValue').val(data.expirationYear).blur();
             if(data.securityCode != undefined && data.securityCode != this.options.emptyValues.securityCode){
@@ -121,7 +121,7 @@ JFormComponentCreditCard = JFormComponent.extend({
         if(!this.changed){
             this._super();
         }
-        
+
         setTimeout(function() {
             if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){

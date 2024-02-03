@@ -4,7 +4,7 @@ class JFormComponentHidden extends JFormComponent {
     /*
      * Constructor
      */
-    function __construct($id, $value, $optionArray = array()) {
+    public function __construct($id, $value, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -21,18 +21,18 @@ class JFormComponentHidden extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div without a label
         $div = $this->generateComponentDiv(false);
         $div->addToAttribute('style', 'display: none;');
 
         // Input tag
-        $input = new JFormElement('input', array(
+        $input = new JFormElement('input', [
             'type' => 'hidden',
             'id' => $this->id,
             'name' => $this->name,
             'value' => $this->value,
-        ));
+        ]);
         $div->insert($input);
 
         return $div->__toString();

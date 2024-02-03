@@ -2,7 +2,7 @@
 
 class JFormElement {
     private $type;
-    private $unaryTagArray = array('input', 'img', 'hr', 'br', 'meta', 'link');
+    private $unaryTagArray = ['input', 'img', 'hr', 'br', 'meta', 'link'];
     private $attributeArray;
     private $innerHtml;
 
@@ -13,7 +13,7 @@ class JFormElement {
      * @param <type> $attributeArray
      * @param <type> $unaryTagArray
      */
-    public function __construct($type, $attributeArray = array()) {
+    public function __construct($type, $attributeArray = []) {
         $this->type = strtolower($type);
 
         foreach($attributeArray as $attribute => $value) {
@@ -35,7 +35,7 @@ class JFormElement {
     }
 
 
-    function setAttribute($attribute, $value = '') {
+    public function setAttribute($attribute, $value = '') {
         if(!is_array($attribute)) {
             $this->attributeArray[$attribute] = $value;
         }
@@ -46,7 +46,7 @@ class JFormElement {
         return $this;
     }
 
-    function addToAttribute($attribute, $value = '') {
+    public function addToAttribute($attribute, $value = '') {
         if(isset($this->attributeArray[$attribute])) {
             $currentValue = $this->attributeArray[$attribute];
         }
@@ -58,7 +58,7 @@ class JFormElement {
         return $this;
     }
 
-    function addClassName($className) {
+    public function addClassName($className) {
         $currentClasses = $this->getAttribute('class');
 
         // Check to see if the class is already added
@@ -73,7 +73,7 @@ class JFormElement {
      *
      * @param <type> $object
      */
-    function insert($object) {
+    public function insert($object) {
         if(@get_class($object) == __class__) {
             $this->innerHtml .= $object->build();
         }
@@ -90,7 +90,7 @@ class JFormElement {
      * @param <type> $object
      * @return <type>
      */
-    function update($object) {
+    public function update($object) {
         $this->innerHtml = $object;
 
         return $this;
@@ -101,7 +101,7 @@ class JFormElement {
      *
      * @return <type>
      */
-    function build() {
+    public function build() {
         // Start the tag
         $element = '<'.$this->type;
 
@@ -130,7 +130,7 @@ class JFormElement {
      *
      * @return <type>
      */
-    function __toString() {
+    public function __toString() {
         return $this->build();
     }
 }

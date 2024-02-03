@@ -6,34 +6,34 @@
 class JFormSection {
 
     // General settings
-    var $id;
-    var $class = 'jFormSection';
-    var $style = '';
-    var $parentJFormPage;
-    var $jFormComponentArray = array();
-    var $data;
-    var $anonymous = false;
+    public $id;
+    public $class = 'jFormSection';
+    public $style = '';
+    public $parentJFormPage;
+    public $jFormComponentArray = [];
+    public $data;
+    public $anonymous = false;
 
     // Title, description, submit instructions
-    var $title = '';
-    var $titleClass = 'jFormSectionTitle';
-    var $description = '';
-    var $descriptionClass = 'jFormSectionDescription';
+    public $title = '';
+    public $titleClass = 'jFormSectionTitle';
+    public $description = '';
+    public $descriptionClass = 'jFormSectionDescription';
 
     // Options
-    var $instanceOptions = null;
-    var $dependencyOptions = null;
+    public $instanceOptions = null;
+    public $dependencyOptions = null;
 
     // Validation
-    var $errorMessageArray = array();
+    public $errorMessageArray = [];
 
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $jFormComponentArray = array()) {
+    public function __construct($id, $optionArray = [], $jFormComponentArray = []) {
         // Set the id
         $this->id = $id;
-     
+
         // Use the options hash to update object variables
         if(is_array($optionArray)) {
             foreach($optionArray as $option => $value) {
@@ -47,14 +47,14 @@ class JFormSection {
         return $this;
     }
 
-    function addJFormComponent($jFormComponent) {
+    public function addJFormComponent($jFormComponent) {
         $jFormComponent->parentJFormSection = $this;
         $this->jFormComponentArray[$jFormComponent->id] = $jFormComponent;
 
         return $this;
     }
 
-    function addJFormComponents($jFormComponents) {
+    public function addJFormComponents($jFormComponents) {
         if (is_array($jFormComponents)) {
             foreach ($jFormComponentArray as $jFormComponent) {
                 $jFormComponent->parentJFormSection = $this;
@@ -67,15 +67,15 @@ class JFormSection {
         return $this;
     }
 
-    function addJFormComponentArray($jFormComponentArray) {
+    public function addJFormComponentArray($jFormComponentArray) {
         foreach($jFormComponentArray as $jFormComponent) {
             $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
-    function getData() {
-        $this->data = array();
+    public function getData() {
+        $this->data = [];
 
         // Check to see if jFormComponent array contains instances
         if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
@@ -99,11 +99,11 @@ class JFormSection {
         return $this->data;
     }
 
-    function setData($jFormSectionData) {
+    public function setData($jFormSectionData) {
         // Handle multiple instances
         if(is_array($jFormSectionData)) {
-            $newJFormComponentArray = array();
-            
+            $newJFormComponentArray = [];
+
             // Go through each section instance
             foreach($jFormSectionData as $jFormSectionIndex => $jFormSection) {
                 // Create a clone of the jFormComponentArray
@@ -128,7 +128,7 @@ class JFormSection {
         }
     }
 
-    function clearData() {
+    public function clearData() {
         // Check to see if jFormComponent array contains instances
         if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
             foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
@@ -146,9 +146,9 @@ class JFormSection {
         $this->data = null;
     }
 
-    function validate() {
+    public function validate() {
         // Clear the error message array
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         // If we have instances, return an array
         if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
@@ -168,17 +168,17 @@ class JFormSection {
         return $this->errorMessageArray;
     }
 
-    function updateRequiredText($requiredText) {
+    public function updateRequiredText($requiredText) {
         foreach($this->jFormComponentArray as $jFormComponent) {
             $jFormComponent->updateRequiredText($requiredText);
         }
     }
 
-    function getOptions() {
-        $options = array();
-        $options['options'] = array();
-        $options['jFormComponents'] = array();
-        
+    public function getOptions() {
+        $options = [];
+        $options['options'] = [];
+        $options['jFormComponents'] = [];
+
         // Instances
         if(!empty($this->instanceOptions)) {
             $options['options']['instanceOptions'] = $this->instanceOptions;
@@ -194,7 +194,7 @@ class JFormSection {
         if(!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
             if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
-                $this->dependencyOptions['dependentOn'] = array($this->dependencyOptions['dependentOn']);
+                $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
@@ -218,12 +218,12 @@ class JFormSection {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Section fieldset
-        $jFormSectionDiv = new JFormElement('div', array(
+        $jFormSectionDiv = new JFormElement('div', [
             'id' => $this->id,
             'class' => $this->class
-        ));
+        ]);
 
         // This causes issues with things that are dependent and should display by default
         // If the section has dependencies and the display type is hidden, hide by default
@@ -238,18 +238,18 @@ class JFormSection {
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new JFormElement('div', array(
+            $title = new JFormElement('div', [
                 'class' => $this->titleClass
-            ));
+            ]);
             $title->update($this->title);
             $jFormSectionDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new JFormElement('div', array(
+            $description = new JFormElement('div', [
                 'class' => $this->descriptionClass
-            ));
+            ]);
             $description->update($this->description);
             $jFormSectionDiv->insert($description);
         }
@@ -258,7 +258,7 @@ class JFormSection {
         foreach($this->jFormComponentArray as $jFormComponentArray) {
             $jFormSectionDiv->insert($jFormComponentArray);
         }
-        
+
         return $jFormSectionDiv->__toString();
     }
 }

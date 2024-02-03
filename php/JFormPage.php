@@ -4,35 +4,35 @@
  * A FormPage object contains FormSection objects and belongs to a Form object
  */
 class JFormPage {
-    
+
     // General settings
-    var $id;
-    var $class = 'jFormPage';
-    var $style = '';
-    var $jFormer;
-    var $jFormSectionArray = array();
-    var $onBeforeScrollTo; // array('function', 'notificationHtml')
-    var $data;
-    var $anonymous = false;
+    public $id;
+    public $class = 'jFormPage';
+    public $style = '';
+    public $jFormer;
+    public $jFormSectionArray = [];
+    public $onBeforeScrollTo; // array('function', 'notificationHtml')
+    public $data;
+    public $anonymous = false;
 
     // Title, description, submit instructions
-    var $title = '';
-    var $titleClass = 'jFormPageTitle';
-    var $description = '';
-    var $descriptionClass = 'jFormPageDescription';
-    var $submitInstructions = '';
-    var $submitInstructionsClass = 'jFormPageSubmitInstructions';
+    public $title = '';
+    public $titleClass = 'jFormPageTitle';
+    public $description = '';
+    public $descriptionClass = 'jFormPageDescription';
+    public $submitInstructions = '';
+    public $submitInstructionsClass = 'jFormPageSubmitInstructions';
 
     // Validation
-    var $errorMessageArray = array();
+    public $errorMessageArray = [];
 
     // Options
-    var $dependencyOptions = null;
+    public $dependencyOptions = null;
 
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $jFormSectionArray = array()) {
+    public function __construct($id, $optionArray = [], $jFormSectionArray = []) {
         // Set the id
         $this->id = $id;
 
@@ -51,13 +51,13 @@ class JFormPage {
         return $this;
     }
 
-    function addJFormSection($jFormSection) {
+    public function addJFormSection($jFormSection) {
         $jFormSection->parentJFormPage = $this;
         $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
 
-    function addJFormSections($jFormSections) {
+    public function addJFormSections($jFormSections) {
         if (is_array($jFormSections)) {
             foreach ($jFormSections as $jFormSection) {
                 $jFormSection->parentJFormPage = $this;
@@ -68,12 +68,12 @@ class JFormPage {
         $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
-    
+
     // Convenience method, no need to create a section to get components on the page
-    function addJFormComponent($jFormComponent) {
+    public function addJFormComponent($jFormComponent) {
         // Create an anonymous section if necessary
         if(empty($this->jFormSectionArray)) {
-            $this->addJFormSection(new JFormSection($this->id.'_section1', array('anonymous' => true)));
+            $this->addJFormSection(new JFormSection($this->id.'_section1', ['anonymous' => true]));
         }
 
         // Get the last section in the page
@@ -86,7 +86,7 @@ class JFormPage {
         // If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
         else {
             // Create an anonymous section
-            $anonymousSection = new JFormSection($this->id.'_section'.(sizeof($this->jFormSectionArray) + 1), array('anonymous' => true));
+            $anonymousSection = new JFormSection($this->id.'_section'.(sizeof($this->jFormSectionArray) + 1), ['anonymous' => true]);
 
             // Add the anonymous section to the page
             $this->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
@@ -94,37 +94,37 @@ class JFormPage {
 
         return $this;
     }
-    function addJFormComponentArray($jFormComponentArray) {
+    public function addJFormComponentArray($jFormComponentArray) {
         foreach($jFormComponentArray as $jFormComponent) {
             $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
-    function getData() {
-        $this->data = array();
+    public function getData() {
+        $this->data = [];
         foreach($this->jFormSectionArray as $jFormSectionKey => $jFormSection) {
             $this->data[$jFormSectionKey] = $jFormSection->getData();
         }
         return $this->data;
     }
 
-    function setData($jFormPageData) {
+    public function setData($jFormPageData) {
         foreach($jFormPageData as $jFormSectionKey => $jFormSectionData) {
             $this->jFormSectionArray[$jFormSectionKey]->setData($jFormSectionData);
         }
     }
 
-    function clearData() {
+    public function clearData() {
         foreach($this->jFormSectionArray as $jFormSection) {
             $jFormSection->clearData();
         }
         $this->data = null;
     }
 
-    function validate() {
+    public function validate() {
         // Clear the error message array
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         // Validate each section
         foreach($this->jFormSectionArray as $jFormSection) {
@@ -134,10 +134,10 @@ class JFormPage {
         return $this->errorMessageArray;
     }
 
-    function getOptions() {
-        $options = array();
-        $options['options'] = array();
-        $options['jFormSections'] = array();
+    public function getOptions() {
+        $options = [];
+        $options['options'] = [];
+        $options['jFormSections'] = [];
 
         foreach($this->jFormSectionArray as $jFormSection) {
             $options['jFormSections'][$jFormSection->id] = $jFormSection->getOptions();
@@ -146,12 +146,12 @@ class JFormPage {
         if(!empty($this->onScrollTo)) {
             $options['options']['onScrollTo'] = $this->onScrollTo;
         }
-        
+
         // Dependencies
         if(!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
             if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
-                $this->dependencyOptions['dependentOn'] = array($this->dependencyOptions['dependentOn']);
+                $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
@@ -163,7 +163,7 @@ class JFormPage {
         return $options;
     }
 
-    function updateRequiredText($requiredText) {
+    public function updateRequiredText($requiredText) {
         foreach($this->jFormSectionArray as $jFormSection) {
             $jFormSection->updateRequiredText($requiredText);
         }
@@ -173,12 +173,12 @@ class JFormPage {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Page div
-        $jFormPageDiv = new JFormElement('div', array(
+        $jFormPageDiv = new JFormElement('div', [
             'id' => $this->id,
             'class' => $this->class
-        ));
+        ]);
 
         // Set the styile
         if(!empty($this->style)) {
@@ -187,18 +187,18 @@ class JFormPage {
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new JFormElement('div', array(
+            $title = new JFormElement('div', [
                 'class' => $this->titleClass
-            ));
+            ]);
             $title->update($this->title);
             $jFormPageDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new JFormElement('div', array(
+            $description = new JFormElement('div', [
                 'class' => $this->descriptionClass
-            ));
+            ]);
             $description->update($this->description);
             $jFormPageDiv->insert($description);
         }
@@ -210,9 +210,9 @@ class JFormPage {
 
         // Submit instructions
         if(!empty($this->submitInstructions)) {
-            $submitInstruction = new JFormElement('div', array(
+            $submitInstruction = new JFormElement('div', [
                 'class' => $this->submitInstructionsClass
-            ));
+            ]);
             $submitInstruction->update($this->submitInstructions);
             $jFormPageDiv->insert($submitInstruction);
         }

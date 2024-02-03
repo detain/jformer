@@ -1,18 +1,18 @@
 <?php
 
 class JFormComponentSingleLineText extends JFormComponent {
-	var $sublabel;
+	public $sublabel;
 
 	/*
 	 * Constructor
 	 */
-	function __construct($id, $label, $optionArray = array()) {
+	public function __construct($id, $label, $optionArray = []) {
 		// Class variables
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
 		$this->class = 'jFormComponentSingleLineText';
-		$this->widthArray = array('shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em');
+		$this->widthArray = ['shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em'];
 
 		// Input options
 		$this->initialValue = '';
@@ -29,16 +29,16 @@ class JFormComponentSingleLineText extends JFormComponent {
 		$this->initialize($optionArray);
 	}
 
-	function hasInstanceValues() {
+	public function hasInstanceValues() {
 		return is_array($this->value);
 	}
 
-	function getOptions() {
+	public function getOptions() {
 		$options = parent::getOptions();
 
 		// Make sure you have an options array to manipulate
 		if(!isset($options['options'])) {
-			$options['options']  = array();
+			$options['options']  = [];
 		}
 
 		// Mask
@@ -63,16 +63,16 @@ class JFormComponentSingleLineText extends JFormComponent {
 	 *
 	 * @return string
 	 */
-	function __toString() {
+	public function __toString() {
 		// Generate the component div
 		$div = $this->generateComponentDiv();
 
 		// Add the input tag
-		$input = new JFormElement('input', array(
+		$input = new JFormElement('input', [
 			'type' => $this->type,
 			'id' => $this->id,
 			'name' => $this->name,
-		));
+		]);
 		if(!empty($this->width)) {
 			if(array_key_exists($this->width, $this->widthArray)) {
 				$input->setAttribute('style', 'width: '.$this->widthArray[$this->width].';');
@@ -103,7 +103,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 		if($this->enterSubmits) {
 			$input->addToAttribute('class', ' jFormComponentEnterSubmits');
 		}
-		$div->insert('<div class="col-xs-8">'.$input.'</div>');
+		$div->insert('<div class="col-sm-8">'.$input.'</div>');
 
 		if(!empty($this->sublabel)) {
 			$div->insert('<div class="jFormComponentSublabel">'.$this->sublabel.'</div>');
@@ -121,117 +121,117 @@ class JFormComponentSingleLineText extends JFormComponent {
 	// Validations
 
 	public function alpha($options) {
-		$messageArray = array('Must only contain letters.');
+		$messageArray = ['Must only contain letters.'];
 		return preg_match('/^[a-z_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function alphaDecimal($options) {
-		$messageArray = array('Must only contain letters, numbers, or periods.');
+		$messageArray = ['Must only contain letters, numbers, or periods.'];
 		return preg_match('/^\w+$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function alphaNumeric($options) {
-		$messageArray = array('Must only contain letters or numbers.');
+		$messageArray = ['Must only contain letters or numbers.'];
 		return preg_match('/^[a-z0-9_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function blank($options) {
-		$messageArray = array('Must be blank.');
+		$messageArray = ['Must be blank.'];
 		return mb_strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
 	}
 
 	public function canadianPostal($options) {
-		$messageArray = array('Must be a valid Canadian postal code.');
+		$messageArray = ['Must be a valid Canadian postal code.'];
 		return preg_match('/^[ABCEGHJKLMNPRSTVXY][0-9][A-Z] [0-9][A-Z][0-9]$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function custom_regexp() {
-		$messageArray = array($options['custom_regexp']['custom_message']);
+		$messageArray = [$options['custom_regexp']['custom_message']];
 		return preg_match ($options['custom_regexp']['regexp'], $options['value']) ? 'success' : $messageArray;
 	}
 
 	public function date($options) {
-		$messageArray = array('Must be a date in the mm/dd/yyyy format.');
+		$messageArray = ['Must be a date in the mm/dd/yyyy format.'];
 		return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)[0-9]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function dateTime($options) {
-		$messageArray = array('Must be a date in the mm/dd/yyyy hh:mm:ss tt format. ss and tt are optional.');
+		$messageArray = ['Must be a date in the mm/dd/yyyy hh:mm:ss tt format. ss and tt are optional.'];
 		return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)?[0-9]{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function decimal($options) {
 		// Can be negative and have a decimal value
 		// Do not accept commas in value as the DB does not accept them
-		$messageArray = array('Must be a number without any commas. Decimal is optional.');
+		$messageArray = ['Must be a number without any commas. Decimal is optional.'];
 		return preg_match('/^-?((\d+(\.\d+)?)|(\.\d+))$/', $options['value']) ? 'success' : $messageArray;
 	}
 
 	public function decimalNegative($options) {
 		// Must be negative and have a decimal value
-		$messageArray = array('Must be a negative number without any commas. Decimal is optional.');
+		$messageArray = ['Must be a negative number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) < 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalPositive($options) {
 		// Must be positive and have a decimal value
-		$messageArray = array('Must be a positive number without any commas. Decimal is optional.');
+		$messageArray = ['Must be a positive number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) > 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalZeroNegative($options) {
 		// Must be negative and have a decimal value
-		$messageArray = array('Must be zero or a negative number without any commas. Decimal is optional.');
+		$messageArray = ['Must be zero or a negative number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) <= 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalZeroPositive($options) {
 		// Must be positive and have a decimal value
-		$messageArray = array('Must be zero or a positive number without any commas. Decimal is optional.');
+		$messageArray = ['Must be zero or a positive number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) >= 0)) ? 'success' : $messageArray;
 	}
 
 	public function email($options) {
-		$messageArray = array('Must be a valid e-mail address.');
+		$messageArray = ['Must be a valid e-mail address.'];
 		return preg_match('/^[A-Z0-9._%-\+]+@(?:[A-Z0-9\-]+\.)+[A-Z]{2,4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function integer($options) {
-		$messageArray = array('Must be a whole number.');
+		$messageArray = ['Must be a whole number.'];
 		return preg_match('/^-?\d+$/', $options['value']) ? 'success' : $messageArray;
 	}
 
 	public function integerNegative($options) {
-		$messageArray = array('Must be a negative whole number.');
+		$messageArray = ['Must be a negative whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) < 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerPositive($options) {
-		$messageArray = array('Must be a positive whole number.');
+		$messageArray = ['Must be a positive whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) > 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerZeroNegative($options) {
-		$messageArray = array('Must be zero or a negative whole number.');
+		$messageArray = ['Must be zero or a negative whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) <= 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerZeroPositive($options) {
-		$messageArray = array('Must be zero or a positive whole number.');
+		$messageArray = ['Must be zero or a positive whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) >= 0)) ? 'success' : $messageArray;
 	}
 
 	public function isbn($options) {
 		//Match an ISBN
-		$errorMessageArray = array('Must be a valid ISBN and consist of either ten or thirteen characters.');
+		$errorMessageArray = ['Must be a valid ISBN and consist of either ten or thirteen characters.'];
 		//For ISBN-10
 		if(preg_match('/^(?=.{13}$)\d{1,5}([\- ])\d{1,7}\1\d{1,6}\1(\d|X)$/', $options['value'])) {
 			$errorMessageArray = 'sucess';
@@ -254,7 +254,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function length($options) {
-		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		$messageArray = ['Must be exactly ' . $options['length'] .' characters long. Current value is '.mb_strlen($options['value']).' characters.'];
 		return mb_strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
@@ -264,74 +264,74 @@ class JFormComponentSingleLineText extends JFormComponent {
 			return 'success';
 		}
 		else {
-			return array('Does not match.');
+			return ['Does not match.'];
 		}
 	}
 
 	public function maxLength($options) {
-		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		$messageArray = ['Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.'];
 		return mb_strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function maxFloat($options) {
-		$messageArray = array('Must be numeric and cannot have more than ' . $options['maxFloat'] . ' decimal place(s).');
+		$messageArray = ['Must be numeric and cannot have more than ' . $options['maxFloat'] . ' decimal place(s).'];
 		return preg_match('^-?((\\d+(\\.\\d{0,'+ $options['maxFloat'] +'})?)|(\\.\\d{0,' . $options['maxFloat'] . '}))$', $options['value'])  ? 'success' : $messageArray;
 	}
 
 	public function maxValue($options) {
-		$messageArray = array('Must be numeric with a maximum value of ' . $options['maxValue'] . '.');
+		$messageArray = ['Must be numeric with a maximum value of ' . $options['maxValue'] . '.'];
 		return $options['maxValue'] >= $options['value'] ? 'success' : $messageArray;
 	}
 
 	public function minLength($options) {
-		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		$messageArray = ['Must be at least ' . $options['minLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.'];
 		return mb_strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function minValue($options) {
-		$messageArray = array('Must be numeric with a minimum value of ' . $options['minValue'] . '.');
+		$messageArray = ['Must be numeric with a minimum value of ' . $options['minValue'] . '.'];
 		return $options['minValue'] <= $options['value'] ? 'success' : $messageArray;
 	}
 
 	public function money($options) {
-		$messageArray = array('Must be a valid dollar value.');
+		$messageArray = ['Must be a valid dollar value.'];
 		return preg_match('/^\$?[1-9][0-9]{0,2}(,?[0-9]{3})*(\.[0-9]{2})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function moneyNegative($options) {
-		$messageArray = array('Must be a valid negative dollar value.');
+		$messageArray = ['Must be a valid negative dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] < 0 || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function moneyPositive($options) {
-		$messageArray = array('Must be a valid positive dollar value.');
+		$messageArray = ['Must be a valid positive dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] > 0 || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function moneyZeroNegative($options) {
-		$messageArray = array('Must be zero or a valid negative dollar value.');
+		$messageArray = ['Must be zero or a valid negative dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] <= 0 ? 'success' : $messageArray;
 	}
 
 	public function moneyZeroPositive($options) {
-		$messageArray = array('Must be zero or a valid positive dollar value.');
+		$messageArray = ['Must be zero or a valid positive dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0]= 0 || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function password($options) {
-		$messageArray = array('Must be between 4 and 32 characters.');
+		$messageArray = ['Must be between 4 and 32 characters.'];
 		return preg_match('/^.{4,32}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function phone($options) {
 		//$messageArray = array('Must be a 10 digit phone number.');
 		//return preg_match('/^(1[\-. ]?)?\(?[0-9]{3}\)?[\-. ]?[0-9]{3}[\-. ]?[0-9]{4}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray ;
-		$messageArray = array('Must be a US or International Phone Number');
+		$messageArray = ['Must be a US or International Phone Number'];
 		return preg_match('/^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function postalZip($options) {
-		$messageArray = array('Must be a valid United States zip code, Canadian postal code, or United Kingdom postal code.');
+		$messageArray = ['Must be a valid United States zip code, Canadian postal code, or United Kingdom postal code.'];
 		$postal = false;
 		if(this.zip($options) == 'success') {
 			$postal = true;
@@ -346,7 +346,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function required($options) {
-		$messageArray = array('Required.');
+		$messageArray = ['Required.'];
 		//return empty($options['value']) ? 'success' : $messageArray; // Break validation on purpose
 		return !empty($options['value']) || $options['value'] == '0' ? 'success' : $messageArray;
 	}
@@ -357,7 +357,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 			return 'success';
 		}
 
-		$messageArray = array();
+		$messageArray = [];
 
 		// Perform the server side check with a scrape
 		$serverSideResponse = getUrlContent($options['url'].'&value='.$options['value']);
@@ -396,9 +396,9 @@ class JFormComponentSingleLineText extends JFormComponent {
 			$request = curl_exec($curlHandler);
 
 			if (!$request) {
-				$response = array('status' => 'failure', 'response' => 'CURL error ' . curl_errno($curlHandler) . ': ' . curl_error($curlHandler));
+				$response = ['status' => 'failure', 'response' => 'CURL error ' . curl_errno($curlHandler) . ': ' . curl_error($curlHandler)];
 			} else {
-				$response = array('status' => 'success', 'response' => $request);
+				$response = ['status' => 'success', 'response' => $request];
 			}
 
 			return $response;
@@ -406,12 +406,12 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function ssn($options) {
-		$messageArray = array('Must be a valid United States social security number.');
+		$messageArray = ['Must be a valid United States social security number.'];
 		return preg_match('/^\d{3}-?\d{2}-?\d{4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function teenager($options) {
-		$messageArray = array('Must be at least 13 years old.');
+		$messageArray = ['Must be at least 13 years old.'];
 		if($this->date($options) == 'success') {
 			$oldEnough = strtotime($options['value']) - strtotime('-13 years');
 		}
@@ -422,27 +422,27 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function time($options) {
-		$messageArray = array('Must be a time in the hh:mm:ss tt format. ss and tt are optional.');
+		$messageArray = ['Must be a time in the hh:mm:ss tt format. ss and tt are optional.'];
 		return preg_match('/^[0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function ukPostal($options) {
-		$messageArray = array('Must be a valid United Kingdom postal code.');
+		$messageArray = ['Must be a valid United Kingdom postal code.'];
 		return preg_match('/^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function url($options) {
-		$messageArray = array('Must be a valid Internet address.');
+		$messageArray = ['Must be a valid Internet address.'];
 		return preg_match('/^((ht|f)tp(s)?:\/\/|www\.)?([\-A-Z0-9.]+)(\.[a-zA-Z]{2,4})(\/[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?(\?[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function username($options) {
-		$messageArray = array('Must use 4 to 32 characters and start with a letter.');
+		$messageArray = ['Must use 4 to 32 characters and start with a letter.'];
 		return preg_match('/^[A-Za-z](?=[A-Za-z0-9_.]{3,31}$)[a-zA-Z0-9_]*\.?[a-zA-Z0-9_]*$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function zip($options) {
-		$messageArray = array('Must be a valid United States zip code.');
+		$messageArray = ['Must be a valid United States zip code.'];
 		return preg_match('/^[0-9]{5}(?:-[0-9]{4})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 

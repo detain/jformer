@@ -8,33 +8,33 @@ else if(file_exists('../../php/JFormer.php')) {
 }
 
 // Create the form
-$loginForm = new JFormer('loginForm', array(
+$loginForm = new JFormer('loginForm', [
     'title' => '<h1>Login</h1>',
     'submitButtonText' => 'Login',
     'requiredText' => ' (required)'
-));
+]);
 
 // Add components to the section
-$loginForm->addJFormComponentArray(array(
-    new JFormComponentSingleLineText('username', 'Username:', array(
-        'validationOptions' => array('required', 'username'),
+$loginForm->addJFormComponentArray([
+    new JFormComponentSingleLineText('username', 'Username:', [
+        'validationOptions' => ['required', 'username'],
         'tip' => '<p>The <a href="/">demo</a> login is <b>admin</b>.</p>',
         'persistentTip' => true
-    )),
-    new JFormComponentSingleLineText('password', 'Password:', array(
+    ]),
+    new JFormComponentSingleLineText('password', 'Password:', [
         'type' => 'password',
-        'validationOptions' => array('required', 'password'),
+        'validationOptions' => ['required', 'password'],
         'tip' => '<p>Password is 12345</p>',
-    )),
+    ]),
     new JFormComponentMultipleChoice('rememberMe', '',
-        array(
-            array('label' => 'Remember me'),
-        ),
-        array(
+        [
+            ['label' => 'Remember me'],
+        ],
+        [
             'tip' => '<p>If a cookie is set you can have this checked by default.</p>',
-        )
+        ]
     ),
-));
+]);
 
 // Set the function for a successful form submission
 function onSubmit($formValues) {
@@ -43,27 +43,27 @@ function onSubmit($formValues) {
         // If they want to be remembered
         if(!empty($formValues->rememberMe)) {
             // Let them know they successfully logged in
-            $response = array('successPageHtml' => '
+            $response = ['successPageHtml' => '
                 <h2>Login Successful</h2>
                 <p>We will keep you logged in on this computer.</p>
-            ');
+            '];
             // Alternatively, you could also do a redirect
             //return array('redirect' => 'http://www.jformer.com');
         }
         // If they do not want to be remembered
         else {
-            $response = array('successPageHtml' => '
+            $response = ['successPageHtml' => '
                 <h2>Login Successful</h2>
                 <p>We will not keep you logged in on this computer.</p>
-            ');
+            '];
         }
     }
     // If login fails, give a failure notice
     else {
-        $response = array(
+        $response = [
             'failureNoticeHtml' => 'Invalid username or password.',
             'failureJs' => "$('#password').val('').focus();",  // You can pass a JavaScript callback to run if it fails
-        );
+        ];
     }
 
     return $response;

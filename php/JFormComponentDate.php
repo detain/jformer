@@ -4,7 +4,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
     /*
      * Constructor
      */
-    function __construct($id, $label, $optionArray = array()) {
+    public function __construct($id, $label, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -29,7 +29,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $div = parent::__toString();
 
@@ -38,7 +38,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
 
     // Date validations
     public function required($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         if($options['value']->month == '' || $options['value']->day == '' || $options['value']->year == '' || $options['value'] == null) {
             array_push($errorMessageArray, 'Required.');
             return $errorMessageArray;
@@ -79,7 +79,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
     public function minDate($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         $month = intval($options['value']->month);
         $day = intval($options['value']->day);
         $year = intval($options['value']->year);
@@ -101,7 +101,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
     public function maxDate($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         $month = intval($options['value']->month);
         $day = intval($options['value']->day);
         $year = intval($options['value']->year);
@@ -123,7 +123,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
     public function teenager($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         $month = intval($options['value']->month);
         $day = intval($options['value']->day);
         $year = intval($options['value']->year);

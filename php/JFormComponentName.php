@@ -1,14 +1,14 @@
 <?php
 
 class JFormComponentName extends JFormComponent {
-	var $middleInitialHidden = false;
-	var $emptyValues = null;
-	var $showSublabels = true;
+	public $middleInitialHidden = false;
+	public $emptyValues = null;
+	public $showSublabels = true;
 
 	/*
 	 * Constructor
 	 */
-	function __construct($id, $label, $optionArray = array()) {
+	public function __construct($id, $label, $optionArray = []) {
 		// Class variables
 		$this->id = $id;
 		$this->name = $this->id;
@@ -16,10 +16,10 @@ class JFormComponentName extends JFormComponent {
 		$this->class = 'jFormComponentName form-group';
 
 		// Input options
-		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
+		$this->initialValues = ['firstName' => '', 'middleInitial' => '', 'lastName' => ''];
 
 		if($this->emptyValues === true) {
-			$this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
+			$this->emptyValues = ['firstName' => 'First Name', 'middleInitial' => 'M','lastName' => 'Last Name'];
 		}
 		//$this->mask = '';
 
@@ -27,11 +27,11 @@ class JFormComponentName extends JFormComponent {
 		$this->initialize($optionArray);
 	}
 
-	function hasInstanceValues() {
+	public function hasInstanceValues() {
 		return is_array($this->value);
 	}
 
-	function getOptions() {
+	public function getOptions() {
 		$options = parent::getOptions();
 
 		if(!empty($this->emptyValues)) {
@@ -49,37 +49,37 @@ class JFormComponentName extends JFormComponent {
 	 *
 	 * @return string
 	 */
-	function __toString() {
+	public function __toString() {
 		// Generate the component div
 		$div = $this->generateComponentDiv();
 
 
-		$firstNameDiv = new JFormElement('div', array(
+		$firstNameDiv = new JFormElement('div', [
 			'class' => 'firstNameDiv form-group',
-		));
+		]);
 		// Add the first name input tag
-		$firstName = new JFormElement('input', array(
+		$firstName = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-firstName',
 			'name' => $this->name.'-firstName',
 			'class' => 'firstName singleLineText form-control',
 			'placeholder' => 'First Name',
 			'value' => $this->initialValues['firstName'],
-		));
+		]);
 		$firstNameDiv->insert($firstName);
 
 		// Add the middle initial input tag
-		$middleInitialDiv = new JFormElement('div', array(
+		$middleInitialDiv = new JFormElement('div', [
 			'class' => 'middleInitialDiv form-group',
-		));
-		$middleInitial = new JFormElement('input', array(
+		]);
+		$middleInitial = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-middleInitial',
 			'name' => $this->name.'-middleInitial',
 			'class' => 'middleInitial singleLineText form-control',
 			'maxlength' => '1',
-			'value' => (isset($this->initialValues['middleInitial']) ? $this->initialValues['middleInitial'] : ''),
-		));
+			'value' => ($this->initialValues['middleInitial'] ?? ''),
+		]);
 		if($this->middleInitialHidden) {
 			$middleInitial->setAttribute('style', 'display: none;');
 			$middleInitialDiv->setAttribute('style', 'display: none;');
@@ -88,21 +88,21 @@ class JFormComponentName extends JFormComponent {
 
 
 		// Add the last name input tag
-		$lastNameDiv = new JFormElement('div', array(
+		$lastNameDiv = new JFormElement('div', [
 			'class' => 'lastNameDiv form-group',
-		));
-		$lastName = new JFormElement('input', array(
+		]);
+		$lastName = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-lastName',
 			'name' => $this->name.'-lastName',
 			'class' => 'lastName singleLineText form-control',
 			'placeholder' => 'Last Name',
 			'value' => $this->initialValues['lastName'],
-		));
+		]);
 		$lastNameDiv->insert($lastName);
 
 		if(!empty($this->emptyValues)){
-			$this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
+			$this->emptyValues = ['firstName' => 'First Name', 'middleInitial' => 'M','lastName' => 'Last Name'];
 			foreach($this->emptyValues as $key => $value) {
 				if (!isset($this->initialValues[$key]) || $this->initialValues[$key] == '')
 				{
@@ -142,12 +142,12 @@ class JFormComponentName extends JFormComponent {
 	}
 
 	public function required($options) {
-		$errorMessageArray = array();
+		$errorMessageArray = [];
 		if($options['value']->firstName == '') {
-			array_push($errorMessageArray, array('First name is required.'));
+			array_push($errorMessageArray, ['First name is required.']);
 		}
 		if($options['value']->lastName == '') {
-			array_push($errorMessageArray, array('Last name is required.'));
+			array_push($errorMessageArray, ['Last name is required.']);
 		}
 		return sizeof($errorMessageArray) == 0 ? 'success' : $errorMessageArray;
 	}

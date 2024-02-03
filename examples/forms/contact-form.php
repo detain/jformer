@@ -8,31 +8,31 @@ else if(file_exists('../../php/JFormer.php')) {
 }
 
 // Create the form
-$contactForm = new JFormer('contactForm', array(
+$contactForm = new JFormer('contactForm', [
     'submitButtonText' => 'Send Message',
     'title' => '<h1>Contact Us</h1>',
-));
+]);
 
 // Add components to the form
-$contactForm->addJFormComponentArray(array(
-    new JFormComponentName('name', 'Name:', array(
-        'validationOptions' => array('required'),
+$contactForm->addJFormComponentArray([
+    new JFormComponentName('name', 'Name:', [
+        'validationOptions' => ['required'],
         'tip' => '<p>Please enter your full name.</p>'
-    )),
-    new JFormComponentSingleLineText('email', 'E-mail address:', array(
-        'validationOptions' => array('required', 'email'),
-    )),
-    new JFormComponentSingleLineText('subject', 'Subject:', array(
-        'validationOptions' => array('required'),
-    )),
-    new JFormComponentTextArea('message', 'Message:', array(
-        'validationOptions' => array('required'),
-    )),
-));
+    ]),
+    new JFormComponentSingleLineText('email', 'E-mail address:', [
+        'validationOptions' => ['required', 'email'],
+    ]),
+    new JFormComponentSingleLineText('subject', 'Subject:', [
+        'validationOptions' => ['required'],
+    ]),
+    new JFormComponentTextArea('message', 'Message:', [
+        'validationOptions' => ['required'],
+    ]),
+]);
 
 // Set the function for a successful form submission
 function onSubmit($formValues) {
-    
+
     // Concatenate the name
     if(!empty($formValues->name->middleInitial)) {
         $name = $formValues->name->firstName . ' ' . $formValues->name->middleInitial . ' ' . $formValues->name->lastName;

@@ -2,7 +2,7 @@ JFormComponentFile = JFormComponent.extend({
     init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
         this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
     },
-    
+
     initialize: function(){
         var tipTarget = this.component.find('button').parent();
         if (tipTarget.length < 1){
@@ -59,7 +59,7 @@ JFormComponentFile = JFormComponent.extend({
             var value = event.target.value.replace(/.+\\/, '');
             self.component.find('input:text').val(value);
         });
-        
+
     },
 
     setValue: function() {

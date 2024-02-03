@@ -60,7 +60,7 @@ JFormComponentLikert = JFormComponent.extend({
     handleServerValidationResponse: function(errorMessageArray) {
         var self = this;
         if(errorMessageArray.length > 0) {
-            $.each(this.instanceArray, function(key, instance){    
+            $.each(this.instanceArray, function(key, instance){
                 $.each(errorMessageArray, function(index, passedErrorArray){
                     $.each(passedErrorArray, function(statementKey, statementError){
                         var likertStatement = self.parentJFormSection.jFormComponents[instance.id+'-'+statementKey];
@@ -79,5 +79,5 @@ JFormComponentLikert = JFormComponent.extend({
         var self = this;
         return true;
     }
-        
+
 });

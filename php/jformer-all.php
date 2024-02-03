@@ -2,7 +2,7 @@
 
 class JFormElement {
     private $type;
-    private $unaryTagArray = array('input', 'img', 'hr', 'br', 'meta', 'link');
+    private $unaryTagArray = ['input', 'img', 'hr', 'br', 'meta', 'link'];
     private $attributeArray;
     private $innerHtml;
 
@@ -13,7 +13,7 @@ class JFormElement {
      * @param <type> $attributeArray
      * @param <type> $unaryTagArray
      */
-    public function __construct($type, $attributeArray = array()) {
+    public function __construct($type, $attributeArray = []) {
         $this->type = strtolower($type);
 
         foreach($attributeArray as $attribute => $value) {
@@ -35,7 +35,7 @@ class JFormElement {
     }
 
 
-    function setAttribute($attribute, $value = '') {
+    public function setAttribute($attribute, $value = '') {
         if(!is_array($attribute)) {
             $this->attributeArray[$attribute] = $value;
         }
@@ -46,7 +46,7 @@ class JFormElement {
         return $this;
     }
 
-    function addToAttribute($attribute, $value = '') {
+    public function addToAttribute($attribute, $value = '') {
         if(isset($this->attributeArray[$attribute])) {
             $currentValue = $this->attributeArray[$attribute];
         }
@@ -58,7 +58,7 @@ class JFormElement {
         return $this;
     }
 
-    function addClassName($className) {
+    public function addClassName($className) {
         $currentClasses = $this->getAttribute('class');
 
         // Check to see if the class is already added
@@ -73,7 +73,7 @@ class JFormElement {
      *
      * @param <type> $object
      */
-    function insert($object) {
+    public function insert($object) {
         if(@get_class($object) == __class__) {
             $this->innerHtml .= $object->build();
         }
@@ -90,7 +90,7 @@ class JFormElement {
      * @param <type> $object
      * @return <type>
      */
-    function update($object) {
+    public function update($object) {
         $this->innerHtml = $object;
 
         return $this;
@@ -101,7 +101,7 @@ class JFormElement {
      *
      * @return <type>
      */
-    function build() {
+    public function build() {
         // Start the tag
         $element = '<'.$this->type;
 
@@ -130,7 +130,7 @@ class JFormElement {
      *
      * @return <type>
      */
-    function __toString() {
+    public function __toString() {
         return $this->build();
     }
 }
@@ -177,7 +177,7 @@ class JFormer {
 	public $action;
 	public $form_type = 'horizontal';
 	public $style;
-	public $jFormPageArray = array();
+	public $jFormPageArray = [];
 	public $jFormerId;
 	public $onSubmitFunctionServerSide = 'onSubmit';
 	public $disableAnalytics = false;
@@ -203,19 +203,19 @@ class JFormer {
 	public $useIframeTarget = true; // use hidden iframe for form processing, normal form post if false
 	// Page navigator
 	public $pageNavigatorEnabled = false;
-	public $pageNavigator = array();
+	public $pageNavigator = [];
 	// Splash page
 	public $splashPageEnabled = false;
-	public $splashPage = array();
+	public $splashPage = [];
 	// Animations
 	public $animationOptions = null;
 	// Custom script execution before form submission
 	public $onSubmitStartClientSide = '';
 	public $onSubmitFinishClientSide = '';
 	// Essential class variables
-	public $status = array('status' => 'processing', 'response' => 'Form initialized.');
+	public $status = ['status' => 'processing', 'response' => 'Form initialized.'];
 	// Validation
-	public $validationResponse = array();
+	public $validationResponse = [];
 	public $validationPassed = null;
 	// Required Text
 	public $requiredText = ' *';
@@ -223,7 +223,7 @@ class JFormer {
 	/**
 	 * Constructor
 	 */
-	function __construct($id, $optionArray = array(), $jFormPageArray = array()) {
+	public function __construct($id, $optionArray = [], $jFormPageArray = []) {
 		// Set the id
 		$this->id = $id;
 
@@ -242,9 +242,9 @@ class JFormer {
 		if (!empty($this->pageNavigator)) {
 			$this->pageNavigatorEnabled = true;
 		} else if ($this->pageNavigator == true) {
-			$this->pageNavigator = array(
+			$this->pageNavigator = [
 				'position' => 'top'
-			);
+			];
 		}
 
 		// Set defaults for the splash page
@@ -258,13 +258,13 @@ class JFormer {
 		return $this;
 	}
 
-	function addJFormPage($jFormPage) {
+	public function addJFormPage($jFormPage) {
 		$jFormPage->jFormer = $this;
 		$this->jFormPageArray[$jFormPage->id] = $jFormPage;
 		return $this;
 	}
 
-	function addJFormPages($jFormPages) {
+	public function addJFormPages($jFormPages) {
 		if (is_array($jFormPages)) {
 			foreach ($jFormPages as $jFormPage) {
 				$jFormPage->jFormer = $this;
@@ -277,10 +277,10 @@ class JFormer {
 	}
 
 	// Convenience method, no need to create a page or section to get components on the form
-	function addJFormComponent($jFormComponent) {
+	public function addJFormComponent($jFormComponent) {
 		// Create an anonymous page if necessary
 		if (empty($this->jFormPageArray))
-			$this->addJFormPage(new JFormPage($this->id . '_page1', array('anonymous' => true)));
+			$this->addJFormPage(new JFormPage($this->id . '_page1', ['anonymous' => true]));
 
 		// Get the first page in the jFormPageArray
 		$currentJFormPage = current($this->jFormPageArray);
@@ -294,7 +294,7 @@ class JFormer {
 		// If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
 		else {
 			// Create an anonymous section
-			$anonymousSection = new JFormSection($currentJFormPage->id . '_section' . (sizeof($currentJFormPage->jFormSectionArray) + 1), array('anonymous' => true));
+			$anonymousSection = new JFormSection($currentJFormPage->id . '_section' . (sizeof($currentJFormPage->jFormSectionArray) + 1), ['anonymous' => true]);
 
 			// Add the anonymous section to the page
 			$currentJFormPage->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
@@ -303,17 +303,17 @@ class JFormer {
 		return $this;
 	}
 
-	function addJFormComponentArray($jFormComponentArray) {
+	public function addJFormComponentArray($jFormComponentArray) {
 		foreach ($jFormComponentArray as $jFormComponent)
 			$this->addJFormComponent($jFormComponent);
 		return $this;
 	}
 
 	// Convenience method, no need to create a to get a section on the form
-	function addJFormSection($jFormSection) {
+	public function addJFormSection($jFormSection) {
 		// Create an anonymous page if necessary
 		if (empty($this->jFormPageArray))
-			$this->addJFormPage(new JFormPage($this->id . '_page1', array('anonymous' => true)));
+			$this->addJFormPage(new JFormPage($this->id . '_page1', ['anonymous' => true]));
 
 		// Get the first page in the jFormPageArray
 		$currentJFormPage = current($this->jFormPageArray);
@@ -324,26 +324,26 @@ class JFormer {
 		return $this;
 	}
 
-	function setStatus($status, $response) {
-		$this->status = array('status' => $status, 'response' => $response);
+	public function setStatus($status, $response) {
+		$this->status = ['status' => $status, 'response' => $response];
 		return $this->status;
 	}
 
-	function resetStatus() {
-		$this->status = array('status' => 'processing', 'response' => 'Form status reset.');
+	public function resetStatus() {
+		$this->status = ['status' => 'processing', 'response' => 'Form status reset.'];
 		return $this->status;
 	}
 
-	function getStatus() {
+	public function getStatus() {
 		return $this->status;
 	}
 
-	function validate() {
+	public function validate() {
 		// Update the form status
 		$this->setStatus('processing', 'Validating component values.');
 
 		// Clear the validation response
-		$this->validationResponse = array();
+		$this->validationResponse = [];
 
 		// Validate each page
 		foreach ($this->jFormPageArray as $jFormPage)
@@ -396,8 +396,8 @@ class JFormer {
 		return $this->validationResponse;
 	}
 
-	function getData() {
-		$this->data = array();
+	public function getData() {
+		$this->data = [];
 
 		foreach ($this->jFormPageArray as $jFormPageKey => $jFormPage) {
 			if (!$jFormPage->anonymous) {
@@ -419,13 +419,13 @@ class JFormer {
 		return json_decode(json_encode($this->data));
 	}
 
-	function updateRequiredText($requiredText) {
+	public function updateRequiredText($requiredText) {
 		foreach($this->jFormPageArray as $jFormPage) {
 			$jFormPage->updateRequiredText($requiredText);
 		}
 	}
 
-	function setInitialValues($formValues) {
+	public function setInitialValues($formValues) {
 		// Make sure we are always working with an object
 		if (!is_object($formValues)) {
 			$formValues = json_decode(urldecode($formValues));
@@ -438,7 +438,7 @@ class JFormer {
 			$this->formPageArray[$formPageKey]->setInitialValues($formPageData);
 	}
 
-	function setData($data, $fileArray = array()) {
+	public function setData($data, $fileArray = []) {
 		// Get the form data as an object, handle apache auto-add slashes on post requests
 		$jFormerData = json_decode(urldecode($data));
 		if (!is_object($jFormerData))
@@ -513,13 +513,13 @@ class JFormer {
 		return $this;
 	}
 
-	function clearData() {
+	public function clearData() {
 		foreach ($this->jFormPageArray as $jFormPage)
 			$jFormPage->clearData();
 		$this->data = null;
 	}
 
-	function clearAllComponentValues() {
+	public function clearAllComponentValues() {
 		// Clear all of the components in the form
 		foreach ($this->jFormPageArray as $jFormPage) {
 			foreach ($jFormPage->jFormSectionArray as $jFormSection) {
@@ -529,7 +529,7 @@ class JFormer {
 		}
 	}
 
-	function select($id) {
+	public function select($id) {
 		foreach ($this->jFormPageArray as $jFormPageId => &$jFormPage) {
 			if ($id === $jFormPageId)
 				return $jFormPage;
@@ -551,7 +551,7 @@ class JFormer {
 		return false;
 	}
 
-	function remove($id) {
+	public function remove($id) {
 		foreach ($this->jFormPageArray as $jFormPageId => &$jFormPage) {
 			if ($id === $jFormPageId) {
 				$this->jFormPageArray[$jFormPageId] = null;
@@ -576,10 +576,10 @@ class JFormer {
 		return false;
 	}
 
-	function processRequest($silent = false) {
+	public function processRequest($silent = false) {
 		// Are they trying to post a file that is too large?
 		if (isset($_SERVER['CONTENT_LENGTH']) && empty($_POST)) {
-			$this->setStatus('success', array('failureNoticeHtml' => 'Your request (' . round($_SERVER['CONTENT_LENGTH'] / 1024 / 1024, 1) . 'M) was too large for the server to handle. ' . ini_get('post_max_size') . ' is the maximum request size.'));
+			$this->setStatus('success', ['failureNoticeHtml' => 'Your request (' . round($_SERVER['CONTENT_LENGTH'] / 1024 / 1024, 1) . 'M) was too large for the server to handle. ' . ini_get('post_max_size') . ' is the maximum request size.']);
 			echo '
 				<script type="text/javascript" language="javascript">
 					parent.' . $this->id . 'Object.handleFormSubmissionResponse(' . json_encode($this->getStatus()) . ');
@@ -593,7 +593,7 @@ class JFormer {
 			// Process the form, get the form state, or display the form
 			if (isset($_POST['jFormer'])) {
 				//echo json_encode($_POST);
-				$onSubmitErrorMessageArray = array();
+				$onSubmitErrorMessageArray = [];
 
 				// Set the form components and validate the form
 				$this->setData($_POST['jFormer'], $_FILES);
@@ -602,7 +602,7 @@ class JFormer {
 				// Run validation
 				$this->validate();
 				if (!$this->validationPassed) {
-					$this->setStatus('failure', array('validationFailed' => $this->validationResponse));
+					$this->setStatus('failure', ['validationFailed' => $this->validationResponse]);
 				} else {
 					try {
 						$onSubmitResponse = call_user_func($this->onSubmitFunctionServerSide, $this->getData());
@@ -618,7 +618,7 @@ class JFormer {
 					if (empty($onSubmitErrorMessageArray)) {
 						$this->setStatus('success', $onSubmitResponse);
 					} else {
-						$this->setStatus('failure', array('failureHtml' => $onSubmitErrorMessageArray));
+						$this->setStatus('failure', ['failureHtml' => $onSubmitErrorMessageArray]);
 					}
 				}
 				if($this->useIframeTarget){
@@ -646,10 +646,10 @@ class JFormer {
 		}
 	}
 
-	function getOptions() {
-		$options = array();
-		$options['options'] = array();
-		$options['jFormPages'] = array();
+	public function getOptions() {
+		$options = [];
+		$options['options'] = [];
+		$options['jFormPages'] = [];
 
 		// Get all of the pages
 		foreach ($this->jFormPageArray as $jFormPage)
@@ -689,27 +689,27 @@ class JFormer {
 		return $options;
 	}
 
-	function outputHtml() {
+	public function outputHtml() {
 		echo $this->getHtml();
 	}
 
-	function __toString() {
+	public function __toString() {
 		$element = $this->getHtml();
 		return $element->__toString();
 	}
 
-	function getHtml() {
+	public function getHtml() {
 		$this->updateRequiredText($this->requiredText);
 		// Create the form
 		$target = $this->useIframeTarget ? $this->id . '-iframe' : '';
-		$jFormElement = new JFormElement('form', array(
+		$jFormElement = new JFormElement('form', [
 					'id' => $this->id,
 					'target' => $target,
 					'enctype' => 'multipart/form-data',
 					'method' => 'post',
 					'class' => $this->class . ' form-'.$this->form_type,
 					'action' => $this->action,
-				));
+				]);
 		if (!empty($this->onMouseOver))
 			$formJFormElement->attr('onmouseover', $this->onMouseOver);
 
@@ -722,13 +722,13 @@ class JFormer {
 
 		// Global messages
 		if ($this->alertsEnabled) {
-			$jFormerAlertWrapperDiv = new JFormElement('div', array(
+			$jFormerAlertWrapperDiv = new JFormElement('div', [
 						'class' => 'jFormerAlertWrapper',
 						'style' => 'display: none;',
-					));
-			$alertDiv = new JFormElement('div', array(
+					]);
+			$alertDiv = new JFormElement('div', [
 						'class' => 'jFormerAlert',
-					));
+					]);
 			$jFormerAlertWrapperDiv->insert($alertDiv);
 			$jFormElement->insert($jFormerAlertWrapperDiv);
 		}
@@ -736,10 +736,10 @@ class JFormer {
 		// If a splash is enabled
 		if ($this->splashPageEnabled) {
 			// Create a splash page div
-			$splashPageDiv = new JFormElement('div', array(
+			$splashPageDiv = new JFormElement('div', [
 						'id' => $this->id . '-splash-page',
 						'class' => 'jFormerSplashPage jFormPage',
-					));
+					]);
 
 			// Set defaults if they aren't set
 			if (!isset($this->splashPage['content']))
@@ -751,8 +751,8 @@ class JFormer {
 
 			// Create a splash button if there is no custom button ID
 			if (!isset($this->splashPage['customButtonId'])) {
-				$splashLi = new JFormElement('li', array('class' => 'splashLi'));
-				$splashButton = new JFormElement('button', array('class' => 'splashButton'));
+				$splashLi = new JFormElement('li', ['class' => 'splashLi']);
+				$splashButton = new JFormElement('button', ['class' => 'splashButton']);
 				$splashButton->update($this->splashPage['splashButtonText']);
 				$splashLi->insert($splashButton);
 			}
@@ -760,44 +760,44 @@ class JFormer {
 
 		// Add a title to the form
 		if (!empty($this->title)) {
-			$title = new JFormElement('div', array(
+			$title = new JFormElement('div', [
 						'class' => $this->titleClass
-					));
+					]);
 			$title->update($this->title);
 			$jFormElement->insert($title);
 		}
 
 		// Add a description to the form
 		if (!empty($this->description)) {
-			$description = new JFormElement('div', array(
+			$description = new JFormElement('div', [
 						'class' => $this->descriptionClass
-					));
+					]);
 			$description->update($this->description);
 			$jFormElement->insert($description);
 		}
 
 		// Add the page navigator if enabled
 		if ($this->pageNavigatorEnabled) {
-			$pageNavigatorDiv = new JFormElement('div', array(
+			$pageNavigatorDiv = new JFormElement('div', [
 						'class' => 'jFormPageNavigator',
-					));
+					]);
 			if (isset($this->pageNavigator['position']) && $this->pageNavigator['position'] == 'right') {
 				$pageNavigatorDiv->addToAttribute('class', ' jFormPageNavigatorRight');
 			} else {
 				$pageNavigatorDiv->addToAttribute('class', ' jFormPageNavigatorTop');
 			}
 
-			$pageNavigatorUl = new JFormElement('ul', array(
-					));
+			$pageNavigatorUl = new JFormElement('ul', [
+					]);
 
 			$jFormPageArrayCount = 0;
 			foreach ($this->jFormPageArray as $jFormPageKey => $jFormPage) {
 				$jFormPageArrayCount++;
 
-				$pageNavigatorLabel = new JFormElement('li', array(
+				$pageNavigatorLabel = new JFormElement('li', [
 							'id' => 'navigatePage' . $jFormPageArrayCount,
 							'class' => 'jFormPageNavigatorLink',
-						));
+						]);
 
 				// If the label is numeric
 				if (isset($this->pageNavigator['label']) && $this->pageNavigator['label'] == 'numeric') {
@@ -828,15 +828,15 @@ class JFormer {
 		}
 
 		// Add the jFormerControl UL
-		$jFormerControlUl = new JFormElement('ul', array(
-					'class' => 'jFormerControl col-xs-offset-4 col-xs-8',
+		$jFormerControlUl = new JFormElement('ul', [
+					'class' => 'jFormerControl offset-sm-4 col-sm-8',
 			'style' => 'list-style-type: none;',
-				));
+				]);
 
 		// Create the cancel button
 		if ($this->cancelButton) {
-			$cancelButtonLi = new JFormElement('li', array('class' => 'cancelLi'));
-			$cancelButton = new JFormElement('button', array('class' => $this->cancelButtonClass));
+			$cancelButtonLi = new JFormElement('li', ['class' => 'cancelLi']);
+			$cancelButton = new JFormElement('button', ['class' => $this->cancelButtonClass]);
 			$cancelButton->update($this->cancelButtonText);
 
 			if (!empty($this->cancelButtonOnClick))
@@ -846,14 +846,14 @@ class JFormer {
 		}
 
 		// Create the previous button
-		$previousButtonLi = new JFormElement('li', array('class' => 'previousLi', 'style' => 'display: none;'));
-		$previousButton = new JFormElement('button', array('class' => 'previousButton'));
+		$previousButtonLi = new JFormElement('li', ['class' => 'previousLi', 'style' => 'display: none;']);
+		$previousButton = new JFormElement('button', ['class' => 'previousButton']);
 		$previousButton->update('Previous');
 		$previousButtonLi->insert($previousButton);
 
 		// Create the next button
-		$nextButtonLi = new JFormElement('li', array('class' => 'nextLi'));
-		$nextButton = new JFormElement('button', array('class' => 'btn btn-primary nextButton'));
+		$nextButtonLi = new JFormElement('li', ['class' => 'nextLi']);
+		$nextButton = new JFormElement('button', ['class' => 'btn btn-secondary nextButton']);
 		$nextButton->update($this->submitButtonText);
 		// Don't show the next button
 		if ($this->splashPageEnabled)
@@ -880,8 +880,8 @@ class JFormer {
 		}
 
 		// Create the page wrapper and scrollers
-		$jFormPageWrapper = new JFormElement('div', array('class' => 'jFormPageWrapper'));
-		$jFormPageScroller = new JFormElement('div', array('class' => 'jFormPageScroller'));
+		$jFormPageWrapper = new JFormElement('div', ['class' => 'jFormPageWrapper']);
+		$jFormPageScroller = new JFormElement('div', ['class' => 'jFormPageScroller']);
 
 		// Add a splash page if it exists
 		if (isset($splashPageDiv))
@@ -899,23 +899,23 @@ class JFormer {
 		}
 
 		// Page wrapper wrapper
-		$pageWrapperContainer = new JFormElement('div', array('class' => 'jFormWrapperContainer'));
+		$pageWrapperContainer = new JFormElement('div', ['class' => 'jFormWrapperContainer']);
 
 		// Insert the page wrapper and the jFormerControl UL to the form
 		$jFormElement->insert($pageWrapperContainer->insert($jFormPageWrapper->insert($jFormPageScroller) . '<div class="form-group" style="padding-top: 10px;">'.$jFormerControlUl.'</div>'));
 
 		// Create a script tag to initialize jFormer JavaScript
-		$script = new JFormElement('script', array(
+		$script = new JFormElement('script', [
 					'type' => 'text/javascript',
 					'language' => 'javascript'
-				));
+				]);
 
 		// Update the script tag
 		$script->update('$(document).ready(function () { ' . $this->id . 'Object = new JFormer(\'' . $this->id . '\', ' . json_encode($this->getOptions()) . '); });');
 		$jFormElement->insert($script);
 
 		// Add a hidden iframe to handle the form posts
-		$iframe = new JFormElement('iframe', array(
+		$iframe = new JFormElement('iframe', [
 					'id' => $this->id . '-iframe',
 					'name' => $this->id . '-iframe',
 					'class' => 'jFormerIFrame',
@@ -924,7 +924,7 @@ class JFormer {
 					'src' => (defined('URLDIR') ? URLDIR : '') . '/js/jformer-detain-git/php/JFormer.php?iframe=true',
 					//'src' => '/empty.html',
 						//'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
-				));
+				]);
 
 		if ($this->debugMode)
 			$iframe->addToAttribute('style', 'display:block;');
@@ -934,7 +934,7 @@ class JFormer {
 
 		// After control
 		if (!empty($this->afterControl)) {
-			$subSubmitInstructions = new JFormElement('div', array('class' => 'jFormerAfterControl'));
+			$subSubmitInstructions = new JFormElement('div', ['class' => 'jFormerAfterControl']);
 			$subSubmitInstructions->update($this->afterControl);
 			$jFormElement->insert($subSubmitInstructions);
 		}
@@ -954,35 +954,35 @@ if (isset($_GET['iframe']))
  * A FormPage object contains FormSection objects and belongs to a Form object
  */
 class JFormPage {
-    
+
     // General settings
-    var $id;
-    var $class = 'jFormPage';
-    var $style = '';
-    var $jFormer;
-    var $jFormSectionArray = array();
-    var $onBeforeScrollTo; // array('function', 'notificationHtml')
-    var $data;
-    var $anonymous = false;
+    public $id;
+    public $class = 'jFormPage';
+    public $style = '';
+    public $jFormer;
+    public $jFormSectionArray = [];
+    public $onBeforeScrollTo; // array('function', 'notificationHtml')
+    public $data;
+    public $anonymous = false;
 
     // Title, description, submit instructions
-    var $title = '';
-    var $titleClass = 'jFormPageTitle';
-    var $description = '';
-    var $descriptionClass = 'jFormPageDescription';
-    var $submitInstructions = '';
-    var $submitInstructionsClass = 'jFormPageSubmitInstructions';
+    public $title = '';
+    public $titleClass = 'jFormPageTitle';
+    public $description = '';
+    public $descriptionClass = 'jFormPageDescription';
+    public $submitInstructions = '';
+    public $submitInstructionsClass = 'jFormPageSubmitInstructions';
 
     // Validation
-    var $errorMessageArray = array();
+    public $errorMessageArray = [];
 
     // Options
-    var $dependencyOptions = null;
+    public $dependencyOptions = null;
 
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $jFormSectionArray = array()) {
+    public function __construct($id, $optionArray = [], $jFormSectionArray = []) {
         // Set the id
         $this->id = $id;
 
@@ -1001,13 +1001,13 @@ class JFormPage {
         return $this;
     }
 
-    function addJFormSection($jFormSection) {
+    public function addJFormSection($jFormSection) {
         $jFormSection->parentJFormPage = $this;
         $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
 
-    function addJFormSections($jFormSections) {
+    public function addJFormSections($jFormSections) {
         if (is_array($jFormSections)) {
             foreach ($jFormSections as $jFormSection) {
                 $jFormSection->parentJFormPage = $this;
@@ -1018,12 +1018,12 @@ class JFormPage {
         $this->jFormSectionArray[$jFormSection->id] = $jFormSection;
         return $this;
     }
-    
+
     // Convenience method, no need to create a section to get components on the page
-    function addJFormComponent($jFormComponent) {
+    public function addJFormComponent($jFormComponent) {
         // Create an anonymous section if necessary
         if(empty($this->jFormSectionArray)) {
-            $this->addJFormSection(new JFormSection($this->id.'_section1', array('anonymous' => true)));
+            $this->addJFormSection(new JFormSection($this->id.'_section1', ['anonymous' => true]));
         }
 
         // Get the last section in the page
@@ -1036,7 +1036,7 @@ class JFormPage {
         // If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
         else {
             // Create an anonymous section
-            $anonymousSection = new JFormSection($this->id.'_section'.(sizeof($this->jFormSectionArray) + 1), array('anonymous' => true));
+            $anonymousSection = new JFormSection($this->id.'_section'.(sizeof($this->jFormSectionArray) + 1), ['anonymous' => true]);
 
             // Add the anonymous section to the page
             $this->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
@@ -1044,37 +1044,37 @@ class JFormPage {
 
         return $this;
     }
-    function addJFormComponentArray($jFormComponentArray) {
+    public function addJFormComponentArray($jFormComponentArray) {
         foreach($jFormComponentArray as $jFormComponent) {
             $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
-    function getData() {
-        $this->data = array();
+    public function getData() {
+        $this->data = [];
         foreach($this->jFormSectionArray as $jFormSectionKey => $jFormSection) {
             $this->data[$jFormSectionKey] = $jFormSection->getData();
         }
         return $this->data;
     }
 
-    function setData($jFormPageData) {
+    public function setData($jFormPageData) {
         foreach($jFormPageData as $jFormSectionKey => $jFormSectionData) {
             $this->jFormSectionArray[$jFormSectionKey]->setData($jFormSectionData);
         }
     }
 
-    function clearData() {
+    public function clearData() {
         foreach($this->jFormSectionArray as $jFormSection) {
             $jFormSection->clearData();
         }
         $this->data = null;
     }
 
-    function validate() {
+    public function validate() {
         // Clear the error message array
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         // Validate each section
         foreach($this->jFormSectionArray as $jFormSection) {
@@ -1084,10 +1084,10 @@ class JFormPage {
         return $this->errorMessageArray;
     }
 
-    function getOptions() {
-        $options = array();
-        $options['options'] = array();
-        $options['jFormSections'] = array();
+    public function getOptions() {
+        $options = [];
+        $options['options'] = [];
+        $options['jFormSections'] = [];
 
         foreach($this->jFormSectionArray as $jFormSection) {
             $options['jFormSections'][$jFormSection->id] = $jFormSection->getOptions();
@@ -1096,12 +1096,12 @@ class JFormPage {
         if(!empty($this->onScrollTo)) {
             $options['options']['onScrollTo'] = $this->onScrollTo;
         }
-        
+
         // Dependencies
         if(!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
             if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
-                $this->dependencyOptions['dependentOn'] = array($this->dependencyOptions['dependentOn']);
+                $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
@@ -1113,7 +1113,7 @@ class JFormPage {
         return $options;
     }
 
-    function updateRequiredText($requiredText) {
+    public function updateRequiredText($requiredText) {
         foreach($this->jFormSectionArray as $jFormSection) {
             $jFormSection->updateRequiredText($requiredText);
         }
@@ -1123,12 +1123,12 @@ class JFormPage {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Page div
-        $jFormPageDiv = new JFormElement('div', array(
+        $jFormPageDiv = new JFormElement('div', [
             'id' => $this->id,
             'class' => $this->class
-        ));
+        ]);
 
         // Set the styile
         if(!empty($this->style)) {
@@ -1137,18 +1137,18 @@ class JFormPage {
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new JFormElement('div', array(
+            $title = new JFormElement('div', [
                 'class' => $this->titleClass
-            ));
+            ]);
             $title->update($this->title);
             $jFormPageDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new JFormElement('div', array(
+            $description = new JFormElement('div', [
                 'class' => $this->descriptionClass
-            ));
+            ]);
             $description->update($this->description);
             $jFormPageDiv->insert($description);
         }
@@ -1160,9 +1160,9 @@ class JFormPage {
 
         // Submit instructions
         if(!empty($this->submitInstructions)) {
-            $submitInstruction = new JFormElement('div', array(
+            $submitInstruction = new JFormElement('div', [
                 'class' => $this->submitInstructionsClass
-            ));
+            ]);
             $submitInstruction->update($this->submitInstructions);
             $jFormPageDiv->insert($submitInstruction);
         }
@@ -1178,34 +1178,34 @@ class JFormPage {
 class JFormSection {
 
     // General settings
-    var $id;
-    var $class = 'jFormSection';
-    var $style = '';
-    var $parentJFormPage;
-    var $jFormComponentArray = array();
-    var $data;
-    var $anonymous = false;
+    public $id;
+    public $class = 'jFormSection';
+    public $style = '';
+    public $parentJFormPage;
+    public $jFormComponentArray = [];
+    public $data;
+    public $anonymous = false;
 
     // Title, description, submit instructions
-    var $title = '';
-    var $titleClass = 'jFormSectionTitle';
-    var $description = '';
-    var $descriptionClass = 'jFormSectionDescription';
+    public $title = '';
+    public $titleClass = 'jFormSectionTitle';
+    public $description = '';
+    public $descriptionClass = 'jFormSectionDescription';
 
     // Options
-    var $instanceOptions = null;
-    var $dependencyOptions = null;
+    public $instanceOptions = null;
+    public $dependencyOptions = null;
 
     // Validation
-    var $errorMessageArray = array();
+    public $errorMessageArray = [];
 
     /*
      * Constructor
      */
-    function __construct($id, $optionArray = array(), $jFormComponentArray = array()) {
+    public function __construct($id, $optionArray = [], $jFormComponentArray = []) {
         // Set the id
         $this->id = $id;
-     
+
         // Use the options hash to update object variables
         if(is_array($optionArray)) {
             foreach($optionArray as $option => $value) {
@@ -1219,14 +1219,14 @@ class JFormSection {
         return $this;
     }
 
-    function addJFormComponent($jFormComponent) {
+    public function addJFormComponent($jFormComponent) {
         $jFormComponent->parentJFormSection = $this;
         $this->jFormComponentArray[$jFormComponent->id] = $jFormComponent;
 
         return $this;
     }
 
-    function addJFormComponents($jFormComponents) {
+    public function addJFormComponents($jFormComponents) {
         if (is_array($jFormComponents)) {
             foreach ($jFormComponentArray as $jFormComponent) {
                 $jFormComponent->parentJFormSection = $this;
@@ -1239,15 +1239,15 @@ class JFormSection {
         return $this;
     }
 
-    function addJFormComponentArray($jFormComponentArray) {
+    public function addJFormComponentArray($jFormComponentArray) {
         foreach($jFormComponentArray as $jFormComponent) {
             $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
-    function getData() {
-        $this->data = array();
+    public function getData() {
+        $this->data = [];
 
         // Check to see if jFormComponent array contains instances
         if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
@@ -1271,11 +1271,11 @@ class JFormSection {
         return $this->data;
     }
 
-    function setData($jFormSectionData) {
+    public function setData($jFormSectionData) {
         // Handle multiple instances
         if(is_array($jFormSectionData)) {
-            $newJFormComponentArray = array();
-            
+            $newJFormComponentArray = [];
+
             // Go through each section instance
             foreach($jFormSectionData as $jFormSectionIndex => $jFormSection) {
                 // Create a clone of the jFormComponentArray
@@ -1300,7 +1300,7 @@ class JFormSection {
         }
     }
 
-    function clearData() {
+    public function clearData() {
         // Check to see if jFormComponent array contains instances
         if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
             foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
@@ -1318,9 +1318,9 @@ class JFormSection {
         $this->data = null;
     }
 
-    function validate() {
+    public function validate() {
         // Clear the error message array
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         // If we have instances, return an array
         if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
@@ -1340,17 +1340,17 @@ class JFormSection {
         return $this->errorMessageArray;
     }
 
-    function updateRequiredText($requiredText) {
+    public function updateRequiredText($requiredText) {
         foreach($this->jFormComponentArray as $jFormComponent) {
             $jFormComponent->updateRequiredText($requiredText);
         }
     }
 
-    function getOptions() {
-        $options = array();
-        $options['options'] = array();
-        $options['jFormComponents'] = array();
-        
+    public function getOptions() {
+        $options = [];
+        $options['options'] = [];
+        $options['jFormComponents'] = [];
+
         // Instances
         if(!empty($this->instanceOptions)) {
             $options['options']['instanceOptions'] = $this->instanceOptions;
@@ -1366,7 +1366,7 @@ class JFormSection {
         if(!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
             if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
-                $this->dependencyOptions['dependentOn'] = array($this->dependencyOptions['dependentOn']);
+                $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
@@ -1390,12 +1390,12 @@ class JFormSection {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Section fieldset
-        $jFormSectionDiv = new JFormElement('div', array(
+        $jFormSectionDiv = new JFormElement('div', [
             'id' => $this->id,
             'class' => $this->class
-        ));
+        ]);
 
         // This causes issues with things that are dependent and should display by default
         // If the section has dependencies and the display type is hidden, hide by default
@@ -1410,18 +1410,18 @@ class JFormSection {
 
         // Add a title to the page
         if(!empty($this->title)) {
-            $title = new JFormElement('div', array(
+            $title = new JFormElement('div', [
                 'class' => $this->titleClass
-            ));
+            ]);
             $title->update($this->title);
             $jFormSectionDiv->insert($title);
         }
 
         // Add a description to the page
         if(!empty($this->description)) {
-            $description = new JFormElement('div', array(
+            $description = new JFormElement('div', [
                 'class' => $this->descriptionClass
-            ));
+            ]);
             $description->update($this->description);
             $jFormSectionDiv->insert($description);
         }
@@ -1430,7 +1430,7 @@ class JFormSection {
         foreach($this->jFormComponentArray as $jFormComponentArray) {
             $jFormSectionDiv->insert($jFormComponentArray);
         }
-        
+
         return $jFormSectionDiv->__toString();
     }
 }
@@ -1441,44 +1441,44 @@ class JFormSection {
  */
 abstract class JFormComponent {
     // General settings
-    var $id;
-    var $class = null;
-    var $value = null;
-    var $style = null;
-    var $parentJFormSection;
-    var $anonymous = false;
+    public $id;
+    public $class = null;
+    public $value = null;
+    public $style = null;
+    public $parentJFormSection;
+    public $anonymous = false;
 
     // Label
-    var $label = null;  // Must be implemented by child class
-    var $labelClass = 'jFormComponentLabel';
-    var $labelRequiredStarClass = 'jFormComponentLabelRequiredStar';
-    var $requiredText = ' *'; // can be overridden at the form level;
+    public $label = null;  // Must be implemented by child class
+    public $labelClass = 'jFormComponentLabel';
+    public $labelRequiredStarClass = 'jFormComponentLabelRequiredStar';
+    public $requiredText = ' *'; // can be overridden at the form level;
 
     // Helpers
-    var $tip = null;
-    var $tipClass = 'jFormComponentTip';
-    var $description = null;
-    var $descriptionClass = 'jFormComponentDescription';
+    public $tip = null;
+    public $tipClass = 'jFormComponentTip';
+    public $description = null;
+    public $descriptionClass = 'jFormComponentDescription';
 
     // Options
-    var $instanceOptions = null;
-    var $triggerFunction = null;
-    var $enterSubmits = false;
-    
+    public $instanceOptions = null;
+    public $triggerFunction = null;
+    public $enterSubmits = false;
+
     // Dependencies
-    var $dependencyOptions = null;
+    public $dependencyOptions = null;
 
     // Validation
-    var $validationOptions = array();
-    var $errorMessageArray = null;
-    var $passedValidation = null;
-    var $showErrorTipOnce = false;
-    var $persistentTip = false;
+    public $validationOptions = [];
+    public $errorMessageArray = null;
+    public $passedValidation = null;
+    public $showErrorTipOnce = false;
+    public $persistentTip = false;
 
     /**
      * Initialize
      */
-    function initialize($optionArray = array()) {
+    public function initialize($optionArray = []) {
         // Use the options hash to update object variables
         if(is_array($optionArray)) {
             foreach($optionArray as $option => $value) {
@@ -1488,27 +1488,27 @@ abstract class JFormComponent {
 
         // Allow users to pass a string into validation options
         if(is_string($this->validationOptions)) {
-            $this->validationOptions = array($this->validationOptions);
+            $this->validationOptions = [$this->validationOptions];
         }
-        
+
         return $this;
     }
 
-    function getValue() {
+    public function getValue() {
         return $this->value;
     }
 
-    function setValue($value) {
+    public function setValue($value) {
         $this->value = $value;
     }
 
-    function clearValue() {
+    public function clearValue() {
         $this->value = null;
     }
 
-    function validate() {
+    public function validate() {
         // Clear the error message array
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         // Only validate if the value isn't null - this is so dependencies aren't validated before they are unlocked
         if($this->value !== null) {
@@ -1527,7 +1527,7 @@ abstract class JFormComponent {
 
                         // Make sure you have an array to work with
                         if(!isset($this->errorMessageArray[$instanceKey])) {
-                            $this->errorMessageArray[$instanceKey] = array();
+                            $this->errorMessageArray[$instanceKey] = [];
                         }
 
                         if($validationResponse != 'success') {
@@ -1538,17 +1538,17 @@ abstract class JFormComponent {
                             }
                             else {
                                 if(is_string($validationResponse)) {
-                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], array($validationResponse));
+                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], [$validationResponse]);
                                 }
                                 else {
-                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], array('There was a problem validating this component on the server.'));
+                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], ['There was a problem validating this component on the server.']);
                                 }
                             }
                         }
                         // Use an empty array as a placeholder for instances that have passed validation
                         else {
                             if(sizeof($this->errorMessageArray[$instanceKey]) == 0) {
-                                $this->errorMessageArray[$instanceKey] = array('');
+                                $this->errorMessageArray[$instanceKey] = [''];
                             }
                         }
                     }
@@ -1563,16 +1563,16 @@ abstract class JFormComponent {
                     $validationResponse = $this->$validationType($validationOptions);
                     if($validationResponse != 'success') {
                         $this->passedValidation = false;
-                        
+
                         if(is_array($validationResponse)) {
                             $this->errorMessageArray = array_merge($validationResponse, $this->errorMessageArray);
                         }
                         else {
                             if(is_string($validationResponse)) {
-                                $this->errorMessageArray = array_merge(array($validationResponse), $this->errorMessageArray);
+                                $this->errorMessageArray = array_merge([$validationResponse], $this->errorMessageArray);
                             }
                             else {
-                                $this->errorMessageArray = array_merge(array('There was a problem validating this component on the server.'), $this->errorMessageArray);
+                                $this->errorMessageArray = array_merge(['There was a problem validating this component on the server.'], $this->errorMessageArray);
                             }
                         }
                     }
@@ -1583,23 +1583,23 @@ abstract class JFormComponent {
         }
     }
 
-    function reformValidations(){
-        $reformedValidations = array();
+    public function reformValidations(){
+        $reformedValidations = [];
         foreach($this->validationOptions as $validationType => $validationOptions) {
             // Check to see if the name of the function is actually an array index
             if(is_int($validationType)) {
                 // The function is not an index, it becomes the name of the option with the value of an empty object
-                $reformedValidations[$validationOptions] =  array();
+                $reformedValidations[$validationOptions] =  [];
             }
             // If the validationOptions is a string
             else if(!is_array($validationOptions)) {
-                $reformedValidations[$validationType] = array();
+                $reformedValidations[$validationType] = [];
                 $reformedValidations[$validationType][$validationType] = $validationOptions;
             }
             // If validationOptions is an object
             else if(is_array($validationOptions)) {
                 if(isset($validationOptions[0])){
-                    $reformedValidations[$validationType] = array();
+                    $reformedValidations[$validationType] = [];
                     $reformedValidations[$validationType][$validationType] = $validationOptions;
                 } else {
                     $reformedValidations[$validationType] = $validationOptions;
@@ -1609,9 +1609,9 @@ abstract class JFormComponent {
         $this->validationOptions = $reformedValidations;
     }
 
-    function getOptions() {
-        $options = array();
-        $options['options'] = array();
+    public function getOptions() {
+        $options = [];
+        $options['options'] = [];
         $options['type'] = get_class($this);
 
         // Validation options
@@ -1625,7 +1625,7 @@ abstract class JFormComponent {
         if($this->persistentTip){
             $options['options']['persistentTip'] = $this->persistentTip;
         }
-        
+
         // Instances
         if(!empty($this->instanceOptions)) {
             $options['options']['instanceOptions'] = $this->instanceOptions;
@@ -1636,22 +1636,22 @@ abstract class JFormComponent {
                 $options['options']['instanceOptions']['removeButtonText'] = 'Remove';
             }
         }
-        
-        
+
+
         // Trigger
         if(!empty($this->triggerFunction)) {
             $options['options']['triggerFunction'] = $this->triggerFunction;
         }
-        
+
         // Dependencies
         if(!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
             if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
-                $this->dependencyOptions['dependentOn'] = array($this->dependencyOptions['dependentOn']);
+                $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
-        
+
         // Clear the options key if there is nothing in it
         if(empty($options['options'])) {
             unset($options['options']);
@@ -1664,18 +1664,18 @@ abstract class JFormComponent {
      * Generates the HTML for the FormComponent
      * @return string
      */
-    abstract function __toString();
-    
-    function hasInstanceValues() {
+    abstract public function __toString();
+
+    public function hasInstanceValues() {
         return is_array($this->value);
     }
 
-    function generateComponentDiv($includeLabel = true) {
+    public function generateComponentDiv($includeLabel = true) {
         // Div tag contains everything about the component
-        $componentDiv = new JFormElement('div', array(
+        $componentDiv = new JFormElement('div', [
             'id' => $this->id.'-wrapper',
             'class' => 'form-group jFormComponent '.$this->class,
-        ));
+        ]);
 
         // This causes issues with things that are dependent and should display by default
         // If the component has dependencies and the display type is hidden, hide by default
@@ -1697,26 +1697,26 @@ abstract class JFormComponent {
         return $componentDiv;
     }
 
-    function updateRequiredText($requiredText) {
+    public function updateRequiredText($requiredText) {
         $this->requiredText = $requiredText;
     }
 
-    function generateComponentLabel() {
+    public function generateComponentLabel() {
         if(empty($this->label)) {
             return '';
         }
-	
-        $label = new JFormElement('label', array(
+
+        $label = new JFormElement('label', [
             'id' => $this->id.'-label',
             'for' => $this->id,
-            'class' => $this->labelClass . ' control-label col-xs-4'
-        ));
+            'class' => $this->labelClass . ' col-form-label col-sm-4'
+        ]);
         $label->update($this->label);
         // Add the required star to the label
         if(in_array('required', $this->validationOptions)) {
-            $labelRequiredStarSpan = new JFormElement('span', array(
+            $labelRequiredStarSpan = new JFormElement('span', [
                 'class' => $this->labelRequiredStarClass
-            ));
+            ]);
             $labelRequiredStarSpan->update($this->requiredText);
             $label->insert($labelRequiredStarSpan);
         }
@@ -1724,13 +1724,13 @@ abstract class JFormComponent {
         return $label;
     }
 
-    function insertComponentDescription($div) {
+    public function insertComponentDescription($div) {
         // Description
         if(!empty($this->description)) {
-            $description = new JFormElement('div', array(
+            $description = new JFormElement('div', [
                 'id' => $this->id.'-description',
                 'class' => $this->descriptionClass
-            ));
+            ]);
             $description->update($this->description);
 
             $div->insert($description);
@@ -1739,14 +1739,14 @@ abstract class JFormComponent {
         return $div;
     }
 
-    function insertComponentTip($div) {
+    public function insertComponentTip($div) {
         // Create the tip div if not empty
         if(!empty($this->tip)) {
-            $tipDiv = new JFormElement('div', array(
+            $tipDiv = new JFormElement('div', [
                 'id' => $this->id.'-tip',
                 'style' => 'display: none;',
                 'class' => $this->tipClass,
-            ));
+            ]);
             $tipDiv->update($this->tip);
             $div->insert($tipDiv);
         }
@@ -1757,7 +1757,7 @@ abstract class JFormComponent {
     // Generic validations
 
     public function required($options) { // Just override this if necessary
-        $messageArray = array('Required.');
+        $messageArray = ['Required.'];
         //return empty($options['value']) ? 'success' : $messageArray; // Break validation on purpose
         return !empty($options['value']) || $options['value'] == '0' ? 'success' : $messageArray;
     }
@@ -1766,29 +1766,29 @@ abstract class JFormComponent {
 
 
 class JFormComponentAddress extends JFormComponent {
-	var $selectedCountry = null;
-	var $selectedState = null;
-	var $stateDropDown = false;
-	var $emptyValues = null;
-	var $showSublabels = true;
-	var $unitedStatesOnly = false;
-	var $addressLine2Hidden = false;
+	public $selectedCountry = null;
+	public $selectedState = null;
+	public $stateDropDown = false;
+	public $emptyValues = null;
+	public $showSublabels = true;
+	public $unitedStatesOnly = false;
+	public $addressLine2Hidden = false;
 
 	/*
 	 * Constructor
 	 */
-	function __construct($id, $label, $optionArray = array()) {
+	public function __construct($id, $label, $optionArray = []) {
 		// Class variables
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
 		$this->class = 'jFormComponentAddress';
-		
-		$this->initialValues = array('addressLine1' => '', 'addressLine2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '');
+
+		$this->initialValues = ['addressLine1' => '', 'addressLine2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => ''];
 
 		// Set the empty values with a boolean
 		if($this->emptyValues === true) {
-			$this->emptyValues = array('addressLine1' => 'Street Address', 'addressLine2' => 'Address Line 2', 'city' => 'City', 'state' => 'State / Province / Region', 'zip' => 'Postal / Zip Code');
+			$this->emptyValues = ['addressLine1' => 'Street Address', 'addressLine2' => 'Address Line 2', 'city' => 'City', 'state' => 'State / Province / Region', 'zip' => 'Postal / Zip Code'];
 		}
 
 		// Initialize the abstract FormComponent object
@@ -1796,7 +1796,7 @@ class JFormComponentAddress extends JFormComponent {
 
 		$this->selectedState = $this->initialValues['state'];
 		$this->selectedCountry = $this->initialValues['country'];
-		
+
 		// United States only switch
 		if($this->unitedStatesOnly) {
 			$this->stateDropDown = true;
@@ -1804,8 +1804,8 @@ class JFormComponentAddress extends JFormComponent {
 		}
 	}
 
-	function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-		$option = new JFormElement('option', array('value' => $optionValue));
+	public function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
+		$option = new JFormElement('option', ['value' => $optionValue]);
 		$option->update($optionLabel);
 
 		if($optionSelected) {
@@ -1819,7 +1819,7 @@ class JFormComponentAddress extends JFormComponent {
 		return $option;
 	}
 
-	function getOptions() {
+	public function getOptions() {
 		$options = parent::getOptions();
 
 		if(!empty($this->emptyValues)) {
@@ -1841,43 +1841,43 @@ class JFormComponentAddress extends JFormComponent {
 	 *
 	 * @return string
 	 */
-	function __toString() {
+	public function __toString() {
 		// Generate the component div
 		$componentDiv = $this->generateComponentDiv();
 
 		// Add the Address Line 1 input tag
-		$addressLine1Div = new JFormElement('div', array(
+		$addressLine1Div = new JFormElement('div', [
 			'class' => 'addressLine1Div',
-		));
-		$addressLine1 = new JFormElement('input', array(
+		]);
+		$addressLine1 = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-addressLine1',
 			'name' => $this->name.'-addressLine1',
 			'class' => 'addressLine1',
 			'placeholder' => 'Enter street address',
 			'value' => $this->initialValues['addressLine1'],
-		));
+		]);
 		$addressLine1Div->insert($addressLine1);
 
 		// Add the Address Line 2 input tag
-		$addressLine2Div = new JFormElement('div', array(
+		$addressLine2Div = new JFormElement('div', [
 			'class' => 'addressLine2Div',
-		));
-		$addressLine2 = new JFormElement('input', array(
+		]);
+		$addressLine2 = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-addressLine2',
 			'name' => $this->name.'-addressLine2',
 			'class' => 'addressLine2',
 			'placeholder' => 'Enter address line 2',
 			'value' => $this->initialValues['addressLine2'],
-		));
+		]);
 		$addressLine2Div->insert($addressLine2);
 
 		// Add the city input tag
-		$cityDiv = new JFormElement('div', array(
+		$cityDiv = new JFormElement('div', [
 			'class' => 'cityDiv',
-		));
-		$city = new JFormElement('input', array(
+		]);
+		$city = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-city',
 			'name' => $this->name.'-city',
@@ -1885,48 +1885,48 @@ class JFormComponentAddress extends JFormComponent {
 			'maxlength' => '25',
 			'placeholder' => 'Enter city',
 			'value' => $this->initialValues['city'],
-		));
+		]);
 		$cityDiv->insert($city);
 
 		// Add the State input tag
-		$stateDiv = new JFormElement('div', array(
+		$stateDiv = new JFormElement('div', [
 			'class' => 'stateDiv',
-		));
+		]);
 		if($this->stateDropDown){
-			$state = new JFormElement('select', array(
+			$state = new JFormElement('select', [
 				'id' => $this->id.'-state',
 				'name' => $this->name.'-state',
 				'class' => 'state',
 				'value' => $this->initialValues['state'],
-			));
+			]);
 			// Add any options that are not in an opt group to the select
 			foreach(JFormComponentDropDown::getStateArray($this->selectedState) as $dropDownOption) {
-				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-				$optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-				$optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-				$optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
+				$optionValue = $dropDownOption['value'] ?? '';
+				$optionLabel = $dropDownOption['label'] ?? '';
+				$optionSelected = $dropDownOption['selected'] ?? false;
+				$optionDisabled = $dropDownOption['disabled'] ?? false;
+				$optionOptGroup = $dropDownOption['optGroup'] ?? '';
 
 				$state->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
 			}
 		}
 		else {
-			$state = new JFormElement('input', array(
+			$state = new JFormElement('input', [
 				'type' => 'text',
 				'id' => $this->id.'-state',
 				'name' => $this->name.'-state',
 				'class' => 'state',
 				'placeholder' => 'Enter state/province/region',
 				'value' => $this->initialValues['state'],
-			));
+			]);
 		}
 		$stateDiv->insert($state);
 
 		// Add the Zip input tag
-		$zipDiv = new JFormElement('div', array(
+		$zipDiv = new JFormElement('div', [
 			'class' => 'zipDiv',
-		));
-		$zip = new JFormElement('input', array(
+		]);
+		$zip = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-zip',
 			'name' => $this->name.'-zip',
@@ -1934,38 +1934,38 @@ class JFormComponentAddress extends JFormComponent {
 			'maxlength' => '10',
 			'placeholder' => 'Enter postal/zip code',
 			'value' => $this->initialValues['zip'],
-		));
+		]);
 		$zipDiv->insert($zip);
 
 		// Add the country input tag
-		$countryDiv = new JFormElement('div', array(
+		$countryDiv = new JFormElement('div', [
 			'class' => 'countryDiv',
-		));
+		]);
 		// Don't built a select list if you are United States only
 		if($this->unitedStatesOnly) {
-			$country = new JFormElement('input', array(
+			$country = new JFormElement('input', [
 				'type' => 'hidden',
 				'id' => $this->id.'-country',
 				'name' => $this->name.'-country',
 				'class' => 'country',
 				'value' => 'US',
 				'style' => 'display: none;',
-			));
+			]);
 		}
 		else {
-			$country = new JFormElement('select', array(
+			$country = new JFormElement('select', [
 				'id' => $this->id.'-country',
 				'name' => $this->name.'-country',
 				'class' => 'country',
 				'value' => $this->initialValues['country'],
-			));
+			]);
 			// Add any options that are not in an opt group to the select
 			foreach(JFormComponentDropDown::getCountryArray($this->selectedCountry) as $dropDownOption) {
-				$optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-				$optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-				$optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-				$optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-				$optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
+				$optionValue = $dropDownOption['value'] ?? '';
+				$optionLabel =  $dropDownOption['label'] ?? '';
+				$optionSelected = $dropDownOption['selected'] ?? false;
+				$optionDisabled = $dropDownOption['disabled'] ?? false;
+				$optionOptGroup = $dropDownOption['optGroup'] ?? '';
 
 				$country->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
 			}
@@ -2054,21 +2054,21 @@ class JFormComponentAddress extends JFormComponent {
 
 	// Address validations
 	public function required($options) {
-		$errorMessageArray = array();
+		$errorMessageArray = [];
 		if($options['value']->addressLine1 == '') {
-			array_push($errorMessageArray, array('Street Address is required.'));
+			array_push($errorMessageArray, ['Street Address is required.']);
 		}
 		if($options['value']->city == '') {
-			array_push($errorMessageArray, array('City is required.'));
+			array_push($errorMessageArray, ['City is required.']);
 		}
 		if($options['value']->state == '') {
-			array_push($errorMessageArray, array('State is required.'));
+			array_push($errorMessageArray, ['State is required.']);
 		}
 		if($options['value']->zip == '') {
-			array_push($errorMessageArray, array('Zip is required.'));
+			array_push($errorMessageArray, ['Zip is required.']);
 		}
 		if($options['value']->country == '') {
-			array_push($errorMessageArray, array('Country is required.'));
+			array_push($errorMessageArray, ['Country is required.']);
 		}
 		return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
 	}
@@ -2078,35 +2078,35 @@ class JFormComponentAddress extends JFormComponent {
 
 
 class JFormComponentCreditCard extends JFormComponent {
-    var $emptyValues = null; // cardNumber, securityCode
-    var $showSublabels = true;
-    var $showCardType = true;
-    var $showSecurityCode = true;
-    var $creditCardProviders = array('visa' => 'Visa', 'masterCard' => 'MasterCard', 'americanExpress' => 'American Express', 'discover' => 'Discover');
-    var $showMonthName = true;
-    var $showLongYear = true;
+    public $emptyValues = null; // cardNumber, securityCode
+    public $showSublabels = true;
+    public $showCardType = true;
+    public $showSecurityCode = true;
+    public $creditCardProviders = ['visa' => 'Visa', 'masterCard' => 'MasterCard', 'americanExpress' => 'American Express', 'discover' => 'Discover'];
+    public $showMonthName = true;
+    public $showLongYear = true;
 
     /*
      * Constructor
      */
-    function __construct($id, $label, $optionArray = array()) {
+    public function __construct($id, $label, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
         $this->class = 'jFormComponentCreditCard';
-        
+
         // Initialize the abstract FormComponent object
         $this->initialize($optionArray);
 
         // Set the empty values with a boolean
         if($this->emptyValues === true) {
-            $this->emptyValues = array('cardNumber' => 'Card Number', 'securityCode' => 'CSC/CVV');
+            $this->emptyValues = ['cardNumber' => 'Card Number', 'securityCode' => 'CSC/CVV'];
         }
     }
 
-    function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new JFormElement('option', array('value' => $optionValue));
+    public function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
+        $option = new JFormElement('option', ['value' => $optionValue]);
         $option->update($optionLabel);
 
         if($optionSelected) {
@@ -2120,7 +2120,7 @@ class JFormComponentCreditCard extends JFormComponent {
         return $option;
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
         if(!empty($this->emptyValues)) {
@@ -2138,20 +2138,20 @@ class JFormComponentCreditCard extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $componentDiv = $this->generateComponentDiv();
 
          // Add the card type select tag
         if($this->showCardType) {
-            $cardTypeDiv = new JFormElement('div', array(
+            $cardTypeDiv = new JFormElement('div', [
                 'class' => 'cardTypeDiv',
-            ));
-            $cardType = new JFormElement('select', array(
+            ]);
+            $cardType = new JFormElement('select', [
                 'id' => $this->id.'-cardType',
                 'name' => $this->name.'-cardType',
                 'class' => 'cardType',
-            ));
+            ]);
             // Have a default value the drop down list if there isn't a sublabel
             if($this->showSublabels == false){
                 $cardType->insert($this->getOption('', 'Card Type', true, true));
@@ -2164,38 +2164,38 @@ class JFormComponentCreditCard extends JFormComponent {
         }
 
         // Add the card number input tag
-        $cardNumberDiv = new JFormElement('div', array(
+        $cardNumberDiv = new JFormElement('div', [
             'class' => 'cardNumberDiv',
-        ));
-        $cardNumber = new JFormElement('input', array(
+        ]);
+        $cardNumber = new JFormElement('input', [
             'type' => 'text',
             'id' => $this->id.'-cardNumber',
             'name' => $this->name.'-cardNumber',
             'class' => 'cardNumber',
             'maxlength' => '16',
-        ));
+        ]);
         $cardNumberDiv->insert($cardNumber);
 
         // Add the expiration month select tag
-        $expirationDateDiv = new JFormElement('div', array(
+        $expirationDateDiv = new JFormElement('div', [
             'class' => 'expirationDateDiv',
-        ));
-        $expirationMonth = new JFormElement('select', array(
+        ]);
+        $expirationMonth = new JFormElement('select', [
             'id' => $this->id.'-expirationMonth',
             'name' => $this->name.'-expirationMonth',
             'class' => 'expirationMonth',
-        ));
+        ]);
         // Have a default value the drop down list if there isn't a sublabel
         if($this->showSublabels == false){
             $expirationMonth->insert($this->getOption('', 'Month', true, true));
         }
         // Add the months
         foreach(JFormComponentDropDown::getMonthArray() as $dropDownOption) {
-            $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-            $optionLabel = isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-            $optionSelected = isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-            $optionDisabled = isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-            $optionOptGroup = isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
+            $optionValue = $dropDownOption['value'] ?? '';
+            $optionLabel = $dropDownOption['label'] ?? '';
+            $optionSelected = $dropDownOption['selected'] ?? false;
+            $optionDisabled = $dropDownOption['disabled'] ?? false;
+            $optionOptGroup = $dropDownOption['optGroup'] ?? '';
 
             if($this->showMonthName) {
                 $expirationMonth->insert($this->getOption($optionValue, $optionValue.' - '.$optionLabel, $optionSelected, $optionDisabled));
@@ -2207,11 +2207,11 @@ class JFormComponentCreditCard extends JFormComponent {
         }
         $expirationDateDiv->insert($expirationMonth);
         // Add the expiration year select tag
-        $expirationYear = new JFormElement('select', array(
+        $expirationYear = new JFormElement('select', [
             'id' => $this->id.'-expirationYear',
             'name' => $this->name.'-expirationYear',
             'class' => 'expirationYear',
-        ));
+        ]);
         // Add years
         if($this->showLongYear) {
             $startYear = Date('Y');
@@ -2232,16 +2232,16 @@ class JFormComponentCreditCard extends JFormComponent {
         $expirationDateDiv->insert($expirationYear);
 
         // Add the security code input tag
-        $securityCodeDiv = new JFormElement('div', array(
+        $securityCodeDiv = new JFormElement('div', [
             'class' => 'securityCodeDiv',
-        ));
-        $securityCode = new JFormElement('input', array(
+        ]);
+        $securityCode = new JFormElement('input', [
             'type' => 'text',
             'id' => $this->id.'-securityCode',
             'name' => $this->name.'-securityCode',
             'class' => 'securityCode',
             'maxlength' => '4',
-        ));
+        ]);
         $securityCodeDiv->insert($securityCode);
 
         // Set the empty values if they are enabled
@@ -2279,7 +2279,7 @@ class JFormComponentCreditCard extends JFormComponent {
         if($this->showSecurityCode) {
             $componentDiv->insert($securityCodeDiv);
         }
-        
+
         // Add any description (optional)
         $componentDiv = $this->insertComponentDescription($componentDiv);
 
@@ -2291,36 +2291,36 @@ class JFormComponentCreditCard extends JFormComponent {
 
     // Credit card validations
     public function required($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         if($this->showCardType && empty($options['value']->cardType)) {
-            array_push($errorMessageArray, array('Card type is required.'));
+            array_push($errorMessageArray, ['Card type is required.']);
         }
         if(empty($options['value']->cardNumber)) {
-            array_push($errorMessageArray, array('Card number is required.'));
+            array_push($errorMessageArray, ['Card number is required.']);
         }
         else {
             if(preg_match('/[^\d]/', $options['value']->cardNumber)) {
-                array_push($errorMessageArray, array('Card number may only contain numbers.'));
+                array_push($errorMessageArray, ['Card number may only contain numbers.']);
             }
             if(mb_strlen($options['value']->cardNumber) > 16 || mb_strlen($options['value']->cardNumber) < 13) {
-                array_push($errorMessageArray, array('Card number must contain 13 to 16 digits.'));
+                array_push($errorMessageArray, ['Card number must contain 13 to 16 digits.']);
             }
         }
         if(empty($options['value']->expirationMonth)) {
-            array_push($errorMessageArray, array('Expiration month is required.'));
+            array_push($errorMessageArray, ['Expiration month is required.']);
         }
         if(empty($options['value']->expirationYear)) {
-            array_push($errorMessageArray, array('Expiration year is required.'));
+            array_push($errorMessageArray, ['Expiration year is required.']);
         }
         if($this->showSecurityCode && empty($options['value']->securityCode)) {
-            array_push($errorMessageArray, array('Security code is required.'));
+            array_push($errorMessageArray, ['Security code is required.']);
         }
         else if($this->showSecurityCode) {
             if(preg_match('/[^\d]/', $options['value']->securityCode)) {
-                array_push($errorMessageArray, array('Security code may only contain numbers.'));
+                array_push($errorMessageArray, ['Security code may only contain numbers.']);
             }
             if(mb_strlen($options['value']->securityCode) > 4 || mb_strlen($options['value']->securityCode) < 3) {
-                array_push($errorMessageArray, array('Security code must contain 3 or 4 digits.'));
+                array_push($errorMessageArray, ['Security code must contain 3 or 4 digits.']);
             }
         }
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
@@ -2334,7 +2334,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
     /*
      * Constructor
      */
-    function __construct($id, $label, $optionArray = array()) {
+    public function __construct($id, $label, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -2359,7 +2359,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $div = parent::__toString();
 
@@ -2368,7 +2368,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
 
     // Date validations
     public function required($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         if($options['value']->month == '' || $options['value']->day == '' || $options['value']->year == '' || $options['value'] == null) {
             array_push($errorMessageArray, 'Required.');
             return $errorMessageArray;
@@ -2409,7 +2409,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
     public function minDate($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         $month = intval($options['value']->month);
         $day = intval($options['value']->day);
         $year = intval($options['value']->year);
@@ -2431,7 +2431,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
     public function maxDate($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         $month = intval($options['value']->month);
         $day = intval($options['value']->day);
         $year = intval($options['value']->year);
@@ -2453,7 +2453,7 @@ class JFormComponentDate extends JFormComponentSingleLineText {
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
     public function teenager($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         $month = intval($options['value']->month);
         $day = intval($options['value']->day);
         $year = intval($options['value']->year);
@@ -2479,17 +2479,17 @@ class JFormComponentDate extends JFormComponentSingleLineText {
 
 
 class JFormComponentDropDown extends JFormComponent {
-    var $dropDownOptionArray = array();
+    public $dropDownOptionArray = [];
 
-    var $disabled = false;
-    var $multiple = false;
-    var $size = null;
-    var $width = null;
+    public $disabled = false;
+    public $multiple = false;
+    public $size = null;
+    public $width = null;
 
     /**
      * Constructor
      */
-    function __construct($id, $label, $dropDownOptionArray, $optionArray = array()) {
+    public function __construct($id, $label, $dropDownOptionArray, $optionArray = []) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -2501,8 +2501,8 @@ class JFormComponentDropDown extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
-        $option = new JFormElement('option', array('value' => $optionValue));
+    public function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
+        $option = new JFormElement('option', ['value' => $optionValue]);
         $option->update($optionLabel);
 
         if($optionSelected) {
@@ -2517,7 +2517,7 @@ class JFormComponentDropDown extends JFormComponent {
     }
 
     public static function getCountryArray($selectedCountry = null) {
-        $countryArray = array(array('value' => '', 'label'  => 'Select a Country', 'disabled' => true), array('value' => 'US', 'label'  => 'United States of America'), array('value' => 'AF', 'label'  => 'Afghanistan'), array('value' => 'AL', 'label'  => 'Albania'), array('value' => 'DZ', 'label'  => 'Algeria'), array('value' => 'AS', 'label'  => 'American Samoa'), array('value' => 'AD', 'label'  => 'Andorra'), array('value' => 'AO', 'label'  => 'Angola'), array('value' => 'AI', 'label'  => 'Anguilla'), array('value' => 'AQ', 'label'  => 'Antarctica'), array('value' => 'AG', 'label'  => 'Antigua and Barbuda'), array('value' => 'AR', 'label'  => 'Argentina'), array('value' => 'AM', 'label'  => 'Armenia'), array('value' => 'AW', 'label'  => 'Aruba'), array('value' => 'AU', 'label'  => 'Australia'), array('value' => 'AT', 'label'  => 'Austria'), array('value' => 'AZ', 'label'  => 'Azerbaijan'), array('value' => 'BS', 'label'  => 'Bahamas'), array('value' => 'BH', 'label'  => 'Bahrain'), array('value' => 'BD', 'label'  => 'Bangladesh'), array('value' => 'BB', 'label'  => 'Barbados'), array('value' => 'BY', 'label'  => 'Belarus'), array('value' => 'BE', 'label'  => 'Belgium'), array('value' => 'BZ', 'label'  => 'Belize'), array('value' => 'BJ', 'label'  => 'Benin'), array('value' => 'BM', 'label'  => 'Bermuda'), array('value' => 'BT', 'label'  => 'Bhutan'), array('value' => 'BO', 'label'  => 'Bolivia'), array('value' => 'BA', 'label'  => 'Bosnia and Herzegovina'), array('value' => 'BW', 'label'  => 'Botswana'), array('value' => 'BV', 'label'  => 'Bouvet Island'), array('value' => 'BR', 'label'  => 'Brazil'), array('value' => 'IO', 'label'  => 'British Indian Ocean Territory'), array('value' => 'BN', 'label'  => 'Brunei'), array('value' => 'BG', 'label'  => 'Bulgaria'), array('value' => 'BF', 'label'  => 'Burkina Faso'), array('value' => 'BI', 'label'  => 'Burundi'), array('value' => 'KH', 'label'  => 'Cambodia'), array('value' => 'CM', 'label'  => 'Cameroon'), array('value' => 'CA', 'label'  => 'Canada'), array('value' => 'CV', 'label'  => 'Cape Verde'), array('value' => 'KY', 'label'  => 'Cayman Islands'), array('value' => 'CF', 'label'  => 'Central African Republic'), array('value' => 'TD', 'label'  => 'Chad'), array('value' => 'CL', 'label'  => 'Chile'), array('value' => 'CN', 'label'  => 'China'), array('value' => 'CX', 'label'  => 'Christmas Island'), array('value' => 'CC', 'label'  => 'Cocos (Keeling) Islands'), array('value' => 'CO', 'label'  => 'Columbia'), array('value' => 'KM', 'label'  => 'Comoros'), array('value' => 'CG', 'label'  => 'Congo'), array('value' => 'CK', 'label'  => 'Cook Islands'), array('value' => 'CR', 'label'  => 'Costa Rica'), array('value' => 'CI', 'label'  => 'Cote D\'Ivorie (Ivory Coast)'), array('value' => 'HR', 'label'  => 'Croatia (Hrvatska)'), array('value' => 'CU', 'label'  => 'Cuba'), array('value' => 'CY', 'label'  => 'Cyprus'), array('value' => 'CZ', 'label'  => 'Czech Republic'), array('value' => 'CD', 'label'  => 'Democratic Republic of Congo (Zaire)'), array('value' => 'DK', 'label'  => 'Denmark'), array('value' => 'DJ', 'label'  => 'Djibouti'), array('value' => 'DM', 'label'  => 'Dominica'), array('value' => 'DO', 'label'  => 'Dominican Republic'), array('value' => 'TP', 'label'  => 'East Timor'), array('value' => 'EC', 'label'  => 'Ecuador'), array('value' => 'EG', 'label'  => 'Egypt'), array('value' => 'SV', 'label'  => 'El Salvador'), array('value' => 'GQ', 'label'  => 'Equatorial Guinea'), array('value' => 'ER', 'label'  => 'Eritrea'), array('value' => 'EE', 'label'  => 'Estonia'), array('value' => 'ET', 'label'  => 'Ethiopia'), array('value' => 'FK', 'label'  => 'Falkland Islands (Malvinas)'), array('value' => 'FO', 'label'  => 'Faroe Islands'), array('value' => 'FJ', 'label'  => 'Fiji'), array('value' => 'FI', 'label'  => 'Finland'), array('value' => 'FR', 'label'  => 'France'), array('value' => 'FX', 'label'  => 'France), Metropolitanarray('), array('value' => 'GF', 'label'  => 'French Guinea'), array('value' => 'PF', 'label'  => 'French Polynesia'), array('value' => 'TF', 'label'  => 'French Southern Territories'), array('value' => 'GA', 'label'  => 'Gabon'), array('value' => 'GM', 'label'  => 'Gambia'), array('value' => 'GE', 'label'  => 'Georgia'), array('value' => 'DE', 'label'  => 'Germany'), array('value' => 'GH', 'label'  => 'Ghana'), array('value' => 'GI', 'label'  => 'Gibraltar'), array('value' => 'GR', 'label'  => 'Greece'), array('value' => 'GL', 'label'  => 'Greenland'), array('value' => 'GD', 'label'  => 'Grenada'), array('value' => 'GP', 'label'  => 'Guadeloupe'), array('value' => 'GU', 'label'  => 'Guam'), array('value' => 'GT', 'label'  => 'Guatemala'), array('value' => 'GN', 'label'  => 'Guinea'), array('value' => 'GW', 'label'  => 'Guinea-Bissau'), array('value' => 'GY', 'label'  => 'Guyana'), array('value' => 'HT', 'label'  => 'Haiti'), array('value' => 'HM', 'label'  => 'Heard and McDonald Islands'), array('value' => 'HN', 'label'  => 'Honduras'), array('value' => 'HK', 'label'  => 'Hong Kong'), array('value' => 'HU', 'label'  => 'Hungary'), array('value' => 'IS', 'label'  => 'Iceland'), array('value' => 'IN', 'label'  => 'India'), array('value' => 'ID', 'label'  => 'Indonesia'), array('value' => 'IR', 'label'  => 'Iran'), array('value' => 'IQ', 'label'  => 'Iraq'), array('value' => 'IE', 'label'  => 'Ireland'), array('value' => 'IL', 'label'  => 'Israel'), array('value' => 'IT', 'label'  => 'Italy'), array('value' => 'JM', 'label'  => 'Jamaica'), array('value' => 'JP', 'label'  => 'Japan'), array('value' => 'JO', 'label'  => 'Jordan'), array('value' => 'KZ', 'label'  => 'Kazakhstan'), array('value' => 'KE', 'label'  => 'Kenya'), array('value' => 'KI', 'label'  => 'Kiribati'), array('value' => 'KW', 'label'  => 'Kuwait'), array('value' => 'KG', 'label'  => 'Kyrgyzstan'), array('value' => 'LA', 'label'  => 'Laos'), array('value' => 'LV', 'label'  => 'Latvia'), array('value' => 'LB', 'label'  => 'Lebanon'), array('value' => 'LS', 'label'  => 'Lesotho'), array('value' => 'LR', 'label'  => 'Liberia'), array('value' => 'LY', 'label'  => 'Libya'), array('value' => 'LI', 'label'  => 'Liechtenstein'), array('value' => 'LT', 'label'  => 'Lithuania'), array('value' => 'LU', 'label'  => 'Luxembourg'), array('value' => 'ME', 'label' => 'Montenegro'), array('value' => 'MO', 'label'  => 'Macau'), array('value' => 'MK', 'label'  => 'Macedonia'), array('value' => 'MG', 'label'  => 'Madagascar'), array('value' => 'MW', 'label'  => 'Malawi'), array('value' => 'MY', 'label'  => 'Malaysia'), array('value' => 'MV', 'label'  => 'Maldives'), array('value' => 'ML', 'label'  => 'Mali'), array('value' => 'MT', 'label'  => 'Malta'), array('value' => 'MH', 'label'  => 'Marshall Islands'), array('value' => 'MQ', 'label'  => 'Martinique'), array('value' => 'MR', 'label'  => 'Mauritania'), array('value' => 'MU', 'label'  => 'Mauritius'), array('value' => 'YT', 'label'  => 'Mayotte'), array('value' => 'MX', 'label'  => 'Mexico'), array('value' => 'FM', 'label'  => 'Micronesia'), array('value' => 'MD', 'label'  => 'Moldova'), array('value' => 'MC', 'label'  => 'Monaco'), array('value' => 'MN', 'label'  => 'Mongolia'), array('value' => 'MS', 'label'  => 'Montserrat'), array('value' => 'MA', 'label'  => 'Morocco'), array('value' => 'MZ', 'label'  => 'Mozambique'), array('value' => 'MM', 'label'  => 'Myanmar (Burma)'), array('value' => 'NA', 'label'  => 'Namibia'), array('value' => 'NR', 'label'  => 'Nauru'), array('value' => 'NP', 'label'  => 'Nepal'), array('value' => 'NL', 'label'  => 'Netherlands'), array('value' => 'AN', 'label'  => 'Netherlands Antilles'), array('value' => 'NC', 'label'  => 'New Caledonia'), array('value' => 'NZ', 'label'  => 'New Zealand'), array('value' => 'NI', 'label'  => 'Nicaragua'), array('value' => 'NE', 'label'  => 'Niger'), array('value' => 'NG', 'label'  => 'Nigeria'), array('value' => 'NU', 'label'  => 'Niue'), array('value' => 'NF', 'label'  => 'Norfolk Island'), array('value' => 'KP', 'label'  => 'North Korea'), array('value' => 'MP', 'label'  => 'Northern Mariana Islands'), array('value' => 'NO', 'label'  => 'Norway'), array('value' => 'OM', 'label'  => 'Oman'), array('value' => 'PK', 'label'  => 'Pakistan'), array('value' => 'PW', 'label'  => 'Palau'), array('value' => 'PA', 'label'  => 'Panama'), array('value' => 'PG', 'label'  => 'Papua New Guinea'), array('value' => 'PY', 'label'  => 'Paraguay'), array('value' => 'PE', 'label'  => 'Peru'), array('value' => 'PH', 'label'  => 'Philippines'), array('value' => 'PN', 'label'  => 'Pitcairn'), array('value' => 'PL', 'label'  => 'Poland'), array('value' => 'PT', 'label'  => 'Portugal'), array('value' => 'PR', 'label'  => 'Puerto Rico'), array('value' => 'QA', 'label'  => 'Qatar'), array('value' => 'RE', 'label'  => 'Reunion'), array('value' => 'RO', 'label'  => 'Romania'), array('value' => 'RS', 'label' => 'Serbia'), array('value' => 'RU', 'label'  => 'Russia'), array('value' => 'RW', 'label'  => 'Rwanda'), array('value' => 'SH', 'label'  => 'Saint Helena'), array('value' => 'KN', 'label'  => 'Saint Kitts and Nevis'), array('value' => 'LC', 'label'  => 'Saint Lucia'), array('value' => 'PM', 'label'  => 'Saint Pierre and Miquelon'), array('value' => 'VC', 'label'  => 'Saint Vincent and The Grenadines'), array('value' => 'SM', 'label'  => 'San Marino'), array('value' => 'ST', 'label'  => 'Sao Tome and Principe'), array('value' => 'SA', 'label'  => 'Saudi Arabia'), array('value' => 'SN', 'label'  => 'Senegal'), array('value' => 'SC', 'label'  => 'Seychelles'), array('value' => 'SL', 'label'  => 'Sierra Leone'), array('value' => 'SG', 'label'  => 'Singapore'), array('value' => 'SK', 'label'  => 'Slovak Republic'), array('value' => 'SI', 'label'  => 'Slovenia'), array('value' => 'SB', 'label'  => 'Solomon Islands'), array('value' => 'SO', 'label'  => 'Somalia'), array('value' => 'ZA', 'label'  => 'South Africa'), array('value' => 'GS', 'label'  => 'South Georgia'), array('value' => 'KR', 'label'  => 'South Korea'), array('value' => 'ES', 'label'  => 'Spain'), array('value' => 'LK', 'label'  => 'Sri Lanka'), array('value' => 'SD', 'label'  => 'Sudan'), array('value' => 'SR', 'label'  => 'Suriname'), array('value' => 'SJ', 'label'  => 'Svalbard and Jan Mayen'), array('value' => 'SZ', 'label'  => 'Swaziland'), array('value' => 'SE', 'label'  => 'Sweden'), array('value' => 'CH', 'label'  => 'Switzerland'), array('value' => 'SY', 'label'  => 'Syria'), array('value' => 'TW', 'label'  => 'Taiwan'), array('value' => 'TJ', 'label'  => 'Tajikistan'), array('value' => 'TZ', 'label'  => 'Tanzania'), array('value' => 'TH', 'label'  => 'Thailand'), array('value' => 'TG', 'label'  => 'Togo'), array('value' => 'TK', 'label'  => 'Tokelau'), array('value' => 'TO', 'label'  => 'Tonga'), array('value' => 'TT', 'label'  => 'Trinidad and Tobago'), array('value' => 'TN', 'label'  => 'Tunisia'), array('value' => 'TR', 'label'  => 'Turkey'), array('value' => 'TM', 'label'  => 'Turkmenistan'), array('value' => 'TC', 'label'  => 'Turks and Caicos Islands'), array('value' => 'TV', 'label'  => 'Tuvalu'), array('value' => 'UG', 'label'  => 'Uganda'), array('value' => 'UA', 'label'  => 'Ukraine'), array('value' => 'AE', 'label'  => 'United Arab Emirates'), array('value' => 'UK', 'label'  => 'United Kingdom'), array('value' => 'US', 'label'  => 'United States of America'), array('value' => 'UM', 'label'  => 'United States Minor Outlying Islands'), array('value' => 'UY', 'label'  => 'Uruguay'), array('value' => 'UZ', 'label'  => 'Uzbekistan'), array('value' => 'VU', 'label'  => 'Vanuatu'), array('value' => 'VA', 'label'  => 'Vatican City (Holy See)'), array('value' => 'VE', 'label'  => 'Venezuela'), array('value' => 'VN', 'label'  => 'Vietnam'), array('value' => 'VG', 'label'  => 'Virgin Islands (British)'), array('value' => 'VI', 'label'  => 'Virgin Islands (US)'), array('value' => 'WF', 'label'  => 'Wallis and Futuna Islands'), array('value' => 'EH', 'label'  => 'Western Sahara'), array('value' => 'WS', 'label'  => 'Western Samoa'), array('value' => 'YE', 'label'  => 'Yemen'), array('value' => 'YU', 'label'  => 'Yugoslavia'), array('value' => 'ZM', 'label'  => 'Zambia'), array('value' => 'ZW', 'label'  => 'Zimbabwe'));
+        $countryArray = [['value' => '', 'label'  => 'Select a Country', 'disabled' => true], ['value' => 'US', 'label'  => 'United States of America'], ['value' => 'AF', 'label'  => 'Afghanistan'], ['value' => 'AL', 'label'  => 'Albania'], ['value' => 'DZ', 'label'  => 'Algeria'], ['value' => 'AS', 'label'  => 'American Samoa'], ['value' => 'AD', 'label'  => 'Andorra'], ['value' => 'AO', 'label'  => 'Angola'], ['value' => 'AI', 'label'  => 'Anguilla'], ['value' => 'AQ', 'label'  => 'Antarctica'], ['value' => 'AG', 'label'  => 'Antigua and Barbuda'], ['value' => 'AR', 'label'  => 'Argentina'], ['value' => 'AM', 'label'  => 'Armenia'], ['value' => 'AW', 'label'  => 'Aruba'], ['value' => 'AU', 'label'  => 'Australia'], ['value' => 'AT', 'label'  => 'Austria'], ['value' => 'AZ', 'label'  => 'Azerbaijan'], ['value' => 'BS', 'label'  => 'Bahamas'], ['value' => 'BH', 'label'  => 'Bahrain'], ['value' => 'BD', 'label'  => 'Bangladesh'], ['value' => 'BB', 'label'  => 'Barbados'], ['value' => 'BY', 'label'  => 'Belarus'], ['value' => 'BE', 'label'  => 'Belgium'], ['value' => 'BZ', 'label'  => 'Belize'], ['value' => 'BJ', 'label'  => 'Benin'], ['value' => 'BM', 'label'  => 'Bermuda'], ['value' => 'BT', 'label'  => 'Bhutan'], ['value' => 'BO', 'label'  => 'Bolivia'], ['value' => 'BA', 'label'  => 'Bosnia and Herzegovina'], ['value' => 'BW', 'label'  => 'Botswana'], ['value' => 'BV', 'label'  => 'Bouvet Island'], ['value' => 'BR', 'label'  => 'Brazil'], ['value' => 'IO', 'label'  => 'British Indian Ocean Territory'], ['value' => 'BN', 'label'  => 'Brunei'], ['value' => 'BG', 'label'  => 'Bulgaria'], ['value' => 'BF', 'label'  => 'Burkina Faso'], ['value' => 'BI', 'label'  => 'Burundi'], ['value' => 'KH', 'label'  => 'Cambodia'], ['value' => 'CM', 'label'  => 'Cameroon'], ['value' => 'CA', 'label'  => 'Canada'], ['value' => 'CV', 'label'  => 'Cape Verde'], ['value' => 'KY', 'label'  => 'Cayman Islands'], ['value' => 'CF', 'label'  => 'Central African Republic'], ['value' => 'TD', 'label'  => 'Chad'], ['value' => 'CL', 'label'  => 'Chile'], ['value' => 'CN', 'label'  => 'China'], ['value' => 'CX', 'label'  => 'Christmas Island'], ['value' => 'CC', 'label'  => 'Cocos (Keeling) Islands'], ['value' => 'CO', 'label'  => 'Columbia'], ['value' => 'KM', 'label'  => 'Comoros'], ['value' => 'CG', 'label'  => 'Congo'], ['value' => 'CK', 'label'  => 'Cook Islands'], ['value' => 'CR', 'label'  => 'Costa Rica'], ['value' => 'CI', 'label'  => 'Cote D\'Ivorie (Ivory Coast)'], ['value' => 'HR', 'label'  => 'Croatia (Hrvatska)'], ['value' => 'CU', 'label'  => 'Cuba'], ['value' => 'CY', 'label'  => 'Cyprus'], ['value' => 'CZ', 'label'  => 'Czech Republic'], ['value' => 'CD', 'label'  => 'Democratic Republic of Congo (Zaire)'], ['value' => 'DK', 'label'  => 'Denmark'], ['value' => 'DJ', 'label'  => 'Djibouti'], ['value' => 'DM', 'label'  => 'Dominica'], ['value' => 'DO', 'label'  => 'Dominican Republic'], ['value' => 'TP', 'label'  => 'East Timor'], ['value' => 'EC', 'label'  => 'Ecuador'], ['value' => 'EG', 'label'  => 'Egypt'], ['value' => 'SV', 'label'  => 'El Salvador'], ['value' => 'GQ', 'label'  => 'Equatorial Guinea'], ['value' => 'ER', 'label'  => 'Eritrea'], ['value' => 'EE', 'label'  => 'Estonia'], ['value' => 'ET', 'label'  => 'Ethiopia'], ['value' => 'FK', 'label'  => 'Falkland Islands (Malvinas)'], ['value' => 'FO', 'label'  => 'Faroe Islands'], ['value' => 'FJ', 'label'  => 'Fiji'], ['value' => 'FI', 'label'  => 'Finland'], ['value' => 'FR', 'label'  => 'France'], ['value' => 'FX', 'label'  => 'France), Metropolitanarray('], ['value' => 'GF', 'label'  => 'French Guinea'], ['value' => 'PF', 'label'  => 'French Polynesia'], ['value' => 'TF', 'label'  => 'French Southern Territories'], ['value' => 'GA', 'label'  => 'Gabon'], ['value' => 'GM', 'label'  => 'Gambia'], ['value' => 'GE', 'label'  => 'Georgia'], ['value' => 'DE', 'label'  => 'Germany'], ['value' => 'GH', 'label'  => 'Ghana'], ['value' => 'GI', 'label'  => 'Gibraltar'], ['value' => 'GR', 'label'  => 'Greece'], ['value' => 'GL', 'label'  => 'Greenland'], ['value' => 'GD', 'label'  => 'Grenada'], ['value' => 'GP', 'label'  => 'Guadeloupe'], ['value' => 'GU', 'label'  => 'Guam'], ['value' => 'GT', 'label'  => 'Guatemala'], ['value' => 'GN', 'label'  => 'Guinea'], ['value' => 'GW', 'label'  => 'Guinea-Bissau'], ['value' => 'GY', 'label'  => 'Guyana'], ['value' => 'HT', 'label'  => 'Haiti'], ['value' => 'HM', 'label'  => 'Heard and McDonald Islands'], ['value' => 'HN', 'label'  => 'Honduras'], ['value' => 'HK', 'label'  => 'Hong Kong'], ['value' => 'HU', 'label'  => 'Hungary'], ['value' => 'IS', 'label'  => 'Iceland'], ['value' => 'IN', 'label'  => 'India'], ['value' => 'ID', 'label'  => 'Indonesia'], ['value' => 'IR', 'label'  => 'Iran'], ['value' => 'IQ', 'label'  => 'Iraq'], ['value' => 'IE', 'label'  => 'Ireland'], ['value' => 'IL', 'label'  => 'Israel'], ['value' => 'IT', 'label'  => 'Italy'], ['value' => 'JM', 'label'  => 'Jamaica'], ['value' => 'JP', 'label'  => 'Japan'], ['value' => 'JO', 'label'  => 'Jordan'], ['value' => 'KZ', 'label'  => 'Kazakhstan'], ['value' => 'KE', 'label'  => 'Kenya'], ['value' => 'KI', 'label'  => 'Kiribati'], ['value' => 'KW', 'label'  => 'Kuwait'], ['value' => 'KG', 'label'  => 'Kyrgyzstan'], ['value' => 'LA', 'label'  => 'Laos'], ['value' => 'LV', 'label'  => 'Latvia'], ['value' => 'LB', 'label'  => 'Lebanon'], ['value' => 'LS', 'label'  => 'Lesotho'], ['value' => 'LR', 'label'  => 'Liberia'], ['value' => 'LY', 'label'  => 'Libya'], ['value' => 'LI', 'label'  => 'Liechtenstein'], ['value' => 'LT', 'label'  => 'Lithuania'], ['value' => 'LU', 'label'  => 'Luxembourg'], ['value' => 'ME', 'label' => 'Montenegro'], ['value' => 'MO', 'label'  => 'Macau'], ['value' => 'MK', 'label'  => 'Macedonia'], ['value' => 'MG', 'label'  => 'Madagascar'], ['value' => 'MW', 'label'  => 'Malawi'], ['value' => 'MY', 'label'  => 'Malaysia'], ['value' => 'MV', 'label'  => 'Maldives'], ['value' => 'ML', 'label'  => 'Mali'], ['value' => 'MT', 'label'  => 'Malta'], ['value' => 'MH', 'label'  => 'Marshall Islands'], ['value' => 'MQ', 'label'  => 'Martinique'], ['value' => 'MR', 'label'  => 'Mauritania'], ['value' => 'MU', 'label'  => 'Mauritius'], ['value' => 'YT', 'label'  => 'Mayotte'], ['value' => 'MX', 'label'  => 'Mexico'], ['value' => 'FM', 'label'  => 'Micronesia'], ['value' => 'MD', 'label'  => 'Moldova'], ['value' => 'MC', 'label'  => 'Monaco'], ['value' => 'MN', 'label'  => 'Mongolia'], ['value' => 'MS', 'label'  => 'Montserrat'], ['value' => 'MA', 'label'  => 'Morocco'], ['value' => 'MZ', 'label'  => 'Mozambique'], ['value' => 'MM', 'label'  => 'Myanmar (Burma)'], ['value' => 'NA', 'label'  => 'Namibia'], ['value' => 'NR', 'label'  => 'Nauru'], ['value' => 'NP', 'label'  => 'Nepal'], ['value' => 'NL', 'label'  => 'Netherlands'], ['value' => 'AN', 'label'  => 'Netherlands Antilles'], ['value' => 'NC', 'label'  => 'New Caledonia'], ['value' => 'NZ', 'label'  => 'New Zealand'], ['value' => 'NI', 'label'  => 'Nicaragua'], ['value' => 'NE', 'label'  => 'Niger'], ['value' => 'NG', 'label'  => 'Nigeria'], ['value' => 'NU', 'label'  => 'Niue'], ['value' => 'NF', 'label'  => 'Norfolk Island'], ['value' => 'KP', 'label'  => 'North Korea'], ['value' => 'MP', 'label'  => 'Northern Mariana Islands'], ['value' => 'NO', 'label'  => 'Norway'], ['value' => 'OM', 'label'  => 'Oman'], ['value' => 'PK', 'label'  => 'Pakistan'], ['value' => 'PW', 'label'  => 'Palau'], ['value' => 'PA', 'label'  => 'Panama'], ['value' => 'PG', 'label'  => 'Papua New Guinea'], ['value' => 'PY', 'label'  => 'Paraguay'], ['value' => 'PE', 'label'  => 'Peru'], ['value' => 'PH', 'label'  => 'Philippines'], ['value' => 'PN', 'label'  => 'Pitcairn'], ['value' => 'PL', 'label'  => 'Poland'], ['value' => 'PT', 'label'  => 'Portugal'], ['value' => 'PR', 'label'  => 'Puerto Rico'], ['value' => 'QA', 'label'  => 'Qatar'], ['value' => 'RE', 'label'  => 'Reunion'], ['value' => 'RO', 'label'  => 'Romania'], ['value' => 'RS', 'label' => 'Serbia'], ['value' => 'RU', 'label'  => 'Russia'], ['value' => 'RW', 'label'  => 'Rwanda'], ['value' => 'SH', 'label'  => 'Saint Helena'], ['value' => 'KN', 'label'  => 'Saint Kitts and Nevis'], ['value' => 'LC', 'label'  => 'Saint Lucia'], ['value' => 'PM', 'label'  => 'Saint Pierre and Miquelon'], ['value' => 'VC', 'label'  => 'Saint Vincent and The Grenadines'], ['value' => 'SM', 'label'  => 'San Marino'], ['value' => 'ST', 'label'  => 'Sao Tome and Principe'], ['value' => 'SA', 'label'  => 'Saudi Arabia'], ['value' => 'SN', 'label'  => 'Senegal'], ['value' => 'SC', 'label'  => 'Seychelles'], ['value' => 'SL', 'label'  => 'Sierra Leone'], ['value' => 'SG', 'label'  => 'Singapore'], ['value' => 'SK', 'label'  => 'Slovak Republic'], ['value' => 'SI', 'label'  => 'Slovenia'], ['value' => 'SB', 'label'  => 'Solomon Islands'], ['value' => 'SO', 'label'  => 'Somalia'], ['value' => 'ZA', 'label'  => 'South Africa'], ['value' => 'GS', 'label'  => 'South Georgia'], ['value' => 'KR', 'label'  => 'South Korea'], ['value' => 'ES', 'label'  => 'Spain'], ['value' => 'LK', 'label'  => 'Sri Lanka'], ['value' => 'SD', 'label'  => 'Sudan'], ['value' => 'SR', 'label'  => 'Suriname'], ['value' => 'SJ', 'label'  => 'Svalbard and Jan Mayen'], ['value' => 'SZ', 'label'  => 'Swaziland'], ['value' => 'SE', 'label'  => 'Sweden'], ['value' => 'CH', 'label'  => 'Switzerland'], ['value' => 'SY', 'label'  => 'Syria'], ['value' => 'TW', 'label'  => 'Taiwan'], ['value' => 'TJ', 'label'  => 'Tajikistan'], ['value' => 'TZ', 'label'  => 'Tanzania'], ['value' => 'TH', 'label'  => 'Thailand'], ['value' => 'TG', 'label'  => 'Togo'], ['value' => 'TK', 'label'  => 'Tokelau'], ['value' => 'TO', 'label'  => 'Tonga'], ['value' => 'TT', 'label'  => 'Trinidad and Tobago'], ['value' => 'TN', 'label'  => 'Tunisia'], ['value' => 'TR', 'label'  => 'Turkey'], ['value' => 'TM', 'label'  => 'Turkmenistan'], ['value' => 'TC', 'label'  => 'Turks and Caicos Islands'], ['value' => 'TV', 'label'  => 'Tuvalu'], ['value' => 'UG', 'label'  => 'Uganda'], ['value' => 'UA', 'label'  => 'Ukraine'], ['value' => 'AE', 'label'  => 'United Arab Emirates'], ['value' => 'UK', 'label'  => 'United Kingdom'], ['value' => 'US', 'label'  => 'United States of America'], ['value' => 'UM', 'label'  => 'United States Minor Outlying Islands'], ['value' => 'UY', 'label'  => 'Uruguay'], ['value' => 'UZ', 'label'  => 'Uzbekistan'], ['value' => 'VU', 'label'  => 'Vanuatu'], ['value' => 'VA', 'label'  => 'Vatican City (Holy See)'], ['value' => 'VE', 'label'  => 'Venezuela'], ['value' => 'VN', 'label'  => 'Vietnam'], ['value' => 'VG', 'label'  => 'Virgin Islands (British)'], ['value' => 'VI', 'label'  => 'Virgin Islands (US)'], ['value' => 'WF', 'label'  => 'Wallis and Futuna Islands'], ['value' => 'EH', 'label'  => 'Western Sahara'], ['value' => 'WS', 'label'  => 'Western Samoa'], ['value' => 'YE', 'label'  => 'Yemen'], ['value' => 'YU', 'label'  => 'Yugoslavia'], ['value' => 'ZM', 'label'  => 'Zambia'], ['value' => 'ZW', 'label'  => 'Zimbabwe']];
 
         if(!empty($selectedCountry)) {
             foreach($countryArray as &$countryOption)  {
@@ -2535,7 +2535,7 @@ class JFormComponentDropDown extends JFormComponent {
     }
 
     public static function getStateArray($selectedState = null) {
-        $stateArray = array(array('value' => '', 'label'  => 'Select a State', 'disabled' => true), array('value' => 'AL', 'label'  => 'Alabama'), array('value' => 'AK', 'label'  => 'Alaska'), array('value' => 'AZ', 'label'  => 'Arizona'), array('value' => 'AR', 'label'  => 'Arkansas'), array('value' => 'CA', 'label'  => 'California'), array('value' => 'CO', 'label'  => 'Colorado'), array('value' => 'CT', 'label'  => 'Connecticut'), array('value' => 'DE', 'label'  => 'Delaware'), array('value' => 'DC', 'label'  => 'District of Columbia'), array('value' => 'FL', 'label'  => 'Florida'), array('value' => 'GA', 'label'  => 'Georgia'), array('value' => 'HI', 'label'  => 'Hawaii'), array('value' => 'ID', 'label'  => 'Idaho'), array('value' => 'IL', 'label'  => 'Illinois'), array('value' => 'IN', 'label'  => 'Indiana'), array('value' => 'IA', 'label'  => 'Iowa'), array('value' => 'KS', 'label'  => 'Kansas'), array('value' => 'KY', 'label'  => 'Kentucky'), array('value' => 'LA', 'label'  => 'Louisiana'), array('value' => 'ME', 'label'  => 'Maine'), array('value' => 'MD', 'label'  => 'Maryland'), array('value' => 'MA', 'label'  => 'Massachusetts'), array('value' => 'MI', 'label'  => 'Michigan'), array('value' => 'MN', 'label'  => 'Minnesota'), array('value' => 'MS', 'label'  => 'Mississippi'), array('value' => 'MO', 'label'  => 'Missouri'), array('value' => 'MT', 'label'  => 'Montana'), array('value' => 'NE', 'label'  => 'Nebraska'), array('value' => 'NV', 'label'  => 'Nevada'), array('value' => 'NH', 'label'  => 'New Hampshire'), array('value' => 'NJ', 'label'  => 'New Jersey'), array('value' => 'NM', 'label'  => 'New Mexico'), array('value' => 'NY', 'label'  => 'New York'), array('value' => 'NC', 'label'  => 'North Carolina'), array('value' => 'ND', 'label'  => 'North Dakota'), array('value' => 'OH', 'label'  => 'Ohio'), array('value' => 'OK', 'label'  => 'Oklahoma'), array('value' => 'OR', 'label'  => 'Oregon'), array('value' => 'PA', 'label'  => 'Pennsylvania'), array('value' => 'RI', 'label'  => 'Rhode Island'), array('value' => 'SC', 'label'  => 'South Carolina'), array('value' => 'SD', 'label'  => 'South Dakota'), array('value' => 'TN', 'label'  => 'Tennessee'), array('value' => 'TX', 'label'  => 'Texas'), array('value' => 'UT', 'label'  => 'Utah'), array('value' => 'VT', 'label'  => 'Vermont'), array('value' => 'VA', 'label'  => 'Virginia'), array('value' => 'WA', 'label'  => 'Washington'), array('value' => 'WV', 'label'  => 'West Virginia'), array('value' => 'WI', 'label'  => 'Wisconsin'), array('value' => 'WY', 'label'  => 'Wyoming'));
+        $stateArray = [['value' => '', 'label'  => 'Select a State', 'disabled' => true], ['value' => 'AL', 'label'  => 'Alabama'], ['value' => 'AK', 'label'  => 'Alaska'], ['value' => 'AZ', 'label'  => 'Arizona'], ['value' => 'AR', 'label'  => 'Arkansas'], ['value' => 'CA', 'label'  => 'California'], ['value' => 'CO', 'label'  => 'Colorado'], ['value' => 'CT', 'label'  => 'Connecticut'], ['value' => 'DE', 'label'  => 'Delaware'], ['value' => 'DC', 'label'  => 'District of Columbia'], ['value' => 'FL', 'label'  => 'Florida'], ['value' => 'GA', 'label'  => 'Georgia'], ['value' => 'HI', 'label'  => 'Hawaii'], ['value' => 'ID', 'label'  => 'Idaho'], ['value' => 'IL', 'label'  => 'Illinois'], ['value' => 'IN', 'label'  => 'Indiana'], ['value' => 'IA', 'label'  => 'Iowa'], ['value' => 'KS', 'label'  => 'Kansas'], ['value' => 'KY', 'label'  => 'Kentucky'], ['value' => 'LA', 'label'  => 'Louisiana'], ['value' => 'ME', 'label'  => 'Maine'], ['value' => 'MD', 'label'  => 'Maryland'], ['value' => 'MA', 'label'  => 'Massachusetts'], ['value' => 'MI', 'label'  => 'Michigan'], ['value' => 'MN', 'label'  => 'Minnesota'], ['value' => 'MS', 'label'  => 'Mississippi'], ['value' => 'MO', 'label'  => 'Missouri'], ['value' => 'MT', 'label'  => 'Montana'], ['value' => 'NE', 'label'  => 'Nebraska'], ['value' => 'NV', 'label'  => 'Nevada'], ['value' => 'NH', 'label'  => 'New Hampshire'], ['value' => 'NJ', 'label'  => 'New Jersey'], ['value' => 'NM', 'label'  => 'New Mexico'], ['value' => 'NY', 'label'  => 'New York'], ['value' => 'NC', 'label'  => 'North Carolina'], ['value' => 'ND', 'label'  => 'North Dakota'], ['value' => 'OH', 'label'  => 'Ohio'], ['value' => 'OK', 'label'  => 'Oklahoma'], ['value' => 'OR', 'label'  => 'Oregon'], ['value' => 'PA', 'label'  => 'Pennsylvania'], ['value' => 'RI', 'label'  => 'Rhode Island'], ['value' => 'SC', 'label'  => 'South Carolina'], ['value' => 'SD', 'label'  => 'South Dakota'], ['value' => 'TN', 'label'  => 'Tennessee'], ['value' => 'TX', 'label'  => 'Texas'], ['value' => 'UT', 'label'  => 'Utah'], ['value' => 'VT', 'label'  => 'Vermont'], ['value' => 'VA', 'label'  => 'Virginia'], ['value' => 'WA', 'label'  => 'Washington'], ['value' => 'WV', 'label'  => 'West Virginia'], ['value' => 'WI', 'label'  => 'Wisconsin'], ['value' => 'WY', 'label'  => 'Wyoming']];
 
         if(!empty($selectedState)) {
             foreach($stateArray as &$stateOption)  {
@@ -2553,13 +2553,13 @@ class JFormComponentDropDown extends JFormComponent {
     }
 
     public static function getMonthArray() {
-        return array(array('value' => '01', 'label'  => 'January'), array('value' => '02', 'label'  => 'February'), array('value' => '03', 'label'  => 'March'), array('value' => '04', 'label'  => 'April'), array('value' => '05', 'label'  => 'May'), array('value' => '06', 'label'  => 'June'), array('value' => '07', 'label'  => 'July'), array('value' => '08', 'label'  => 'August'), array('value' => '09', 'label'  => 'September'), array('value' => '10', 'label'  => 'October'), array('value' => '11', 'label'  => 'November'), array('value' => '12', 'label'  => 'December'));
+        return [['value' => '01', 'label'  => 'January'], ['value' => '02', 'label'  => 'February'], ['value' => '03', 'label'  => 'March'], ['value' => '04', 'label'  => 'April'], ['value' => '05', 'label'  => 'May'], ['value' => '06', 'label'  => 'June'], ['value' => '07', 'label'  => 'July'], ['value' => '08', 'label'  => 'August'], ['value' => '09', 'label'  => 'September'], ['value' => '10', 'label'  => 'October'], ['value' => '11', 'label'  => 'November'], ['value' => '12', 'label'  => 'December']];
     }
 
     public static function getYearArray($minYear, $maxYear) {
-        $yearArray = array();
+        $yearArray = [];
         for($i = $maxYear - $minYear; $i > 0; $i--) {
-            $yearArray[] = array('value' => $i + $minYear, 'label' => $i + $minYear);
+            $yearArray[] = ['value' => $i + $minYear, 'label' => $i + $minYear];
         }
         return $yearArray;
     }
@@ -2568,16 +2568,16 @@ class JFormComponentDropDown extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Div tag contains everything about the component
         $div = parent::generateComponentDiv();
 
         // Select tag
-        $select = new JFormElement('select', array(
+        $select = new JFormElement('select', [
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->class . ' form-control',
-        ));
+        ]);
 
         // Only use if disabled is set, otherwise will throw an error
         if($this->disabled) {
@@ -2594,7 +2594,7 @@ class JFormComponentDropDown extends JFormComponent {
         }
 
         // Check for any opt groups
-        $optGroupArray = array();
+        $optGroupArray = [];
         foreach($this->dropDownOptionArray as $dropDownOption) {
             if(isset($dropDownOption['optGroup']) && !empty($dropDownOption['optGroup'])) {
                 $optGroupArray[] = $dropDownOption['optGroup'];
@@ -2604,22 +2604,22 @@ class JFormComponentDropDown extends JFormComponent {
 
         // Create the optgroup elements
         foreach($optGroupArray as $optGroup) {
-            ${$optGroup} = new JFormElement('optgroup', array('label' => $optGroup));
+            ${$optGroup} = new JFormElement('optgroup', ['label' => $optGroup]);
         }
 
         // Add any options to their appropriate optgroup
         foreach($this->dropDownOptionArray as $dropDownOption) {
             if(isset($dropDownOption['optGroup']) && !empty($dropDownOption['optGroup'])) {
-                $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-                $optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-                $optionSelected =  isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-                $optionDisabled =  isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-                $optionOptGroup =  isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
-            
+                $optionValue = $dropDownOption['value'] ?? '';
+                $optionLabel =  $dropDownOption['label'] ?? '';
+                $optionSelected =  $dropDownOption['selected'] ?? false;
+                $optionDisabled =  $dropDownOption['disabled'] ?? false;
+                $optionOptGroup =  $dropDownOption['optGroup'] ?? '';
+
                 ${$dropDownOption['optGroup']}->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
             }
         }
-        
+
         // Add any options that are not in an opt group to the select
         foreach($this->dropDownOptionArray as $dropDownOption) {
             // Handle optgroup addition - only add the group if you haven't seen it yet
@@ -2629,18 +2629,18 @@ class JFormComponentDropDown extends JFormComponent {
             }
             // Add any other elements
             else if(!isset($dropDownOption['optGroup'])) {
-                $optionValue = isset($dropDownOption['value']) ? $dropDownOption['value'] : '';
-                $optionLabel =  isset($dropDownOption['label']) ? $dropDownOption['label'] : '';
-                $optionSelected =  isset($dropDownOption['selected']) ? $dropDownOption['selected'] : false;
-                $optionDisabled =  isset($dropDownOption['disabled']) ? $dropDownOption['disabled'] : false;
-                $optionOptGroup =  isset($dropDownOption['optGroup']) ? $dropDownOption['optGroup'] : '';
+                $optionValue = $dropDownOption['value'] ?? '';
+                $optionLabel =  $dropDownOption['label'] ?? '';
+                $optionSelected =  $dropDownOption['selected'] ?? false;
+                $optionDisabled =  $dropDownOption['disabled'] ?? false;
+                $optionOptGroup =  $dropDownOption['optGroup'] ?? '';
 
                 $select->insert($this->getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled));
             }
         }
 
         // Add the select box to the div
-        $div->insert('<div class="col-xs-8">'.$select.'</div>');
+        $div->insert('<div class="col-sm-8">'.$select.'</div>');
 
         // Add any description (optional)
         $div = $this->insertComponentDescription($div);
@@ -2659,7 +2659,7 @@ class JFormComponentFile extends JFormComponent {
     /*
      * Constructor
      */
-    function __construct($id, $label, $optionArray = array()) {
+    public function __construct($id, $label, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -2680,11 +2680,11 @@ class JFormComponentFile extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    function hasInstanceValues() {
+    public function hasInstanceValues() {
         return isset($this->value[0]);
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
         if($this->customStyle) {
@@ -2698,36 +2698,36 @@ class JFormComponentFile extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $div = $this->generateComponentDiv();
 
         // Add the input tag
-        $pseudoFileWrapper = new JFormElement('div', array(
+        $pseudoFileWrapper = new JFormElement('div', [
             'class' => 'pseudoFile',
             'style' => 'position:absolute;'
-        ));
+        ]);
 
-        $pseudoFileInput = new JFormElement('input', array (
+        $pseudoFileInput = new JFormElement('input',  [
            'type'=> 'text',
            'disabled' => 'disabled',
-        ));
+        ]);
 
-        $pseudoFileButton = new JFormElement('button', array (
+        $pseudoFileButton = new JFormElement('button',  [
            'onclick' => 'return false;',
            'disabled' => 'disabled'
-        ));
+        ]);
         $pseudoFileButton->update('Browse...');
         $pseudoFileWrapper->insert($pseudoFileInput);
         $pseudoFileWrapper->insert($pseudoFileButton);
 
-        $input = new JFormElement('input', array(
+        $input = new JFormElement('input', [
             'type' => $this->type,
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->inputClass,
             'size'=> 15,
-        ));
+        ]);
         if(!empty($this->styleWidth)) {
             $input->setAttribute('style', 'width: '.$this->styleWidth.';');
         }
@@ -2752,20 +2752,20 @@ class JFormComponentFile extends JFormComponent {
         return $div->__toString();
     }
     public function required($options) {
-        $messageArray = array('Required.');
+        $messageArray = ['Required.'];
         return !empty($options['value']) ? 'success' : $messageArray;
     }
 
     public function extension($options) {
-        $messageArray = array('Must have the .'.$options->extension.' extension.');
+        $messageArray = ['Must have the .'.$options->extension.' extension.'];
         $extensionRegex = '/\.'.options.extension.'$/';
         return $options['value']['name'] == '' || preg_match($extensionRegex , $options['value']['name']) ? 'success' : $messageArray;
     }
 
     public function extensionType($options) {
         $extensionType;
-        $messageArray = array('Incorrect file type.');
-        
+        $messageArray = ['Incorrect file type.'];
+
         if(is_array($options['extensionType'])) {
             $extensionType = '/\.('.implode('|', $options['extensionType']).')/';
         }
@@ -2777,7 +2777,7 @@ class JFormComponentFile extends JFormComponent {
             $extensionObject->video = '/\.(3g2|3gp|asf|asx|avi|flv|mov|mp4|mpg|rm|swf|vob|wmv)$/i';
             $extensionObject->web = '/\.(asp|css|htm|html|js|jsp|php|rss|xhtml)$/i';
             $extensionType = $extensionObject->$options['extensionType'];
-            $messageArray = array('Must be an '.$options['extensionType'].' file type.');
+            $messageArray = ['Must be an '.$options['extensionType'].' file type.'];
         }
         return empty($options['value']) || preg_match($extensionType , $options['value']['name']) ? 'success' : $messageArray;
     }
@@ -2787,7 +2787,7 @@ class JFormComponentFile extends JFormComponent {
         }
         // they will give filesize in kb
         $fileSizeInKb = $this->value['size'] / 1024;
-        return $fileSizeInKb <= $options['size'] ? 'success' : array('File must be smaller then ' . $options['size'].'kb. File is '.round($fileSizeInKb, 2). 'kb.');
+        return $fileSizeInKb <= $options['size'] ? 'success' : ['File must be smaller then ' . $options['size'].'kb. File is '.round($fileSizeInKb, 2). 'kb.'];
     }
     public function imageDimensions($options) {
         if(empty($options['value'])){
@@ -2797,16 +2797,16 @@ class JFormComponentFile extends JFormComponent {
 
         // Check to see if the file is an image
         if(!$imageInfo) {
-            return array("File is not a valid image file.");
+            return ["File is not a valid image file."];
         } else {
-            $errorMessageArray = array();
+            $errorMessageArray = [];
             $width = $imageInfo[0];
             $height = $imageInfo[1];
             if($width > $options['width']) {
-                $errorMessageArray[] = array('The image must be less then '.$options['width'].'px wide. File is '.$width. 'px.');
+                $errorMessageArray[] = ['The image must be less then '.$options['width'].'px wide. File is '.$width. 'px.'];
             }
             if($height > $options['height']) {
-                $errorMessageArray[] = array('The image must be less then '.$options['height'].'px tall. File is '.$height. 'px.');
+                $errorMessageArray[] = ['The image must be less then '.$options['height'].'px tall. File is '.$height. 'px.'];
             }
         }
         return empty($errorMessageArray) ? 'success' : $errorMessageArray;
@@ -2820,17 +2820,17 @@ class JFormComponentFile extends JFormComponent {
 
         // Check to see if the file is an image
         if(!$imageInfo) {
-            return array("File is not a valid image file.");
+            return ["File is not a valid image file."];
         }
         else {
-            $errorMessageArray = array();
+            $errorMessageArray = [];
             $width = $imageInfo[0];
             $height = $imageInfo[1];
             if($width < $options['width']) {
-                $errorMessageArray[] = array('The image must at least then '.$options['width'].'px wide. File is '.$width. 'px.');
+                $errorMessageArray[] = ['The image must at least then '.$options['width'].'px wide. File is '.$width. 'px.'];
             }
             if($height < $options['height']) {
-                $errorMessageArray[] = array('The image must at least then '.$options['height'].'px tall. File is '.$height. 'px.');
+                $errorMessageArray[] = ['The image must at least then '.$options['height'].'px tall. File is '.$height. 'px.'];
             }
         }
         return empty($errorMessageArray) ? 'success' : $errorMessageArray;
@@ -2844,7 +2844,7 @@ class JFormComponentHidden extends JFormComponent {
     /*
      * Constructor
      */
-    function __construct($id, $value, $optionArray = array()) {
+    public function __construct($id, $value, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -2861,18 +2861,18 @@ class JFormComponentHidden extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div without a label
         $div = $this->generateComponentDiv(false);
         $div->addToAttribute('style', 'display: none;');
 
         // Input tag
-        $input = new JFormElement('input', array(
+        $input = new JFormElement('input', [
             'type' => 'hidden',
             'id' => $this->id,
             'name' => $this->name,
             'value' => $this->value,
-        ));
+        ]);
         $div->insert($input);
 
         return $div->__toString();
@@ -2882,30 +2882,30 @@ class JFormComponentHidden extends JFormComponent {
 
 
 class JFormComponentHtml extends JFormComponent {
-    var $html;
+    public $html;
 
-    function __construct($html) {
+    public function __construct($html) {
         $this->id = uniqid();
         $this->html = $html;
     }
 
-    function getOptions() {
+    public function getOptions() {
         return null;
     }
 
-    function clearValue() {
+    public function clearValue() {
         return null;
     }
 
-    function validate() {
+    public function validate() {
         return null;
     }
 
-    function getValue() {
+    public function getValue() {
         return null;
     }
 
-    function  __toString() {
+    public function  __toString() {
         return $this->html;
     }
 }
@@ -2913,15 +2913,15 @@ class JFormComponentHtml extends JFormComponent {
 
 
 class JFormComponentLikert extends JFormComponent {
-    var $choiceArray = array();
-    var $statementArray = array();
-    var $showTableHeading = true;
-    var $collapseLabelIntoTableHeading = false;
+    public $choiceArray = [];
+    public $statementArray = [];
+    public $showTableHeading = true;
+    public $collapseLabelIntoTableHeading = false;
 
     /**
      * Constructor
      */
-    function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
+    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -2935,12 +2935,12 @@ class JFormComponentLikert extends JFormComponent {
         $this->initialize($optionsArray);
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
-        $statementArray = array();
+        $statementArray = [];
         foreach($this->statementArray as $statement) {
-            $statementArray[$statement['name']] = array();
+            $statementArray[$statement['name']] = [];
 
             if(!empty($statement['validationOptions'])) {
                 $statementArray[$statement['name']]['validationOptions'] = $statement['validationOptions'];
@@ -2955,7 +2955,7 @@ class JFormComponentLikert extends JFormComponent {
 
         // Make sure you have an options array to manipulate
         if(!isset($options['options'])) {
-            $options['options']  = array();
+            $options['options']  = [];
         }
 
         return $options;
@@ -2965,31 +2965,31 @@ class JFormComponentLikert extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $componentDiv = parent::generateComponentDiv(!$this->collapseLabelIntoTableHeading);
 
         // Create the table
-        $table = new JFormElement('table', array('class' => 'jFormComponentLikertTable'));
+        $table = new JFormElement('table', ['class' => 'jFormComponentLikertTable']);
 
         // Generate the first row
         if($this->showTableHeading) {
-            $tableHeadingRow = new JFormElement('tr', array('class' => 'jFormComponentLikertTableHeading'));
+            $tableHeadingRow = new JFormElement('tr', ['class' => 'jFormComponentLikertTableHeading']);
 
-            $tableHeading = new JFormElement('th', array(
+            $tableHeading = new JFormElement('th', [
                 'class' => 'jFormComponentLikertStatementColumn',
-            ));
+            ]);
             // Collapse the label into the heading if the option is set
             if($this->collapseLabelIntoTableHeading) {
-                $tableHeadingLabel = new JFormElement('label', array(
+                $tableHeadingLabel = new JFormElement('label', [
                     'class' => 'jFormComponentLikertStatementLabel',
-                ));
+                ]);
                 $tableHeadingLabel->update($this->label);
                 // Add the required star to the label
                 if(in_array('required', $this->validationOptions)) {
-                    $labelRequiredStarSpan = new JFormElement('span', array(
+                    $labelRequiredStarSpan = new JFormElement('span', [
                         'class' => $this->labelRequiredStarClass
-                    ));
+                    ]);
                     $labelRequiredStarSpan->update(' *');
                     $tableHeadingLabel->insert($labelRequiredStarSpan);
                 }
@@ -3002,7 +3002,7 @@ class JFormComponentLikert extends JFormComponent {
             }
             $table->insert($tableHeadingRow);
         }
-        
+
         // Insert each of the statements
         $statementCount = 0;
         foreach($this->statementArray as $statement) {
@@ -3015,28 +3015,28 @@ class JFormComponentLikert extends JFormComponent {
             }
 
             // Set the statement
-            $statementRow = new JFormElement('tr', array('class' => $statementRowClass));
-            $statementColumn = new JFormElement('td', array('class' => 'jFormComponentLikertStatementColumn'));
-            $statementLabel = new JFormElement('label', array(
+            $statementRow = new JFormElement('tr', ['class' => $statementRowClass]);
+            $statementColumn = new JFormElement('td', ['class' => 'jFormComponentLikertStatementColumn']);
+            $statementLabel = new JFormElement('label', [
                 'class' => 'jFormComponentLikertStatementLabel',
                 'for' => $statement['name'].'-choice1',
-            ));
+            ]);
             $statementColumn->insert($statementLabel->insert($statement['statement']));
 
             // Set the statement description (optional)
             if(!empty($statement['description'])) {
-                $statementDescription = new JFormElement('div', array(
+                $statementDescription = new JFormElement('div', [
                     'class' => 'jFormComponentLikertStatementDescription',
-                ));
+                ]);
                 $statementColumn->insert($statementDescription->update($statement['description']));
             }
 
             // Insert a tip (optional)
             if(!empty($statement['tip'])) {
-                $statementTip = new JFormElement('div', array(
+                $statementTip = new JFormElement('div', [
                     'class' => 'jFormComponentLikertStatementTip',
                     'style' => 'display: none;',
-                ));
+                ]);
                 $statementColumn->insert($statementTip->update($statement['tip']));
             }
 
@@ -3046,12 +3046,12 @@ class JFormComponentLikert extends JFormComponent {
             foreach($this->choiceArray as $choice) {
                 $choiceColumn = new JFormElement('td');
 
-                $choiceInput = new JFormElement('input', array(
+                $choiceInput = new JFormElement('input', [
                     'id' => $statement['name'].'-choice'.$choiceCount,
                     'type' => 'radio',
                     'value' => $choice['value'],
                     'name' => $statement['name'],
-                ));
+                ]);
                 // Set a selected value if defined
                 if(!empty($statement['selected'])) {
                     if($statement['selected'] == $choice['value']) {
@@ -3062,10 +3062,10 @@ class JFormComponentLikert extends JFormComponent {
 
                 // Choice sub labels
                 if(!empty($choice['sublabel'])) {
-                    $choiceSublabel = new JFormElement('label', array(
+                    $choiceSublabel = new JFormElement('label', [
                         'class' => 'jFormComponentLikertSublabel',
                         'for' => $statement['name'].'-choice'.$choiceCount,
-                    ));
+                    ]);
                     $choiceSublabel->update($choice['sublabel']);
                     $choiceColumn->insert($choiceSublabel);
                 }
@@ -3091,12 +3091,12 @@ class JFormComponentLikert extends JFormComponent {
 
     // Validation
     public function required($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         foreach($options['value'] as $key => $statement) {
             if(empty($statement)) {
                 //print_r($key);
                 //print_r($statement);
-                array_push($errorMessageArray, array($key => 'Required.'));
+                array_push($errorMessageArray, [$key => 'Required.']);
             }
         }
 
@@ -3108,7 +3108,7 @@ class JFormComponentLikertStatement extends JFormComponent {
     /**
      * Constructor
      */
-    function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
+    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -3118,7 +3118,7 @@ class JFormComponentLikertStatement extends JFormComponent {
         $this->initialize($optionsArray);
     }
 
-    function  __toString() {
+    public function  __toString() {
         return;
     }
 }
@@ -3127,16 +3127,16 @@ class JFormComponentLikertStatement extends JFormComponent {
 
 
 class JFormComponentMultipleChoice extends JFormComponent {
-    var $multipleChoiceType = 'checkbox'; // radio, checkbox
-    var $multipleChoiceClass = 'choice';
-    var $multipleChoiceLabelClass = 'choiceLabel';
-    var $multipleChoiceArray = array();
-    var $showMultipleChoiceTipIcons = true;
+    public $multipleChoiceType = 'checkbox'; // radio, checkbox
+    public $multipleChoiceClass = 'choice';
+    public $multipleChoiceLabelClass = 'choiceLabel';
+    public $multipleChoiceArray = [];
+    public $showMultipleChoiceTipIcons = true;
 
     /**
      * Constructor
      */
-    function __construct($id, $label, $multipleChoiceArray, $optionArray = array()) {
+    public function __construct($id, $label, $multipleChoiceArray, $optionArray = []) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -3148,7 +3148,7 @@ class JFormComponentMultipleChoice extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    function hasInstanceValues() {
+    public function hasInstanceValues() {
         if($this->multipleChoiceType == 'radio' ){
             return is_array($this->value);
         } else {
@@ -3163,9 +3163,9 @@ class JFormComponentMultipleChoice extends JFormComponent {
      * MultipleChoice Specific Instance Handling for validation
      *
      */
-     function validateComponent() {
+     public function validateComponent() {
         $this->passedValidation = true;
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         if(is_array($this->value[0])){
             foreach($this->value as $value){
@@ -3177,12 +3177,12 @@ class JFormComponentMultipleChoice extends JFormComponent {
         }
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
         // Make sure you have an options array to manipulate
         if(!isset($options['options'])) {
-            $options['options']  = array();
+            $options['options']  = [];
         }
 
         // Set the multiple choice type
@@ -3195,7 +3195,7 @@ class JFormComponentMultipleChoice extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         if(sizeof($this->multipleChoiceArray) > 1) {
             $div = parent::generateComponentDiv();
@@ -3203,18 +3203,18 @@ class JFormComponentMultipleChoice extends JFormComponent {
         else {
             $div = parent::generateComponentDiv(false);
         }
-        
+
         // Case
         // array(array('value' => 'option1', 'label' => 'Option 1', 'checked' => 'checked', 'tip' => 'This is a tip'))
         $multipleChoiceCount = 0;
         foreach($this->multipleChoiceArray as $multipleChoice) {
-            
-            $multipleChoiceValue = isset($multipleChoice['value']) ? $multipleChoice['value'] : '';
-            $multipleChoiceLabel =  isset($multipleChoice['label']) ? $multipleChoice['label'] : '';
-            $multipleChoiceChecked =  isset($multipleChoice['checked']) ? $multipleChoice['checked'] : false;
-            $multipleChoiceTip =  isset($multipleChoice['tip']) ? $multipleChoice['tip'] : '';
-            $multipleChoiceDisabled =  isset($multipleChoice['disabled']) ? $multipleChoice['disabled'] : '';
-            $multipleChoiceInputHidden =  isset($multipleChoice['inputHidden']) ? $multipleChoice['inputHidden'] : '';
+
+            $multipleChoiceValue = $multipleChoice['value'] ?? '';
+            $multipleChoiceLabel =  $multipleChoice['label'] ?? '';
+            $multipleChoiceChecked =  $multipleChoice['checked'] ?? false;
+            $multipleChoiceTip =  $multipleChoice['tip'] ?? '';
+            $multipleChoiceDisabled =  $multipleChoice['disabled'] ?? '';
+            $multipleChoiceInputHidden =  $multipleChoice['inputHidden'] ?? '';
 
             $multipleChoiceCount++;
 
@@ -3229,25 +3229,25 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
         return $div->__toString();
     }
-    
+
     //function to insert tips onto the wrappers
 
-    function getMultipleChoiceWrapper($multipleChoiceValue, $multipleChoiceLabel, $multipleChoiceChecked, $multipleChoiceTip, $multipleChoiceDisabled, $multipleChoiceInputHidden, $multipleChoiceCount) {
+    public function getMultipleChoiceWrapper($multipleChoiceValue, $multipleChoiceLabel, $multipleChoiceChecked, $multipleChoiceTip, $multipleChoiceDisabled, $multipleChoiceInputHidden, $multipleChoiceCount) {
         // Make a wrapper div for the input and label
-        $multipleChoiceWrapperDiv = new JFormElement('div', array(
+        $multipleChoiceWrapperDiv = new JFormElement('div', [
             'id' => $this->id.'-choice'.$multipleChoiceCount.'-wrapper',
             'class' => $this->multipleChoiceClass.'Wrapper',
-        ));
+        ]);
 
         // Input tag
-        $input = new JFormElement('input', array(
+        $input = new JFormElement('input', [
             'type' => $this->multipleChoiceType,
             'id' => $this->id.'-choice'.$multipleChoiceCount,
             'name' => $this->name,
             'value' => $multipleChoiceValue,
             'class' => $this->multipleChoiceClass,
             'style' => 'display: inline;',
-        ));
+        ]);
         if($multipleChoiceChecked == 'checked') {
             $input->setAttribute('checked', 'checked');
         }
@@ -3260,11 +3260,11 @@ class JFormComponentMultipleChoice extends JFormComponent {
         $multipleChoiceWrapperDiv->insert($input);
 
         // Multiple choice label
-        $multipleChoiceLabelElement = new JFormElement('label', array(
+        $multipleChoiceLabelElement = new JFormElement('label', [
             'for' => $this->id.'-choice'.$multipleChoiceCount,
             'class' => $this->multipleChoiceLabelClass,
             'style' => 'display: inline;',
-        ));
+        ]);
         // Add an image to the label if there is a tip
         if(!empty($multipleChoiceTip) && $this->showMultipleChoiceTipIcons) {
             $multipleChoiceLabelElement->update($multipleChoiceLabel.' <span class="jFormComponentMultipleChoiceTipIcon">&nbsp;</span>');
@@ -3276,9 +3276,9 @@ class JFormComponentMultipleChoice extends JFormComponent {
         if(sizeof($this->multipleChoiceArray) == 1) {
             // Add the required star to the label
             if(in_array('required', $this->validationOptions)) {
-                $labelRequiredStarSpan = new JFormElement('span', array(
+                $labelRequiredStarSpan = new JFormElement('span', [
                     'class' => $this->labelRequiredStarClass
-                ));
+                ]);
                 $labelRequiredStarSpan->update(' *');
                 $multipleChoiceLabelElement->insert($labelRequiredStarSpan);
             }
@@ -3287,11 +3287,11 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
         // Multiple choice tip
         if(!empty($multipleChoiceTip)) {
-            $multipleChoiceTipDiv = new JFormElement('div', array(
+            $multipleChoiceTipDiv = new JFormElement('div', [
                 'id' => $this->id.'-'.$multipleChoiceValue.'-tip',
                 'style' => 'display: none;',
                 'class' => 'jFormComponentMultipleChoiceTip'
-            ));
+            ]);
             $multipleChoiceTipDiv->update($multipleChoiceTip);
             $multipleChoiceWrapperDiv->insert($multipleChoiceTipDiv);
         }
@@ -3302,15 +3302,15 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
     // Validations
     public function required($options) {
-        $errorMessageArray = array('Required.');
+        $errorMessageArray = ['Required.'];
         return  sizeof($options['value']) > 0 ? 'success' : $errorMessageArray;
     }
     public function minOptions($options) {
-        $errorMessageArray = array('You must select more than '. $options['minOptions'] .' options');
+        $errorMessageArray = ['You must select more than '. $options['minOptions'] .' options'];
         return sizeof($options['value']) == 0 || sizeof($options['value']) > $options['minOptions'] ? 'success' : $errorMessageArray;
     }
     public function maxOptions($options) {
-        $errorMessageArray = array('You may select up to '. $options['maxOptions'] .' options. You have selected '. sizeof($options['value']) . '.');
+        $errorMessageArray = ['You may select up to '. $options['maxOptions'] .' options. You have selected '. sizeof($options['value']) . '.'];
         return sizeof($options['value']) == 0 || sizeof($options['value']) <= $options['maxOptions'] ? 'success' : $errorMessageArray;
     }
 }
@@ -3319,25 +3319,25 @@ class JFormComponentMultipleChoice extends JFormComponent {
 
 
 class JFormComponentName extends JFormComponent {
-	var $middleInitialHidden = false;
-	var $emptyValues = null;
-	var $showSublabels = true;
+	public $middleInitialHidden = false;
+	public $emptyValues = null;
+	public $showSublabels = true;
 
 	/*
 	 * Constructor
 	 */
-	function __construct($id, $label, $optionArray = array()) {
+	public function __construct($id, $label, $optionArray = []) {
 		// Class variables
 		$this->id = $id;
 		$this->name = $this->id;
-		$this->label = $label;
+        $this->label = $label;
 		$this->class = 'jFormComponentName form-group';
 
 		// Input options
-		$this->initialValues = array('firstName' => '', 'middleInitial' => '', 'lastName' => '');
+		$this->initialValues = ['firstName' => '', 'middleInitial' => '', 'lastName' => ''];
 
 		if($this->emptyValues === true) {
-			$this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
+			$this->emptyValues = ['firstName' => 'First Name', 'middleInitial' => 'M','lastName' => 'Last Name'];
 		}
 		//$this->mask = '';
 
@@ -3345,11 +3345,11 @@ class JFormComponentName extends JFormComponent {
 		$this->initialize($optionArray);
 	}
 
-	function hasInstanceValues() {
+	public function hasInstanceValues() {
 		return is_array($this->value);
 	}
 
-	function getOptions() {
+	public function getOptions() {
 		$options = parent::getOptions();
 
 		if(!empty($this->emptyValues)) {
@@ -3367,37 +3367,37 @@ class JFormComponentName extends JFormComponent {
 	 *
 	 * @return string
 	 */
-	function __toString() {
+	public function __toString() {
 		// Generate the component div
 		$div = $this->generateComponentDiv();
 
 
-		$firstNameDiv = new JFormElement('div', array(
+		$firstNameDiv = new JFormElement('div', [
 			'class' => 'firstNameDiv form-group',
-		));
+		]);
 		// Add the first name input tag
-		$firstName = new JFormElement('input', array(
+		$firstName = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-firstName',
 			'name' => $this->name.'-firstName',
 			'class' => 'firstName singleLineText form-control',
 			'placeholder' => 'First Name',
 			'value' => $this->initialValues['firstName'],
-		));
+		]);
 		$firstNameDiv->insert($firstName);
 
 		// Add the middle initial input tag
-		$middleInitialDiv = new JFormElement('div', array(
+		$middleInitialDiv = new JFormElement('div', [
 			'class' => 'middleInitialDiv form-group',
-		));
-		$middleInitial = new JFormElement('input', array(
+		]);
+		$middleInitial = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-middleInitial',
 			'name' => $this->name.'-middleInitial',
 			'class' => 'middleInitial singleLineText form-control',
 			'maxlength' => '1',
-			'value' => (isset($this->initialValues['middleInitial']) ? $this->initialValues['middleInitial'] : ''),
-		));
+			'value' => ($this->initialValues['middleInitial'] ?? ''),
+		]);
 		if($this->middleInitialHidden) {
 			$middleInitial->setAttribute('style', 'display: none;');
 			$middleInitialDiv->setAttribute('style', 'display: none;');
@@ -3406,21 +3406,21 @@ class JFormComponentName extends JFormComponent {
 
 
 		// Add the last name input tag
-		$lastNameDiv = new JFormElement('div', array(
+		$lastNameDiv = new JFormElement('div', [
 			'class' => 'lastNameDiv form-group',
-		));
-		$lastName = new JFormElement('input', array(
+		]);
+		$lastName = new JFormElement('input', [
 			'type' => 'text',
 			'id' => $this->id.'-lastName',
 			'name' => $this->name.'-lastName',
 			'class' => 'lastName singleLineText form-control',
 			'placeholder' => 'Last Name',
 			'value' => $this->initialValues['lastName'],
-		));
+		]);
 		$lastNameDiv->insert($lastName);
 
 		if(!empty($this->emptyValues)){
-			$this->emptyValues = array('firstName' => 'First Name', 'middleInitial' => 'M' ,'lastName' => 'Last Name');
+			$this->emptyValues = ['firstName' => 'First Name', 'middleInitial' => 'M','lastName' => 'Last Name'];
 			foreach($this->emptyValues as $key => $value) {
 				if (!isset($this->initialValues[$key]) || $this->initialValues[$key] == '')
 				{
@@ -3460,12 +3460,12 @@ class JFormComponentName extends JFormComponent {
 	}
 
 	public function required($options) {
-		$errorMessageArray = array();
+		$errorMessageArray = [];
 		if($options['value']->firstName == '') {
-			array_push($errorMessageArray, array('First name is required.'));
+			array_push($errorMessageArray, ['First name is required.']);
 		}
 		if($options['value']->lastName == '') {
-			array_push($errorMessageArray, array('Last name is required.'));
+			array_push($errorMessageArray, ['Last name is required.']);
 		}
 		return sizeof($errorMessageArray) == 0 ? 'success' : $errorMessageArray;
 	}
@@ -3475,18 +3475,18 @@ class JFormComponentName extends JFormComponent {
 
 
 class JFormComponentSingleLineText extends JFormComponent {
-	var $sublabel;
+	public $sublabel;
 
 	/*
 	 * Constructor
 	 */
-	function __construct($id, $label, $optionArray = array()) {
+	public function __construct($id, $label, $optionArray = []) {
 		// Class variables
 		$this->id = $id;
 		$this->name = $this->id;
 		$this->label = $label;
 		$this->class = 'jFormComponentSingleLineText';
-		$this->widthArray = array('shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em');
+		$this->widthArray = ['shortest' => '2em', 'short' => '6em', 'mediumShort' => '9em', 'medium' => '12em', 'mediumLong' => '15em', 'long' => '18em', 'longest' => '24em'];
 
 		// Input options
 		$this->initialValue = '';
@@ -3503,16 +3503,16 @@ class JFormComponentSingleLineText extends JFormComponent {
 		$this->initialize($optionArray);
 	}
 
-	function hasInstanceValues() {
+	public function hasInstanceValues() {
 		return is_array($this->value);
 	}
 
-	function getOptions() {
+	public function getOptions() {
 		$options = parent::getOptions();
 
 		// Make sure you have an options array to manipulate
 		if(!isset($options['options'])) {
-			$options['options']  = array();
+			$options['options']  = [];
 		}
 
 		// Mask
@@ -3537,16 +3537,16 @@ class JFormComponentSingleLineText extends JFormComponent {
 	 *
 	 * @return string
 	 */
-	function __toString() {
+	public function __toString() {
 		// Generate the component div
 		$div = $this->generateComponentDiv();
 
 		// Add the input tag
-		$input = new JFormElement('input', array(
+		$input = new JFormElement('input', [
 			'type' => $this->type,
 			'id' => $this->id,
 			'name' => $this->name,
-		));
+		]);
 		if(!empty($this->width)) {
 			if(array_key_exists($this->width, $this->widthArray)) {
 				$input->setAttribute('style', 'width: '.$this->widthArray[$this->width].';');
@@ -3577,7 +3577,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 		if($this->enterSubmits) {
 			$input->addToAttribute('class', ' jFormComponentEnterSubmits');
 		}
-		$div->insert('<div class="col-xs-8">'.$input.'</div>');
+		$div->insert('<div class="col-sm-8">'.$input.'</div>');
 
 		if(!empty($this->sublabel)) {
 			$div->insert('<div class="jFormComponentSublabel">'.$this->sublabel.'</div>');
@@ -3595,117 +3595,117 @@ class JFormComponentSingleLineText extends JFormComponent {
 	// Validations
 
 	public function alpha($options) {
-		$messageArray = array('Must only contain letters.');
+		$messageArray = ['Must only contain letters.'];
 		return preg_match('/^[a-z_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function alphaDecimal($options) {
-		$messageArray = array('Must only contain letters, numbers, or periods.');
+		$messageArray = ['Must only contain letters, numbers, or periods.'];
 		return preg_match('/^\w+$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function alphaNumeric($options) {
-		$messageArray = array('Must only contain letters or numbers.');
+		$messageArray = ['Must only contain letters or numbers.'];
 		return preg_match('/^[a-z0-9_\s]+$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function blank($options) {
-		$messageArray = array('Must be blank.');
+		$messageArray = ['Must be blank.'];
 		return mb_strlen(trim($options['value'])) == 0 ? 'success' : $messageArray;
 	}
 
 	public function canadianPostal($options) {
-		$messageArray = array('Must be a valid Canadian postal code.');
+		$messageArray = ['Must be a valid Canadian postal code.'];
 		return preg_match('/^[ABCEGHJKLMNPRSTVXY][0-9][A-Z] [0-9][A-Z][0-9]$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function custom_regexp() {
-		$messageArray = array($options['custom_regexp']['custom_message']);
+		$messageArray = [$options['custom_regexp']['custom_message']];
 		return preg_match ($options['custom_regexp']['regexp'], $options['value']) ? 'success' : $messageArray;
 	}
 
 	public function date($options) {
-		$messageArray = array('Must be a date in the mm/dd/yyyy format.');
+		$messageArray = ['Must be a date in the mm/dd/yyyy format.'];
 		return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)[0-9]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function dateTime($options) {
-		$messageArray = array('Must be a date in the mm/dd/yyyy hh:mm:ss tt format. ss and tt are optional.');
+		$messageArray = ['Must be a date in the mm/dd/yyyy hh:mm:ss tt format. ss and tt are optional.'];
 		return preg_match('/^(0?[1-9]|1[012])[\- \/.](0?[1-9]|[12][0-9]|3[01])[\- \/.](19|20)?[0-9]{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function decimal($options) {
 		// Can be negative and have a decimal value
 		// Do not accept commas in value as the DB does not accept them
-		$messageArray = array('Must be a number without any commas. Decimal is optional.');
+		$messageArray = ['Must be a number without any commas. Decimal is optional.'];
 		return preg_match('/^-?((\d+(\.\d+)?)|(\.\d+))$/', $options['value']) ? 'success' : $messageArray;
 	}
 
 	public function decimalNegative($options) {
 		// Must be negative and have a decimal value
-		$messageArray = array('Must be a negative number without any commas. Decimal is optional.');
+		$messageArray = ['Must be a negative number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) < 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalPositive($options) {
 		// Must be positive and have a decimal value
-		$messageArray = array('Must be a positive number without any commas. Decimal is optional.');
+		$messageArray = ['Must be a positive number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) > 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalZeroNegative($options) {
 		// Must be negative and have a decimal value
-		$messageArray = array('Must be zero or a negative number without any commas. Decimal is optional.');
+		$messageArray = ['Must be zero or a negative number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) <= 0)) ? 'success' : $messageArray;
 	}
 
 	public function decimalZeroPositive($options) {
 		// Must be positive and have a decimal value
-		$messageArray = array('Must be zero or a positive number without any commas. Decimal is optional.');
+		$messageArray = ['Must be zero or a positive number without any commas. Decimal is optional.'];
 		//isDecimal = self.validations.decimal($options);
 		return ($this->decimal($options) == 'success' && (floatval($options['value']) >= 0)) ? 'success' : $messageArray;
 	}
 
 	public function email($options) {
-		$messageArray = array('Must be a valid e-mail address.');
+		$messageArray = ['Must be a valid e-mail address.'];
 		return preg_match('/^[A-Z0-9._%-\+]+@(?:[A-Z0-9\-]+\.)+[A-Z]{2,4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function integer($options) {
-		$messageArray = array('Must be a whole number.');
+		$messageArray = ['Must be a whole number.'];
 		return preg_match('/^-?\d+$/', $options['value']) ? 'success' : $messageArray;
 	}
 
 	public function integerNegative($options) {
-		$messageArray = array('Must be a negative whole number.');
+		$messageArray = ['Must be a negative whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) < 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerPositive($options) {
-		$messageArray = array('Must be a positive whole number.');
+		$messageArray = ['Must be a positive whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) > 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerZeroNegative($options) {
-		$messageArray = array('Must be zero or a negative whole number.');
+		$messageArray = ['Must be zero or a negative whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) <= 0)) ? 'success' : $messageArray;
 	}
 
 	public function integerZeroPositive($options) {
-		$messageArray = array('Must be zero or a positive whole number.');
+		$messageArray = ['Must be zero or a positive whole number.'];
 		//isInteger = preg_match('/^-?\d+$/', $options['value']);
 		return ($this->integer($options) && (intval($options['value'], 10) >= 0)) ? 'success' : $messageArray;
 	}
 
 	public function isbn($options) {
 		//Match an ISBN
-		$errorMessageArray = array('Must be a valid ISBN and consist of either ten or thirteen characters.');
+		$errorMessageArray = ['Must be a valid ISBN and consist of either ten or thirteen characters.'];
 		//For ISBN-10
 		if(preg_match('/^(?=.{13}$)\d{1,5}([\- ])\d{1,7}\1\d{1,6}\1(\d|X)$/', $options['value'])) {
 			$errorMessageArray = 'sucess';
@@ -3728,7 +3728,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function length($options) {
-		$messageArray = array('Must be exactly ' . $options['length'] .' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		$messageArray = ['Must be exactly ' . $options['length'] .' characters long. Current value is '.mb_strlen($options['value']).' characters.'];
 		return mb_strlen($options['value']) == $options['length'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
@@ -3738,74 +3738,74 @@ class JFormComponentSingleLineText extends JFormComponent {
 			return 'success';
 		}
 		else {
-			return array('Does not match.');
+			return ['Does not match.'];
 		}
 	}
 
 	public function maxLength($options) {
-		$messageArray = array('Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		$messageArray = ['Must be less than ' . $options['maxLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.'];
 		return mb_strlen($options['value']) <= $options['maxLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function maxFloat($options) {
-		$messageArray = array('Must be numeric and cannot have more than ' . $options['maxFloat'] . ' decimal place(s).');
+		$messageArray = ['Must be numeric and cannot have more than ' . $options['maxFloat'] . ' decimal place(s).'];
 		return preg_match('^-?((\\d+(\\.\\d{0,'+ $options['maxFloat'] +'})?)|(\\.\\d{0,' . $options['maxFloat'] . '}))$', $options['value'])  ? 'success' : $messageArray;
 	}
 
 	public function maxValue($options) {
-		$messageArray = array('Must be numeric with a maximum value of ' . $options['maxValue'] . '.');
+		$messageArray = ['Must be numeric with a maximum value of ' . $options['maxValue'] . '.'];
 		return $options['maxValue'] >= $options['value'] ? 'success' : $messageArray;
 	}
 
 	public function minLength($options) {
-		$messageArray = array('Must be at least ' . $options['minLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.');
+		$messageArray = ['Must be at least ' . $options['minLength'] . ' characters long. Current value is '.mb_strlen($options['value']).' characters.'];
 		return mb_strlen($options['value']) >= $options['minLength'] || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function minValue($options) {
-		$messageArray = array('Must be numeric with a minimum value of ' . $options['minValue'] . '.');
+		$messageArray = ['Must be numeric with a minimum value of ' . $options['minValue'] . '.'];
 		return $options['minValue'] <= $options['value'] ? 'success' : $messageArray;
 	}
 
 	public function money($options) {
-		$messageArray = array('Must be a valid dollar value.');
+		$messageArray = ['Must be a valid dollar value.'];
 		return preg_match('/^\$?[1-9][0-9]{0,2}(,?[0-9]{3})*(\.[0-9]{2})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function moneyNegative($options) {
-		$messageArray = array('Must be a valid negative dollar value.');
+		$messageArray = ['Must be a valid negative dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] < 0 || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function moneyPositive($options) {
-		$messageArray = array('Must be a valid positive dollar value.');
+		$messageArray = ['Must be a valid positive dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] > 0 || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function moneyZeroNegative($options) {
-		$messageArray = array('Must be zero or a valid negative dollar value.');
+		$messageArray = ['Must be zero or a valid negative dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0] <= 0 ? 'success' : $messageArray;
 	}
 
 	public function moneyZeroPositive($options) {
-		$messageArray = array('Must be zero or a valid positive dollar value.');
+		$messageArray = ['Must be zero or a valid positive dollar value.'];
 		return preg_match('/^((-?\$)|(\$-?)|(-))?((\d+(\.\d{2})?)|(\.\d{2}))$/', $options['value'], $matches) && $matches[0]= 0 || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function password($options) {
-		$messageArray = array('Must be between 4 and 32 characters.');
+		$messageArray = ['Must be between 4 and 32 characters.'];
 		return preg_match('/^.{4,32}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function phone($options) {
 		//$messageArray = array('Must be a 10 digit phone number.');
 		//return preg_match('/^(1[\-. ]?)?\(?[0-9]{3}\)?[\-. ]?[0-9]{3}[\-. ]?[0-9]{4}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray ;
-		$messageArray = array('Must be a US or International Phone Number');
+		$messageArray = ['Must be a US or International Phone Number'];
 		return preg_match('/^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function postalZip($options) {
-		$messageArray = array('Must be a valid United States zip code, Canadian postal code, or United Kingdom postal code.');
+		$messageArray = ['Must be a valid United States zip code, Canadian postal code, or United Kingdom postal code.'];
 		$postal = false;
 		if(this.zip($options) == 'success') {
 			$postal = true;
@@ -3820,7 +3820,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function required($options) {
-		$messageArray = array('Required.');
+		$messageArray = ['Required.'];
 		//return empty($options['value']) ? 'success' : $messageArray; // Break validation on purpose
 		return !empty($options['value']) || $options['value'] == '0' ? 'success' : $messageArray;
 	}
@@ -3831,7 +3831,7 @@ class JFormComponentSingleLineText extends JFormComponent {
 			return 'success';
 		}
 
-		$messageArray = array();
+		$messageArray = [];
 
 		// Perform the server side check with a scrape
 		$serverSideResponse = getUrlContent($options['url'].'&value='.$options['value']);
@@ -3870,9 +3870,9 @@ class JFormComponentSingleLineText extends JFormComponent {
 			$request = curl_exec($curlHandler);
 
 			if (!$request) {
-				$response = array('status' => 'failure', 'response' => 'CURL error ' . curl_errno($curlHandler) . ': ' . curl_error($curlHandler));
+				$response = ['status' => 'failure', 'response' => 'CURL error ' . curl_errno($curlHandler) . ': ' . curl_error($curlHandler)];
 			} else {
-				$response = array('status' => 'success', 'response' => $request);
+				$response = ['status' => 'success', 'response' => $request];
 			}
 
 			return $response;
@@ -3880,12 +3880,12 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function ssn($options) {
-		$messageArray = array('Must be a valid United States social security number.');
+		$messageArray = ['Must be a valid United States social security number.'];
 		return preg_match('/^\d{3}-?\d{2}-?\d{4}$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function teenager($options) {
-		$messageArray = array('Must be at least 13 years old.');
+		$messageArray = ['Must be at least 13 years old.'];
 		if($this->date($options) == 'success') {
 			$oldEnough = strtotime($options['value']) - strtotime('-13 years');
 		}
@@ -3896,27 +3896,27 @@ class JFormComponentSingleLineText extends JFormComponent {
 	}
 
 	public function time($options) {
-		$messageArray = array('Must be a time in the hh:mm:ss tt format. ss and tt are optional.');
+		$messageArray = ['Must be a time in the hh:mm:ss tt format. ss and tt are optional.'];
 		return preg_match('/^[0-2]?\d:[0-5]\d(:[0-5]\d)?( ?(a|p)m)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function ukPostal($options) {
-		$messageArray = array('Must be a valid United Kingdom postal code.');
+		$messageArray = ['Must be a valid United Kingdom postal code.'];
 		return preg_match('/^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function url($options) {
-		$messageArray = array('Must be a valid Internet address.');
+		$messageArray = ['Must be a valid Internet address.'];
 		return preg_match('/^((ht|f)tp(s)?:\/\/|www\.)?([\-A-Z0-9.]+)(\.[a-zA-Z]{2,4})(\/[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?(\?[\-A-Z0-9+&@#\/%=~_|!:,.;]*)?$/i', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function username($options) {
-		$messageArray = array('Must use 4 to 32 characters and start with a letter.');
+		$messageArray = ['Must use 4 to 32 characters and start with a letter.'];
 		return preg_match('/^[A-Za-z](?=[A-Za-z0-9_.]{3,31}$)[a-zA-Z0-9_]*\.?[a-zA-Z0-9_]*$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
 	public function zip($options) {
-		$messageArray = array('Must be a valid United States zip code.');
+		$messageArray = ['Must be a valid United States zip code.'];
 		return preg_match('/^[0-9]{5}(?:-[0-9]{4})?$/', $options['value']) || $options['value'] == '' ? 'success' : $messageArray;
 	}
 
@@ -3928,15 +3928,15 @@ class JFormComponentTextArea extends JFormComponent {
     /*
      * Constructor
      */
-    function __construct($id, $label, $optionArray = array()) {
+    public function __construct($id, $label, $optionArray = []) {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
         $this->label = $label;
         $this->class = 'jFormComponentTextArea';
         $this->inputClass = 'textArea';
-        $this->widthArray = array('shortest' => '5em', 'short' => '10em', 'medium' => '20em', 'long' => '30em', 'longest' => '40em');
-        $this->heightArray = array('short' => '6em', 'medium' => '12em', 'tall' => '18em');
+        $this->widthArray = ['shortest' => '5em', 'short' => '10em', 'medium' => '20em', 'long' => '30em', 'longest' => '40em'];
+        $this->heightArray = ['short' => '6em', 'medium' => '12em', 'tall' => '18em'];
 
         // Input options
         $this->initialValue = '';
@@ -3954,11 +3954,11 @@ class JFormComponentTextArea extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    function hasInstanceValues() {
+    public function hasInstanceValues() {
         return is_array($this->value);
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
         // Tabbing
@@ -3983,16 +3983,16 @@ class JFormComponentTextArea extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $div = $this->generateComponentDiv();
 
         // Add the input tag
-        $textArea = new JFormElement('textarea', array(
+        $textArea = new JFormElement('textarea', [
             'id' => $this->id,
             'name' => $this->name,
             'class' => $this->inputClass,
-        ));
+        ]);
         if(!empty($this->width)) {
             if(array_key_exists($this->width, $this->widthArray)) {
                 $textArea->setAttribute('style', 'width: '.$this->widthArray[$this->width].';');

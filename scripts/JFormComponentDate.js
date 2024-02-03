@@ -60,7 +60,7 @@ JFormComponentDate = JFormComponent.extend({
                 var selectedDate = self.getDateFromObject(options.value);
                 if(selectedDate < minDate) {
                     errorMessageArray.push('Date must be on or after ' + self.monthArray[minDate.getMonth()] + ' ' + minDate.getDate() + ', ' + minDate.getFullYear() + '.');
-                }                
+                }
                 return errorMessageArray.length < 1 ? 'success' : errorMessageArray;
             },
             'maxDate': function(options) {
@@ -114,7 +114,7 @@ JFormComponentDate = JFormComponent.extend({
             value = value.split(value.match(/[^\d]/));
             if (value[0] != undefined){
                 date.month = value[0];
-            } 
+            }
             if(value[1] != undefined) {
                 date.day = value[1];
             }
@@ -122,7 +122,7 @@ JFormComponentDate = JFormComponent.extend({
                 date.year = value[2];
             }
         }
-        
+
         return date;
     },
 
@@ -148,7 +148,7 @@ JFormComponentDate = JFormComponent.extend({
                 $('#'+this.id).val('');
             }
         }
-        
+
         this.validate(true);
         return ;
 

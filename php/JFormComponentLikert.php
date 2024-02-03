@@ -1,15 +1,15 @@
 <?php
 
 class JFormComponentLikert extends JFormComponent {
-    var $choiceArray = array();
-    var $statementArray = array();
-    var $showTableHeading = true;
-    var $collapseLabelIntoTableHeading = false;
+    public $choiceArray = [];
+    public $statementArray = [];
+    public $showTableHeading = true;
+    public $collapseLabelIntoTableHeading = false;
 
     /**
      * Constructor
      */
-    function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
+    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -23,12 +23,12 @@ class JFormComponentLikert extends JFormComponent {
         $this->initialize($optionsArray);
     }
 
-    function getOptions() {
+    public function getOptions() {
         $options = parent::getOptions();
 
-        $statementArray = array();
+        $statementArray = [];
         foreach($this->statementArray as $statement) {
-            $statementArray[$statement['name']] = array();
+            $statementArray[$statement['name']] = [];
 
             if(!empty($statement['validationOptions'])) {
                 $statementArray[$statement['name']]['validationOptions'] = $statement['validationOptions'];
@@ -43,7 +43,7 @@ class JFormComponentLikert extends JFormComponent {
 
         // Make sure you have an options array to manipulate
         if(!isset($options['options'])) {
-            $options['options']  = array();
+            $options['options']  = [];
         }
 
         return $options;
@@ -53,31 +53,31 @@ class JFormComponentLikert extends JFormComponent {
      *
      * @return string
      */
-    function __toString() {
+    public function __toString() {
         // Generate the component div
         $componentDiv = parent::generateComponentDiv(!$this->collapseLabelIntoTableHeading);
 
         // Create the table
-        $table = new JFormElement('table', array('class' => 'jFormComponentLikertTable'));
+        $table = new JFormElement('table', ['class' => 'jFormComponentLikertTable']);
 
         // Generate the first row
         if($this->showTableHeading) {
-            $tableHeadingRow = new JFormElement('tr', array('class' => 'jFormComponentLikertTableHeading'));
+            $tableHeadingRow = new JFormElement('tr', ['class' => 'jFormComponentLikertTableHeading']);
 
-            $tableHeading = new JFormElement('th', array(
+            $tableHeading = new JFormElement('th', [
                 'class' => 'jFormComponentLikertStatementColumn',
-            ));
+            ]);
             // Collapse the label into the heading if the option is set
             if($this->collapseLabelIntoTableHeading) {
-                $tableHeadingLabel = new JFormElement('label', array(
+                $tableHeadingLabel = new JFormElement('label', [
                     'class' => 'jFormComponentLikertStatementLabel',
-                ));
+                ]);
                 $tableHeadingLabel->update($this->label);
                 // Add the required star to the label
                 if(in_array('required', $this->validationOptions)) {
-                    $labelRequiredStarSpan = new JFormElement('span', array(
+                    $labelRequiredStarSpan = new JFormElement('span', [
                         'class' => $this->labelRequiredStarClass
-                    ));
+                    ]);
                     $labelRequiredStarSpan->update(' *');
                     $tableHeadingLabel->insert($labelRequiredStarSpan);
                 }
@@ -90,7 +90,7 @@ class JFormComponentLikert extends JFormComponent {
             }
             $table->insert($tableHeadingRow);
         }
-        
+
         // Insert each of the statements
         $statementCount = 0;
         foreach($this->statementArray as $statement) {
@@ -103,28 +103,28 @@ class JFormComponentLikert extends JFormComponent {
             }
 
             // Set the statement
-            $statementRow = new JFormElement('tr', array('class' => $statementRowClass));
-            $statementColumn = new JFormElement('td', array('class' => 'jFormComponentLikertStatementColumn'));
-            $statementLabel = new JFormElement('label', array(
+            $statementRow = new JFormElement('tr', ['class' => $statementRowClass]);
+            $statementColumn = new JFormElement('td', ['class' => 'jFormComponentLikertStatementColumn']);
+            $statementLabel = new JFormElement('label', [
                 'class' => 'jFormComponentLikertStatementLabel',
                 'for' => $statement['name'].'-choice1',
-            ));
+            ]);
             $statementColumn->insert($statementLabel->insert($statement['statement']));
 
             // Set the statement description (optional)
             if(!empty($statement['description'])) {
-                $statementDescription = new JFormElement('div', array(
+                $statementDescription = new JFormElement('div', [
                     'class' => 'jFormComponentLikertStatementDescription',
-                ));
+                ]);
                 $statementColumn->insert($statementDescription->update($statement['description']));
             }
 
             // Insert a tip (optional)
             if(!empty($statement['tip'])) {
-                $statementTip = new JFormElement('div', array(
+                $statementTip = new JFormElement('div', [
                     'class' => 'jFormComponentLikertStatementTip',
                     'style' => 'display: none;',
-                ));
+                ]);
                 $statementColumn->insert($statementTip->update($statement['tip']));
             }
 
@@ -134,12 +134,12 @@ class JFormComponentLikert extends JFormComponent {
             foreach($this->choiceArray as $choice) {
                 $choiceColumn = new JFormElement('td');
 
-                $choiceInput = new JFormElement('input', array(
+                $choiceInput = new JFormElement('input', [
                     'id' => $statement['name'].'-choice'.$choiceCount,
                     'type' => 'radio',
                     'value' => $choice['value'],
                     'name' => $statement['name'],
-                ));
+                ]);
                 // Set a selected value if defined
                 if(!empty($statement['selected'])) {
                     if($statement['selected'] == $choice['value']) {
@@ -150,10 +150,10 @@ class JFormComponentLikert extends JFormComponent {
 
                 // Choice sub labels
                 if(!empty($choice['sublabel'])) {
-                    $choiceSublabel = new JFormElement('label', array(
+                    $choiceSublabel = new JFormElement('label', [
                         'class' => 'jFormComponentLikertSublabel',
                         'for' => $statement['name'].'-choice'.$choiceCount,
-                    ));
+                    ]);
                     $choiceSublabel->update($choice['sublabel']);
                     $choiceColumn->insert($choiceSublabel);
                 }
@@ -179,12 +179,12 @@ class JFormComponentLikert extends JFormComponent {
 
     // Validation
     public function required($options) {
-        $errorMessageArray = array();
+        $errorMessageArray = [];
         foreach($options['value'] as $key => $statement) {
             if(empty($statement)) {
                 //print_r($key);
                 //print_r($statement);
-                array_push($errorMessageArray, array($key => 'Required.'));
+                array_push($errorMessageArray, [$key => 'Required.']);
             }
         }
 
@@ -196,7 +196,7 @@ class JFormComponentLikertStatement extends JFormComponent {
     /**
      * Constructor
      */
-    function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
+    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -206,7 +206,7 @@ class JFormComponentLikertStatement extends JFormComponent {
         $this->initialize($optionsArray);
     }
 
-    function  __toString() {
+    public function  __toString() {
         return;
     }
 }

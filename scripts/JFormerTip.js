@@ -25,7 +25,7 @@
         else {
             wrappedContent = ['<span class="tipArrow"></span><div class="tipContent">',conf.content.html(),'</div>'].join('');
         }
-        
+
 
         var tooltip = jQuery(conf.content)
         .addClass(conf.baseClass)
@@ -36,7 +36,7 @@
             if(tooltip.is(':visible')) {
                 self.updatePos();
             }
-            
+
         });
 
         jQuery.extend(self,

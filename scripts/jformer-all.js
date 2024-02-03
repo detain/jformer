@@ -284,7 +284,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-DateInput = (function($) { 
+DateInput = (function($) {
 
     function DateInput(element, options) {
         if (typeof(opts) != "object") options = {};
@@ -296,7 +296,7 @@ DateInput = (function($) {
         this.input.after(button);
         this.button = $(element).parent().find('span.jFormComponentDateButton');
         this.bindMethodsToObj("show", "hide", "hideIfClickOutside", "keydownHandler", "selectDate");
-  
+
         this.build();
         this.selectDate();
         this.hide();
@@ -321,7 +321,7 @@ DateInput = (function($) {
             $(".jFormComponentDateSelectorNext", monthNav).click(this.bindToObj(function() {
                 this.moveMonthBy(1);
             }));
-    
+
             var yearNav = $('<p class="jFormComponentDateSelectorYearNavigator">' +
                 '<span class="jFormComponentDateSelectorButton jFormComponentDateSelectorPrevious" title="[Ctrl+Page-Up]">&#171;</span>' +
                 ' <span class="jFormComponentDateSelectorYearName"></span> ' +
@@ -334,22 +334,22 @@ DateInput = (function($) {
             $(".jFormComponentDateSelectorNext", yearNav).click(this.bindToObj(function() {
                 this.moveMonthBy(12);
             }));
-    
+
             var nav = $('<div class="jFormComponentDateSelectorNavigator"></div>').append(monthNav, yearNav);
-    
+
             var tableShell = "<table><thead><tr>";
             $(this.adjustDays(this.short_day_names)).each(function() {
                 tableShell += "<th>" + this + "</th>";
             });
             tableShell += "</tr></thead><tbody></tbody></table>";
-    
+
             this.dateSelector = this.rootLayers = $('<div class="jFormComponentDateSelector"></div>').append(nav, tableShell).insertAfter(this.input);
-    
+
             if ($.browser.msie && $.browser.version < 7) {
-      
+
                 this.ieframe = $('<iframe class="jFormComponentDateSelectorIEFrame" frameborder="0" src="#"></iframe>').insertBefore(this.dateSelector);
                 this.rootLayers = this.rootLayers.add(this.ieframe);
-      
+
                 $(".jFormComponentDateSelectorButton", nav).mouseover(function() {
                     $(this).addClass("hover")
                 });
@@ -357,9 +357,9 @@ DateInput = (function($) {
                     $(this).removeClass("hover")
                 });
             };
-    
+
             this.tbody = $("tbody", this.dateSelector);
-    
+
             this.input.change(this.bindToObj(function() {
                 this.selectDate();
             }));
@@ -368,40 +368,40 @@ DateInput = (function($) {
 
         selectMonth: function(date) {
             var newMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-    
+
             if (!this.currentMonth || !(this.currentMonth.getFullYear() == newMonth.getFullYear() &&
                 this.currentMonth.getMonth() == newMonth.getMonth())) {
-      
+
                 this.currentMonth = newMonth;
-      
+
                 var rangeStart = this.rangeStart(date), rangeEnd = this.rangeEnd(date);
                 var numDays = this.daysBetween(rangeStart, rangeEnd);
                 var dayCells = "";
-      
+
                 for (var i = 0; i <= numDays; i++) {
                     var currentDay = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), rangeStart.getDate() + i, 12, 00);
-        
+
                     if (this.isFirstDayOfWeek(currentDay)) dayCells += "<tr>";
-        
+
                     if (currentDay.getMonth() == date.getMonth()) {
                         dayCells += '<td class="jFormComponentDateSelectorSelectedDay" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
                     } else {
                         dayCells += '<td class="jFormComponentDateSelectorUnselectedMonth" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
                     };
-        
+
                     if (this.isLastDayOfWeek(currentDay)) dayCells += "</tr>";
                 };
                 this.tbody.empty().append(dayCells);
-      
+
                 this.monthNameSpan.empty().append(this.monthName(date));
                 this.yearNameSpan.empty().append(this.currentMonth.getFullYear());
-      
+
                 $(".jFormComponentDateSelectorSelectedDay", this.tbody).click(this.bindToObj(function(event) {
                     this.changeInput($(event.target).attr("date"));
                 }));
-      
+
                 $('td[date="' + this.dateToString(new Date()) + '"]', this.tbody).addClass("jFormComponentDateSelectorToday");
-      
+
                 $("td.jFormComponentDateSelectorSelectedDay", this.tbody).mouseover(function() {
                     $(this).addClass("hover")
                 });
@@ -409,27 +409,27 @@ DateInput = (function($) {
                     $(this).removeClass("hover")
                 });
             };
-    
+
             $('.jFormComponentDateSelectorSelected', this.tbody).removeClass("jFormComponentDateSelectorSelected");
             $('td[date="' + this.selectedDateString + '"]', this.tbody).addClass("jFormComponentDateSelectorSelected");
         },
-  
+
         selectDate: function(date) {
             if (typeof(date) == "undefined") {
                 date = this.stringToDate(this.input.val());
             };
             if (!date) date = new Date();
-    
+
             this.selectedDate = date;
             this.selectedDateString = this.dateToString(this.selectedDate);
             this.selectMonth(this.selectedDate);
         },
-  
+
         changeInput: function(dateString) {
             this.input.val(dateString).change();
             this.hide();
         },
-  
+
         show: function() {
             this.rootLayers.css("display", "block");
             this.button.unbind("click", this.show);
@@ -438,7 +438,7 @@ DateInput = (function($) {
             $([window, document.body]).click(this.hideIfClickOutside);
             this.setPosition();
         },
-  
+
         hide: function() {
             this.rootLayers.css("display", "none");
             $([window, document.body]).unbind("click", this.hideIfClickOutside);
@@ -446,25 +446,25 @@ DateInput = (function($) {
             this.input.focus(this.show);
             $(document.body).unbind("keydown", this.keydownHandler);
         },
-  
+
         hideIfClickOutside: function(event) {
             if (event.target != this.input[0] && event.target != this.button[0] && !this.insideSelector(event)) {
                 this.hide();
             };
         },
-  
+
         insideSelector: function(event) {
             var offset = this.dateSelector.offset();
             offset.right = offset.left + this.dateSelector.outerWidth();
             offset.bottom = offset.top + this.dateSelector.outerHeight();
 
-    
+
             return event.pageY < offset.bottom &&
             event.pageY > offset.top &&
             event.pageX < offset.right &&
             event.pageX > offset.left;
         },
-  
+
         keydownHandler: function(event) {
             switch (event.keyCode)
             {
@@ -499,7 +499,7 @@ DateInput = (function($) {
             }
             event.preventDefault();
         },
-  
+
         stringToDate: function(string) {
             string = string.replace(/[^\d]/g, '/');
             if (string.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4,4})$/)) {
@@ -508,7 +508,7 @@ DateInput = (function($) {
                 return null;
             };
         },
-  
+
         dateToString: function(date) {
             return padString(date.getMonth()+1) +'/'+ padString(date.getDate()) +"/"+ date.getFullYear();
 
@@ -520,7 +520,7 @@ DateInput = (function($) {
                 return number;
             }
         },
-  
+
         setPosition: function() {
             var offset = this.button.position();
             this.rootLayers.css({
@@ -548,88 +548,88 @@ DateInput = (function($) {
                 });
             }
         },
-  
+
         moveDateBy: function(amount) {
             var newDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), this.selectedDate.getDate() + amount);
             this.selectDate(newDate);
         },
-  
+
         moveDateMonthBy: function(amount) {
             var newDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() + amount, this.selectedDate.getDate());
             if (newDate.getMonth() == this.selectedDate.getMonth() + amount + 1) {
-      
+
                 newDate.setDate(0);
             };
             this.selectDate(newDate);
         },
-  
+
         moveMonthBy: function(amount) {
             var newMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + amount, this.currentMonth.getDate());
             this.selectMonth(newMonth);
         },
-  
+
         monthName: function(date) {
             return this.jFormComponentDateSelectorMonthNames[date.getMonth()];
         },
-  
+
         bindToObj: function(fn) {
             var self = this;
             return function() {
                 return fn.apply(self, arguments)
             };
         },
-  
+
         bindMethodsToObj: function() {
             for (var i = 0; i < arguments.length; i++) {
                 this[arguments[i]] = this.bindToObj(this[arguments[i]]);
             };
         },
-  
+
         indexFor: function(array, value) {
             for (var i = 0; i < array.length; i++) {
                 if (value == array[i]) return i;
             };
         },
-  
+
         monthNum: function(jFormComponentDateSelectorMonthName) {
             return this.indexFor(this.jFormComponentDateSelectorMonthNames, jFormComponentDateSelectorMonthName);
         },
-  
+
         shortMonthNum: function(jFormComponentDateSelectorMonthName) {
             return this.indexFor(this.short_jFormComponentDateSelectorMonthNames, jFormComponentDateSelectorMonthName);
         },
-  
+
         shortDayNum: function(day_name) {
             return this.indexFor(this.short_day_names, day_name);
         },
-  
+
         daysBetween: function(start, end) {
             start = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
             end = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
             return (end - start) / 86400000;
         },
-  
+
         changeDayTo: function(dayOfWeek, date, direction) {
             var difference = direction * (Math.abs(date.getDay() - dayOfWeek - (direction * 7)) % 7);
             return new Date(date.getFullYear(), date.getMonth(), date.getDate() + difference);
         },
-  
+
         rangeStart: function(date) {
             return this.changeDayTo(this.start_of_week, new Date(date.getFullYear(), date.getMonth()), -1);
         },
-  
+
         rangeEnd: function(date) {
             return this.changeDayTo((this.start_of_week - 1) % 7, new Date(date.getFullYear(), date.getMonth() + 1, 0), 1);
         },
-  
+
         isFirstDayOfWeek: function(date) {
             return date.getDay() == this.start_of_week;
         },
-  
+
         isLastDayOfWeek: function(date) {
             return date.getDay() == (this.start_of_week - 1) % 7;
         },
-  
+
         adjustDays: function(days) {
             var newDays = [];
             for (var i = 0; i < days.length; i++) {
@@ -651,7 +651,7 @@ DateInput = (function($) {
     };
 
     return DateInput;
-})(jQuery); 
+})(jQuery);
 /*
 	Masked Input plugin for jQuery
 	Copyright (c) 2007-2009 Josh Bush (digitalbush.com)
@@ -982,7 +982,7 @@ DateInput = (function($) {
         else {
             wrappedContent = ['<span class="tipArrow"></span><div class="tipContent">',conf.content.html(),'</div>'].join('');
         }
-        
+
 
         var tooltip = jQuery(conf.content)
         .addClass(conf.baseClass)
@@ -993,7 +993,7 @@ DateInput = (function($) {
             if(tooltip.is(':visible')) {
                 self.updatePos();
             }
-            
+
         });
 
         jQuery.extend(self,
@@ -1385,7 +1385,7 @@ JFormer = Class.extend({
 		if(this.options.setupPageScroller) {
 			this.setupPageScroller();
 		}
-		
+
 		// Hide all inactive pages
 		this.hideInactivePages();
 
@@ -1420,11 +1420,11 @@ JFormer = Class.extend({
 		var self = this
 		var each = $.each;
 		var dependencies = {};
-		
+
 		each(jFormPages, function(jFormPageKey, jFormPageValue) {
 			var jFormPage = new JFormPage(self, jFormPageKey, jFormPageValue.options);
 			jFormPage.show();
-			
+
 			// Handle page level dependencies
 			if(jFormPage.options.dependencyOptions !== null) {
 				$.each(jFormPage.options.dependencyOptions.dependentOn, function(index, componentId) {
@@ -1501,7 +1501,7 @@ JFormer = Class.extend({
 		// Add listeners for all of the components that are being dependent on
 		// We group the component event listeners to prevent them from constantly being called
 		$.each(dependencies, function(componentId, dependentTypes) {
-			
+
 			$('#'+componentId+':text, textarea#'+componentId).bind('keyup', function(event) {
 				$.each(dependentTypes.pages, function(index, object) {
 					self.jFormPages[object.jFormPageId].checkDependencies();
@@ -1629,7 +1629,7 @@ JFormer = Class.extend({
 
 		// Set the width of each page
 		pages.css('width', this.form.find('.jFormWrapperContainer').width());
-		
+
 		// Mark the splash page as inactive
 		self.options.splashPage.jFormPage.active = false;
 
@@ -1708,7 +1708,7 @@ updatePageNavigator: function() {
 				}
 
 				self.currentJFormPageIdArrayIndex = pageIndex;
-					
+
 			});
 		}
 	}
@@ -1726,7 +1726,7 @@ renumberPageNavigator: function() {
 		}
 	});
 },
-	
+
 addJFormPage: function(jFormPage) {
 	this.jFormPageIdArray.push(jFormPage.id);
 	this.jFormPages[jFormPage.id] = jFormPage;
@@ -1850,7 +1850,7 @@ setupPageScroller: function(options) {
 		activePageOuterHeight : self.getActivePage().page.outerHeight()
 	};
 	options = $.extend(defaultOptions, options);
-		
+
 	// Find all of the pages
 	var pages = this.form.find('.jFormPage');
 
@@ -1940,7 +1940,7 @@ setupControl: function() {
 			self.scrollToPage(self.jFormPageIdArray[self.currentJFormPageIdArrayIndex]);
 		}
 	});
-	   
+
 	// First page with more pages after, or splash page
 	if(this.currentJFormPageIdArrayIndex === 0 && this.currentJFormPageIdArrayIndex != this.jFormPageIdArray.length - 1 && this.lastEnabledPage === false) {
 		this.controlNextButton.html('Next');
@@ -2014,7 +2014,7 @@ setupControl: function() {
 		});
 	}
 },
-	
+
 scrollToPage: function(jFormPageId, options) {
 	//console.log('JFormer('+this.id+'):scrollToPage', jFormPageId, options);
 
@@ -2046,7 +2046,7 @@ scrollToPage: function(jFormPageId, options) {
 			} else {
 				self.control.append('<li class="jformerScrollToNotification">'+this.jFormPages[jFormPageId].options.onScrollTo.notificationHtml+'<li>');
 			}
-				
+
 		}
 		this.jFormPages[jFormPageId].options.onScrollTo.onBefore();
 	}
@@ -2089,7 +2089,7 @@ scrollToPage: function(jFormPageId, options) {
 
 	// Scroll the document the top of the form
 	this.scrollToTop();
-		
+
 	// PageWrapper is like a viewport - this scrolls to the top of the new page, but the document needs to be scrolled too
 	var initializing = this.initializing;
 	this.jFormPageWrapper.scrollTo(
@@ -2353,7 +2353,7 @@ submitForm: function(event) {
 			$(fileInput).appendTo(formClone);
 		}
 	});
-		
+
 	// Submit the form
 	formClone.submit();
 	formClone.remove(); // Ninja vanish!
@@ -2372,7 +2372,7 @@ submitForm: function(event) {
 
 handleFormSubmissionResponse: function(json) {
 	var self = this;
-		
+
 	// Remove the processing li from the form control
 	this.control.find('.processingLi').remove();
 
@@ -2732,7 +2732,7 @@ JFormPage = Class.extend({
 
         var self = this;
         var each = $.each;
-        
+
         self.validationPassed = true;
         each(this.jFormSections, function(sectionKey, section) {
            each(section.instanceArray, function(instanceIndex, sectionInstance){
@@ -2934,7 +2934,7 @@ JFormSection = Class.extend({
             if(this.options.dependencyOptions !== null){
                 if(this.options.dependencyOptions.display == 'hide'){
                     addButton.hide();
-                } 
+                }
             }
             this.instanceArray[this.instanceArray.length - 1].section.after(addButton);
             this.parentJFormPage.page.find('#'+buttonId).bind('click', function(event){
@@ -2971,7 +2971,7 @@ JFormSection = Class.extend({
 
             if(sectionHtmlExists) {
 				instanceClone = $('#'+this.id+'-section'+this.iterations);
-				
+
             }
             else {
                 instanceClone = this.clone.clone();
@@ -3011,7 +3011,7 @@ JFormSection = Class.extend({
                         target.parent().slideUp(animationOptions.removeDuration, function(){
                             target.parent().remove();
                             target.remove();
-                            
+
                         });
                         //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
                         parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
@@ -3026,7 +3026,7 @@ JFormSection = Class.extend({
                         });
                     }
                 }
-                
+
                 if(parent.instanceArray.length < parent.options.instanceOptions.max || parent.options.instanceOptions.max === 0){
                     parent.parentJFormPage.page.find('#'+parent.id+'-addInstance').show();
                 }
@@ -3047,7 +3047,7 @@ JFormSection = Class.extend({
                 // Show the instance section with an animation
                 else {
                     if(animationOptions.appearEffect == 'slide'){
-                    
+
                         instanceClone.slideDown(animationOptions.appearDuration, function(){
                             //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
                             parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
@@ -3171,7 +3171,7 @@ JFormSection = Class.extend({
                     } else {
                         label.text(label.text() + ' ('+count+')');
                     }
-                    
+
                 }
             }
         });
@@ -3239,7 +3239,7 @@ JFormSection = Class.extend({
                     }
                 });
             /*$.each(self.instanceArray[index].jFormComponents, function(key, component){
-                   
+
                    component.setData(instance[key]);
                });*/
             });
@@ -3249,7 +3249,7 @@ JFormSection = Class.extend({
                 if(self.jFormComponents[key] != undefined){
                     self.jFormComponents[key].setData(componentData);
                 }
-                
+
             });
         }
     },
@@ -3312,7 +3312,7 @@ JFormSection = Class.extend({
                             });
                         }
                     }
-                    
+
                 }
                 // Lock the section and disable all inputs
                 else {
@@ -3444,7 +3444,7 @@ JFormComponent = Class.extend({
                 this.clone = null;
             }
             this.instanceArray = [this];
-            this.createInstanceButton();   
+            this.createInstanceButton();
         }
 
         // Intitialize the implemented component
@@ -3461,7 +3461,7 @@ JFormComponent = Class.extend({
         this.defineComponentChangedEventListener();
         this.catchComponentChangedEventListener();
 
-        
+
 
         // Tip listeners
         this.addTipListeners();
@@ -3476,7 +3476,7 @@ JFormComponent = Class.extend({
                 self.highlight();
             } );
             $(input).bind('blur', function(event) {
-                
+
                 self.removeHighlight();
 
                 // Handle multifield highlight and validation
@@ -3678,7 +3678,7 @@ JFormComponent = Class.extend({
         if(this.options.dependencyOptions !== null){
             addButton.hide();
         }
-        
+
           this.component.after(addButton);
           //this.component.after('<button id="'+this.id+'-addInstance" class="jFormComponentAddInstanceButton">'+this.options.instanceAddText+'</button>');
           this.parentJFormSection.section.find('#'+this.id+'-addInstance').bind('click', function(event){
@@ -3714,12 +3714,12 @@ JFormComponent = Class.extend({
 
             // Create the remove button
             $(instanceClone).append('<button id="'+this.id+'-removeInstance" class="jFormComponentRemoveInstanceButton">'+this.options.instanceOptions.removeButtonText+'</button>');
-            
+
             // Add an event listener on the remove button
             instanceClone.find('#'+this.id+'-removeInstance').bind('click', function(event){
                 var target = $(event.target);
                 event.preventDefault();
-                
+
                 parent.instanceArray = $.map(parent.instanceArray, function(cloneId, index){
                    if(cloneId.component.attr('id') ==  target.parent().attr('id')){
                        if(cloneId.tip != null){
@@ -3740,7 +3740,7 @@ JFormComponent = Class.extend({
                             //parent.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
                             parent.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                         })
-                        
+
                     }else {
                         target.parent().fadeOut(animationOptions.removeDuration, function(){
                             target.parent().remove();
@@ -3780,7 +3780,7 @@ JFormComponent = Class.extend({
             }
 
             this.nameInstance(instanceClone);
-            
+
             var instanceObject = this.createInstanceObject(instanceClone, this.options);
             this.instanceArray.push(instanceObject);
             this.relabelInstances(this.instanceArray, animationOptions);
@@ -3804,7 +3804,7 @@ JFormComponent = Class.extend({
                 });
 
                 instanceObject.component.bind('jFormComponent:changed', function(event) {
-                    
+
                         $.each(parent.options.dependencies.pages, function(index, object) {
                             objectTop.jFormPages[object.jFormPageId].checkDependencies();
                         });
@@ -3819,7 +3819,7 @@ JFormComponent = Class.extend({
             if(this.disabledByDependency){
                 this.disableByDependency(true);
             }
-            
+
             // Resize the page
             //parent.parentJFormSection.parentJFormPage.scrollTo();
         }
@@ -3953,7 +3953,7 @@ JFormComponent = Class.extend({
             if(self.tip && typeof(self.tip) == 'object' && $.trim(self.tipDiv.html()) !== '') {
                 self.tip.show();
             }
-            
+
         });
 
         // Hide a tip
@@ -4049,7 +4049,7 @@ JFormComponent = Class.extend({
                 if(silent){
                     silentValidationPassed = false;
                 } else {
-                    $.merge(self.errorMessageArray, validation);   
+                    $.merge(self.errorMessageArray, validation);
                 }
             }
         });
@@ -4166,7 +4166,7 @@ JFormComponent = Class.extend({
             }
             elementsToDisable = elementsToDisable.add(addButton);
         }
-  
+
         if(self.parentJFormSection.parentJFormPage.jFormer.initializing) {
             animationOptions = {
                 adjustHeightDelay : 0,
@@ -4201,7 +4201,7 @@ JFormComponent = Class.extend({
                                 self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                             });
                         }else if(animationOptions.hideEffect === 'fade'){
-                        
+
                             elementsToDisable.slideUp(animationOptions.hideDuration, function() {
                                 self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                             });
@@ -4219,16 +4219,16 @@ JFormComponent = Class.extend({
                 if(this.options.dependencyOptions.display == 'hide') {
                     //console.log('showing component')
                     if(animationOptions.appearEffect == 'none' || animationOptions.apearDuration === 0){
-                        
+
                         elementsToDisable.show();
                         self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                     }else {
                         if(animationOptions.appearEffect === 'fade'){
-                        
+
                             elementsToDisable.fadeIn(animationOptions.appearDuration);
                             self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                         }else if(animationOptions.appearEffect === 'slide'){
-                        
+
                             elementsToDisable.slideDown(animationOptions.appearDuration);
                             self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                         }
@@ -4286,7 +4286,7 @@ JFormComponentAddress = JFormComponent.extend({
                 return errorMessageArray.length < 1 ? 'success' : errorMessageArray;
             }
         }
-        
+
         this.changed = false;
     },
 
@@ -4386,7 +4386,7 @@ JFormComponentAddress = JFormComponent.extend({
         if(!this.changed){
             this._super();
         }
-        
+
         setTimeout(function() {
             if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){
@@ -4454,7 +4454,7 @@ JFormComponentAddress = JFormComponent.extend({
                 }
                 if(options.value.cardNumber == '') {
                     errorMessageArray.push(['Credit card number is required.']);
-                } 
+                }
                 if(options.value.cardNumber != '' && options.value.cardNumber.match(/[^\d]/)){
                     errorMessageArray.push(['Card number may only contain numbers.']);
                 }
@@ -4479,7 +4479,7 @@ JFormComponentAddress = JFormComponent.extend({
                 return errorMessageArray.length < 1 ? 'success' : errorMessageArray;
             }
         }
-        
+
         this.changed = false;
     },
 
@@ -4491,7 +4491,7 @@ JFormComponentAddress = JFormComponent.extend({
             }
             if(data.cardNumber != this.options.emptyValues.cardNumber){
                 self.component.find(':input[id*=cardNumber]').removeClass('defaultValue').val(data.cardNumber).blur();
-            }            
+            }
             self.component.find(':input[id*=expirationMonth]').removeClass('defaultValue').val(data.expirationMonth).blur();
             self.component.find(':input[id*=expirationYear]').removeClass('defaultValue').val(data.expirationYear).blur();
             if(data.securityCode != undefined && data.securityCode != this.options.emptyValues.securityCode){
@@ -4558,7 +4558,7 @@ JFormComponentAddress = JFormComponent.extend({
         if(!this.changed){
             this._super();
         }
-        
+
         setTimeout(function() {
             if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){
@@ -4669,7 +4669,7 @@ JFormComponentAddress = JFormComponent.extend({
                 var selectedDate = self.getDateFromObject(options.value);
                 if(selectedDate < minDate) {
                     errorMessageArray.push('Date must be on or after ' + self.monthArray[minDate.getMonth()] + ' ' + minDate.getDate() + ', ' + minDate.getFullYear() + '.');
-                }                
+                }
                 return errorMessageArray.length < 1 ? 'success' : errorMessageArray;
             },
             'maxDate': function(options) {
@@ -4723,7 +4723,7 @@ JFormComponentAddress = JFormComponent.extend({
             value = value.split(value.match(/[^\d]/));
             if (value[0] != undefined){
                 date.month = value[0];
-            } 
+            }
             if(value[1] != undefined) {
                 date.day = value[1];
             }
@@ -4731,7 +4731,7 @@ JFormComponentAddress = JFormComponent.extend({
                 date.year = value[2];
             }
         }
-        
+
         return date;
     },
 
@@ -4757,7 +4757,7 @@ JFormComponentAddress = JFormComponent.extend({
                 $('#'+this.id).val('');
             }
         }
-        
+
         this.validate(true);
         return ;
 
@@ -4802,7 +4802,7 @@ JFormComponentDropDown = JFormComponent.extend({
     init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
         this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
     },
-    
+
     initialize: function(){
         var tipTarget = this.component.find('button').parent();
         if (tipTarget.length < 1){
@@ -4859,7 +4859,7 @@ JFormComponentDropDown = JFormComponent.extend({
             var value = event.target.value.replace(/.+\\/, '');
             self.component.find('input:text').val(value);
         });
-        
+
     },
 
     setValue: function() {
@@ -4954,7 +4954,7 @@ JFormComponentLikert = JFormComponent.extend({
     handleServerValidationResponse: function(errorMessageArray) {
         var self = this;
         if(errorMessageArray.length > 0) {
-            $.each(this.instanceArray, function(key, instance){    
+            $.each(this.instanceArray, function(key, instance){
                 $.each(errorMessageArray, function(index, passedErrorArray){
                     $.each(passedErrorArray, function(statementKey, statementError){
                         var likertStatement = self.parentJFormSection.jFormComponents[instance.id+'-'+statementKey];
@@ -4973,7 +4973,7 @@ JFormComponentLikert = JFormComponent.extend({
         var self = this;
         return true;
     }
-        
+
 });
 JFormComponentLikertStatement = JFormComponent.extend({
     init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
@@ -5021,7 +5021,7 @@ JFormComponentLikertStatement = JFormComponent.extend({
     getValue: function() {
         if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
             return null;
-        }      
+        }
         var value = this.component.find('input:checked');
         if(value.length > 0){
             value = value.val()
@@ -5198,7 +5198,7 @@ JFormComponentLikertStatement = JFormComponent.extend({
         if(!this.changed){
             this._super();
         }
-        
+
         setTimeout(function() {
             if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){
@@ -5286,7 +5286,7 @@ JFormComponentLikertStatement = JFormComponent.extend({
             },
             'custom_regexp': function(options) {
                 var errorMessageArray = [options.custom_regexp.custom_message];
-                var sm = options.custom_regexp.regexp.substring(1,sm.length-1);						
+                var sm = options.custom_regexp.regexp.substring(1,sm.length-1);
                 var regular_expression = RegExp(sm);
                 return options.value.match(regular_expression) ? 'success' : errorMessageArray;
             },
@@ -5664,7 +5664,7 @@ JFormComponentLikertStatement = JFormComponent.extend({
 JFormComponentTextArea = JFormComponent.extend({
     init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
         this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
-        
+
         if(this.options.allowTabbing) {
             this.allowTabbing();
         }
@@ -5746,7 +5746,7 @@ JFormComponentTextArea = JFormComponent.extend({
             lineHeight: textArea.css('lineHeight'),
             resize: 'none'
         }).appendTo(document.body);
-            
+
         var update = function() {
             var times = function(string, number) {
                 for (var i = 0, r = ''; i < number; i ++) r += string;

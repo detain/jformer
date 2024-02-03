@@ -53,7 +53,7 @@ JFormComponent = Class.extend({
                 this.clone = null;
             }
             this.instanceArray = [this];
-            this.createInstanceButton();   
+            this.createInstanceButton();
         }
 
         // Intitialize the implemented component
@@ -70,7 +70,7 @@ JFormComponent = Class.extend({
         this.defineComponentChangedEventListener();
         this.catchComponentChangedEventListener();
 
-        
+
 
         // Tip listeners
         this.addTipListeners();
@@ -85,7 +85,7 @@ JFormComponent = Class.extend({
                 self.highlight();
             } );
             $(input).bind('blur', function(event) {
-                
+
                 self.removeHighlight();
 
                 // Handle multifield highlight and validation
@@ -287,7 +287,7 @@ JFormComponent = Class.extend({
         if(this.options.dependencyOptions !== null){
             addButton.hide();
         }
-        
+
           this.component.after(addButton);
           //this.component.after('<button id="'+this.id+'-addInstance" class="jFormComponentAddInstanceButton">'+this.options.instanceAddText+'</button>');
           this.parentJFormSection.section.find('#'+this.id+'-addInstance').bind('click', function(event){
@@ -323,12 +323,12 @@ JFormComponent = Class.extend({
 
             // Create the remove button
             $(instanceClone).append('<button id="'+this.id+'-removeInstance" class="jFormComponentRemoveInstanceButton">'+this.options.instanceOptions.removeButtonText+'</button>');
-            
+
             // Add an event listener on the remove button
             instanceClone.find('#'+this.id+'-removeInstance').bind('click', function(event){
                 var target = $(event.target);
                 event.preventDefault();
-                
+
                 parent.instanceArray = $.map(parent.instanceArray, function(cloneId, index){
                    if(cloneId.component.attr('id') ==  target.parent().attr('id')){
                        if(cloneId.tip != null){
@@ -349,7 +349,7 @@ JFormComponent = Class.extend({
                             //parent.parentJFormSection.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
                             parent.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                         })
-                        
+
                     }else {
                         target.parent().fadeOut(animationOptions.removeDuration, function(){
                             target.parent().remove();
@@ -389,7 +389,7 @@ JFormComponent = Class.extend({
             }
 
             this.nameInstance(instanceClone);
-            
+
             var instanceObject = this.createInstanceObject(instanceClone, this.options);
             this.instanceArray.push(instanceObject);
             this.relabelInstances(this.instanceArray, animationOptions);
@@ -413,7 +413,7 @@ JFormComponent = Class.extend({
                 });
 
                 instanceObject.component.bind('jFormComponent:changed', function(event) {
-                    
+
                         $.each(parent.options.dependencies.pages, function(index, object) {
                             objectTop.jFormPages[object.jFormPageId].checkDependencies();
                         });
@@ -428,7 +428,7 @@ JFormComponent = Class.extend({
             if(this.disabledByDependency){
                 this.disableByDependency(true);
             }
-            
+
             // Resize the page
             //parent.parentJFormSection.parentJFormPage.scrollTo();
         }
@@ -562,7 +562,7 @@ JFormComponent = Class.extend({
             if(self.tip && typeof(self.tip) == 'object' && $.trim(self.tipDiv.html()) !== '') {
                 self.tip.show();
             }
-            
+
         });
 
         // Hide a tip
@@ -658,7 +658,7 @@ JFormComponent = Class.extend({
                 if(silent){
                     silentValidationPassed = false;
                 } else {
-                    $.merge(self.errorMessageArray, validation);   
+                    $.merge(self.errorMessageArray, validation);
                 }
             }
         });
@@ -775,7 +775,7 @@ JFormComponent = Class.extend({
             }
             elementsToDisable = elementsToDisable.add(addButton);
         }
-  
+
         if(self.parentJFormSection.parentJFormPage.jFormer.initializing) {
             animationOptions = {
                 adjustHeightDelay : 0,
@@ -810,7 +810,7 @@ JFormComponent = Class.extend({
                                 self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                             });
                         }else if(animationOptions.hideEffect === 'fade'){
-                        
+
                             elementsToDisable.slideUp(animationOptions.hideDuration, function() {
                                 self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                             });
@@ -828,16 +828,16 @@ JFormComponent = Class.extend({
                 if(this.options.dependencyOptions.display == 'hide') {
                     //console.log('showing component')
                     if(animationOptions.appearEffect == 'none' || animationOptions.apearDuration === 0){
-                        
+
                         elementsToDisable.show();
                         self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                     }else {
                         if(animationOptions.appearEffect === 'fade'){
-                        
+
                             elementsToDisable.fadeIn(animationOptions.appearDuration);
                             self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                         }else if(animationOptions.appearEffect === 'slide'){
-                        
+
                             elementsToDisable.slideDown(animationOptions.appearDuration);
                             self.parentJFormSection.parentJFormPage.jFormer.adjustHeight(animationOptions);
                         }

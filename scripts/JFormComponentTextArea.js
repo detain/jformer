@@ -2,7 +2,7 @@
 JFormComponentTextArea = JFormComponent.extend({
     init: function(parentJFormSection, jFormComponentId, jFormComponentType, options) {
         this._super(parentJFormSection, jFormComponentId, jFormComponentType, options);
-        
+
         if(this.options.allowTabbing) {
             this.allowTabbing();
         }
@@ -84,7 +84,7 @@ JFormComponentTextArea = JFormComponent.extend({
             lineHeight: textArea.css('lineHeight'),
             resize: 'none'
         }).appendTo(document.body);
-            
+
         var update = function() {
             var times = function(string, number) {
                 for (var i = 0, r = ''; i < number; i ++) r += string;

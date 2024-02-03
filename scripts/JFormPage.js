@@ -79,7 +79,7 @@ JFormPage = Class.extend({
 
         var self = this;
         var each = $.each;
-        
+
         self.validationPassed = true;
         each(this.jFormSections, function(sectionKey, section) {
            each(section.instanceArray, function(instanceIndex, sectionInstance){

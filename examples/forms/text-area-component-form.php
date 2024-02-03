@@ -8,22 +8,22 @@ else if(file_exists('../../php/JFormer.php')) {
 }
 
 // Create the form
-$textAreaComponentForm = new JFormer('textAreaComponentForm', array(
+$textAreaComponentForm = new JFormer('textAreaComponentForm', [
     'title' => '<h1>Text Area Component</h1>',
     'submitButtonText' => 'Test',
-));
+]);
 
 // Add components to the form
-$textAreaComponentForm->addJFormComponentArray(array(
-    new JFormComponentTextArea('textArea1', 'Text area:', array(
+$textAreaComponentForm->addJFormComponentArray([
+    new JFormComponentTextArea('textArea1', 'Text area:', [
         'tip' => '<p>This is a tip on a text area component.</p>',
-    )),
-));
+    ]),
+]);
 
 // Set the function for a successful form submission
 function onSubmit($formValues) {
     // Return a simple debug response
-    return array('failureNoticeHtml' => json_encode($formValues));
+    return ['failureNoticeHtml' => json_encode($formValues)];
 }
 
 // Process any request to the form

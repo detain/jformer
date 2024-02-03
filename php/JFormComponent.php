@@ -4,44 +4,44 @@
  */
 abstract class JFormComponent {
     // General settings
-    var $id;
-    var $class = null;
-    var $value = null;
-    var $style = null;
-    var $parentJFormSection;
-    var $anonymous = false;
+    public $id;
+    public $class = null;
+    public $value = null;
+    public $style = null;
+    public $parentJFormSection;
+    public $anonymous = false;
 
     // Label
-    var $label = null;  // Must be implemented by child class
-    var $labelClass = 'jFormComponentLabel';
-    var $labelRequiredStarClass = 'jFormComponentLabelRequiredStar';
-    var $requiredText = ' *'; // can be overridden at the form level;
+    public $label = null;  // Must be implemented by child class
+    public $labelClass = 'jFormComponentLabel';
+    public $labelRequiredStarClass = 'jFormComponentLabelRequiredStar';
+    public $requiredText = ' *'; // can be overridden at the form level;
 
     // Helpers
-    var $tip = null;
-    var $tipClass = 'jFormComponentTip';
-    var $description = null;
-    var $descriptionClass = 'jFormComponentDescription';
+    public $tip = null;
+    public $tipClass = 'jFormComponentTip';
+    public $description = null;
+    public $descriptionClass = 'jFormComponentDescription';
 
     // Options
-    var $instanceOptions = null;
-    var $triggerFunction = null;
-    var $enterSubmits = false;
-    
+    public $instanceOptions = null;
+    public $triggerFunction = null;
+    public $enterSubmits = false;
+
     // Dependencies
-    var $dependencyOptions = null;
+    public $dependencyOptions = null;
 
     // Validation
-    var $validationOptions = array();
-    var $errorMessageArray = null;
-    var $passedValidation = null;
-    var $showErrorTipOnce = false;
-    var $persistentTip = false;
+    public $validationOptions = [];
+    public $errorMessageArray = null;
+    public $passedValidation = null;
+    public $showErrorTipOnce = false;
+    public $persistentTip = false;
 
     /**
      * Initialize
      */
-    function initialize($optionArray = array()) {
+    public function initialize($optionArray = []) {
         // Use the options hash to update object variables
         if(is_array($optionArray)) {
             foreach($optionArray as $option => $value) {
@@ -51,27 +51,27 @@ abstract class JFormComponent {
 
         // Allow users to pass a string into validation options
         if(is_string($this->validationOptions)) {
-            $this->validationOptions = array($this->validationOptions);
+            $this->validationOptions = [$this->validationOptions];
         }
-        
+
         return $this;
     }
 
-    function getValue() {
+    public function getValue() {
         return $this->value;
     }
 
-    function setValue($value) {
+    public function setValue($value) {
         $this->value = $value;
     }
 
-    function clearValue() {
+    public function clearValue() {
         $this->value = null;
     }
 
-    function validate() {
+    public function validate() {
         // Clear the error message array
-        $this->errorMessageArray = array();
+        $this->errorMessageArray = [];
 
         // Only validate if the value isn't null - this is so dependencies aren't validated before they are unlocked
         if($this->value !== null) {
@@ -90,7 +90,7 @@ abstract class JFormComponent {
 
                         // Make sure you have an array to work with
                         if(!isset($this->errorMessageArray[$instanceKey])) {
-                            $this->errorMessageArray[$instanceKey] = array();
+                            $this->errorMessageArray[$instanceKey] = [];
                         }
 
                         if($validationResponse != 'success') {
@@ -101,17 +101,17 @@ abstract class JFormComponent {
                             }
                             else {
                                 if(is_string($validationResponse)) {
-                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], array($validationResponse));
+                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], [$validationResponse]);
                                 }
                                 else {
-                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], array('There was a problem validating this component on the server.'));
+                                    $this->errorMessageArray[$instanceKey] = array_merge($this->errorMessageArray[$instanceKey], ['There was a problem validating this component on the server.']);
                                 }
                             }
                         }
                         // Use an empty array as a placeholder for instances that have passed validation
                         else {
                             if(sizeof($this->errorMessageArray[$instanceKey]) == 0) {
-                                $this->errorMessageArray[$instanceKey] = array('');
+                                $this->errorMessageArray[$instanceKey] = [''];
                             }
                         }
                     }
@@ -126,16 +126,16 @@ abstract class JFormComponent {
                     $validationResponse = $this->$validationType($validationOptions);
                     if($validationResponse != 'success') {
                         $this->passedValidation = false;
-                        
+
                         if(is_array($validationResponse)) {
                             $this->errorMessageArray = array_merge($validationResponse, $this->errorMessageArray);
                         }
                         else {
                             if(is_string($validationResponse)) {
-                                $this->errorMessageArray = array_merge(array($validationResponse), $this->errorMessageArray);
+                                $this->errorMessageArray = array_merge([$validationResponse], $this->errorMessageArray);
                             }
                             else {
-                                $this->errorMessageArray = array_merge(array('There was a problem validating this component on the server.'), $this->errorMessageArray);
+                                $this->errorMessageArray = array_merge(['There was a problem validating this component on the server.'], $this->errorMessageArray);
                             }
                         }
                     }
@@ -146,23 +146,23 @@ abstract class JFormComponent {
         }
     }
 
-    function reformValidations(){
-        $reformedValidations = array();
+    public function reformValidations(){
+        $reformedValidations = [];
         foreach($this->validationOptions as $validationType => $validationOptions) {
             // Check to see if the name of the function is actually an array index
             if(is_int($validationType)) {
                 // The function is not an index, it becomes the name of the option with the value of an empty object
-                $reformedValidations[$validationOptions] =  array();
+                $reformedValidations[$validationOptions] =  [];
             }
             // If the validationOptions is a string
             else if(!is_array($validationOptions)) {
-                $reformedValidations[$validationType] = array();
+                $reformedValidations[$validationType] = [];
                 $reformedValidations[$validationType][$validationType] = $validationOptions;
             }
             // If validationOptions is an object
             else if(is_array($validationOptions)) {
                 if(isset($validationOptions[0])){
-                    $reformedValidations[$validationType] = array();
+                    $reformedValidations[$validationType] = [];
                     $reformedValidations[$validationType][$validationType] = $validationOptions;
                 } else {
                     $reformedValidations[$validationType] = $validationOptions;
@@ -172,9 +172,9 @@ abstract class JFormComponent {
         $this->validationOptions = $reformedValidations;
     }
 
-    function getOptions() {
-        $options = array();
-        $options['options'] = array();
+    public function getOptions() {
+        $options = [];
+        $options['options'] = [];
         $options['type'] = get_class($this);
 
         // Validation options
@@ -188,7 +188,7 @@ abstract class JFormComponent {
         if($this->persistentTip){
             $options['options']['persistentTip'] = $this->persistentTip;
         }
-        
+
         // Instances
         if(!empty($this->instanceOptions)) {
             $options['options']['instanceOptions'] = $this->instanceOptions;
@@ -199,22 +199,22 @@ abstract class JFormComponent {
                 $options['options']['instanceOptions']['removeButtonText'] = 'Remove';
             }
         }
-        
-        
+
+
         // Trigger
         if(!empty($this->triggerFunction)) {
             $options['options']['triggerFunction'] = $this->triggerFunction;
         }
-        
+
         // Dependencies
         if(!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
             if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
-                $this->dependencyOptions['dependentOn'] = array($this->dependencyOptions['dependentOn']);
+                $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
-        
+
         // Clear the options key if there is nothing in it
         if(empty($options['options'])) {
             unset($options['options']);
@@ -227,18 +227,18 @@ abstract class JFormComponent {
      * Generates the HTML for the FormComponent
      * @return string
      */
-    abstract function __toString();
-    
-    function hasInstanceValues() {
+    abstract public function __toString();
+
+    public function hasInstanceValues() {
         return is_array($this->value);
     }
 
-    function generateComponentDiv($includeLabel = true) {
+    public function generateComponentDiv($includeLabel = true) {
         // Div tag contains everything about the component
-        $componentDiv = new JFormElement('div', array(
+        $componentDiv = new JFormElement('div', [
             'id' => $this->id.'-wrapper',
             'class' => 'form-group jFormComponent '.$this->class,
-        ));
+        ]);
 
         // This causes issues with things that are dependent and should display by default
         // If the component has dependencies and the display type is hidden, hide by default
@@ -260,26 +260,26 @@ abstract class JFormComponent {
         return $componentDiv;
     }
 
-    function updateRequiredText($requiredText) {
+    public function updateRequiredText($requiredText) {
         $this->requiredText = $requiredText;
     }
 
-    function generateComponentLabel() {
+    public function generateComponentLabel() {
         if(empty($this->label)) {
             return '';
         }
-	
-        $label = new JFormElement('label', array(
+
+        $label = new JFormElement('label', [
             'id' => $this->id.'-label',
             'for' => $this->id,
-            'class' => $this->labelClass . ' control-label col-xs-4'
-        ));
+            'class' => $this->labelClass . ' col-form-label col-sm-4'
+        ]);
         $label->update($this->label);
         // Add the required star to the label
         if(in_array('required', $this->validationOptions)) {
-            $labelRequiredStarSpan = new JFormElement('span', array(
+            $labelRequiredStarSpan = new JFormElement('span', [
                 'class' => $this->labelRequiredStarClass
-            ));
+            ]);
             $labelRequiredStarSpan->update($this->requiredText);
             $label->insert($labelRequiredStarSpan);
         }
@@ -287,13 +287,13 @@ abstract class JFormComponent {
         return $label;
     }
 
-    function insertComponentDescription($div) {
+    public function insertComponentDescription($div) {
         // Description
         if(!empty($this->description)) {
-            $description = new JFormElement('div', array(
+            $description = new JFormElement('div', [
                 'id' => $this->id.'-description',
                 'class' => $this->descriptionClass
-            ));
+            ]);
             $description->update($this->description);
 
             $div->insert($description);
@@ -302,14 +302,14 @@ abstract class JFormComponent {
         return $div;
     }
 
-    function insertComponentTip($div) {
+    public function insertComponentTip($div) {
         // Create the tip div if not empty
         if(!empty($this->tip)) {
-            $tipDiv = new JFormElement('div', array(
+            $tipDiv = new JFormElement('div', [
                 'id' => $this->id.'-tip',
                 'style' => 'display: none;',
                 'class' => $this->tipClass,
-            ));
+            ]);
             $tipDiv->update($this->tip);
             $div->insert($tipDiv);
         }
@@ -320,7 +320,7 @@ abstract class JFormComponent {
     // Generic validations
 
     public function required($options) { // Just override this if necessary
-        $messageArray = array('Required.');
+        $messageArray = ['Required.'];
         //return empty($options['value']) ? 'success' : $messageArray; // Break validation on purpose
         return !empty($options['value']) || $options['value'] == '0' ? 'success' : $messageArray;
     }

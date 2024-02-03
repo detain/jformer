@@ -8,22 +8,22 @@ else if(file_exists('../../php/JFormer.php')) {
 }
 
 // Create the form
-$singleLineTextComponentForm = new JFormer('singleLineTextComponentForm', array(
+$singleLineTextComponentForm = new JFormer('singleLineTextComponentForm', [
     'title' => '<h1>Single Line Text Component</h1>',
     'submitButtonText' => 'Test',
-));
+]);
 
 // Add components to the form
-$singleLineTextComponentForm->addJFormComponentArray(array(
-    new JFormComponentSingleLineText('singleLineText1', 'Single line text:', array(
+$singleLineTextComponentForm->addJFormComponentArray([
+    new JFormComponentSingleLineText('singleLineText1', 'Single line text:', [
         'tip' => '<p>This is a tip on a single line text component.</p>',
-    )),
-));
+    ]),
+]);
 
 // Set the function for a successful form submission
 function onSubmit($formValues) {
     // Return a simple debug response
-    return array('failureNoticeHtml' => json_encode($formValues));
+    return ['failureNoticeHtml' => json_encode($formValues)];
 }
 
 // Process any request to the form

@@ -82,7 +82,7 @@ JFormComponentName = JFormComponent.extend({
         if(!this.changed){
             this._super();
         }
-        
+
         setTimeout(function() {
             if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){

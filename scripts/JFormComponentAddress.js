@@ -30,7 +30,7 @@ JFormComponentAddress = JFormComponent.extend({
                 return errorMessageArray.length < 1 ? 'success' : errorMessageArray;
             }
         }
-        
+
         this.changed = false;
     },
 
@@ -130,7 +130,7 @@ JFormComponentAddress = JFormComponent.extend({
         if(!this.changed){
             this._super();
         }
-        
+
         setTimeout(function() {
             if(!self.component.hasClass('jFormComponentHighlight')){
                 if(self.options.validationOptions.length < 1){

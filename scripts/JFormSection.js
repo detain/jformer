@@ -45,7 +45,7 @@ JFormSection = Class.extend({
             if(this.options.dependencyOptions !== null){
                 if(this.options.dependencyOptions.display == 'hide'){
                     addButton.hide();
-                } 
+                }
             }
             this.instanceArray[this.instanceArray.length - 1].section.after(addButton);
             this.parentJFormPage.page.find('#'+buttonId).bind('click', function(event){
@@ -82,7 +82,7 @@ JFormSection = Class.extend({
 
             if(sectionHtmlExists) {
 				instanceClone = $('#'+this.id+'-section'+this.iterations);
-				
+
             }
             else {
                 instanceClone = this.clone.clone();
@@ -122,7 +122,7 @@ JFormSection = Class.extend({
                         target.parent().slideUp(animationOptions.removeDuration, function(){
                             target.parent().remove();
                             target.remove();
-                            
+
                         });
                         //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
                         parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
@@ -137,7 +137,7 @@ JFormSection = Class.extend({
                         });
                     }
                 }
-                
+
                 if(parent.instanceArray.length < parent.options.instanceOptions.max || parent.options.instanceOptions.max === 0){
                     parent.parentJFormPage.page.find('#'+parent.id+'-addInstance').show();
                 }
@@ -158,7 +158,7 @@ JFormSection = Class.extend({
                 // Show the instance section with an animation
                 else {
                     if(animationOptions.appearEffect == 'slide'){
-                    
+
                         instanceClone.slideDown(animationOptions.appearDuration, function(){
                             //parent.parentJFormPage.jFormer.jFormPageWrapper.dequeue();
                             parent.parentJFormPage.jFormer.adjustHeight(animationOptions);
@@ -282,7 +282,7 @@ JFormSection = Class.extend({
                     } else {
                         label.text(label.text() + ' ('+count+')');
                     }
-                    
+
                 }
             }
         });
@@ -350,7 +350,7 @@ JFormSection = Class.extend({
                     }
                 });
             /*$.each(self.instanceArray[index].jFormComponents, function(key, component){
-                   
+
                    component.setData(instance[key]);
                });*/
             });
@@ -360,7 +360,7 @@ JFormSection = Class.extend({
                 if(self.jFormComponents[key] != undefined){
                     self.jFormComponents[key].setData(componentData);
                 }
-                
+
             });
         }
     },
@@ -423,7 +423,7 @@ JFormSection = Class.extend({
                             });
                         }
                     }
-                    
+
                 }
                 // Lock the section and disable all inputs
                 else {

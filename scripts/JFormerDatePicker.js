@@ -26,7 +26,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-DateInput = (function($) { 
+DateInput = (function($) {
 
     function DateInput(element, options) {
         if (typeof(opts) != "object") options = {};
@@ -38,7 +38,7 @@ DateInput = (function($) {
         this.input.after(button);
         this.button = $(element).parent().find('span.jFormComponentDateButton');
         this.bindMethodsToObj("show", "hide", "hideIfClickOutside", "keydownHandler", "selectDate");
-  
+
         this.build();
         this.selectDate();
         this.hide();
@@ -63,7 +63,7 @@ DateInput = (function($) {
             $(".jFormComponentDateSelectorNext", monthNav).click(this.bindToObj(function() {
                 this.moveMonthBy(1);
             }));
-    
+
             var yearNav = $('<p class="jFormComponentDateSelectorYearNavigator">' +
                 '<span class="jFormComponentDateSelectorButton jFormComponentDateSelectorPrevious" title="[Ctrl+Page-Up]">&#171;</span>' +
                 ' <span class="jFormComponentDateSelectorYearName"></span> ' +
@@ -76,22 +76,22 @@ DateInput = (function($) {
             $(".jFormComponentDateSelectorNext", yearNav).click(this.bindToObj(function() {
                 this.moveMonthBy(12);
             }));
-    
+
             var nav = $('<div class="jFormComponentDateSelectorNavigator"></div>').append(monthNav, yearNav);
-    
+
             var tableShell = "<table><thead><tr>";
             $(this.adjustDays(this.short_day_names)).each(function() {
                 tableShell += "<th>" + this + "</th>";
             });
             tableShell += "</tr></thead><tbody></tbody></table>";
-    
+
             this.dateSelector = this.rootLayers = $('<div class="jFormComponentDateSelector"></div>').append(nav, tableShell).insertAfter(this.input);
-    
+
             if ($.browser.msie && $.browser.version < 7) {
-      
+
                 this.ieframe = $('<iframe class="jFormComponentDateSelectorIEFrame" frameborder="0" src="#"></iframe>').insertBefore(this.dateSelector);
                 this.rootLayers = this.rootLayers.add(this.ieframe);
-      
+
                 $(".jFormComponentDateSelectorButton", nav).mouseover(function() {
                     $(this).addClass("hover")
                 });
@@ -99,9 +99,9 @@ DateInput = (function($) {
                     $(this).removeClass("hover")
                 });
             };
-    
+
             this.tbody = $("tbody", this.dateSelector);
-    
+
             this.input.change(this.bindToObj(function() {
                 this.selectDate();
             }));
@@ -110,40 +110,40 @@ DateInput = (function($) {
 
         selectMonth: function(date) {
             var newMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-    
+
             if (!this.currentMonth || !(this.currentMonth.getFullYear() == newMonth.getFullYear() &&
                 this.currentMonth.getMonth() == newMonth.getMonth())) {
-      
+
                 this.currentMonth = newMonth;
-      
+
                 var rangeStart = this.rangeStart(date), rangeEnd = this.rangeEnd(date);
                 var numDays = this.daysBetween(rangeStart, rangeEnd);
                 var dayCells = "";
-      
+
                 for (var i = 0; i <= numDays; i++) {
                     var currentDay = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), rangeStart.getDate() + i, 12, 00);
-        
+
                     if (this.isFirstDayOfWeek(currentDay)) dayCells += "<tr>";
-        
+
                     if (currentDay.getMonth() == date.getMonth()) {
                         dayCells += '<td class="jFormComponentDateSelectorSelectedDay" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
                     } else {
                         dayCells += '<td class="jFormComponentDateSelectorUnselectedMonth" date="' + this.dateToString(currentDay) + '">' + currentDay.getDate() + '</td>';
                     };
-        
+
                     if (this.isLastDayOfWeek(currentDay)) dayCells += "</tr>";
                 };
                 this.tbody.empty().append(dayCells);
-      
+
                 this.monthNameSpan.empty().append(this.monthName(date));
                 this.yearNameSpan.empty().append(this.currentMonth.getFullYear());
-      
+
                 $(".jFormComponentDateSelectorSelectedDay", this.tbody).click(this.bindToObj(function(event) {
                     this.changeInput($(event.target).attr("date"));
                 }));
-      
+
                 $('td[date="' + this.dateToString(new Date()) + '"]', this.tbody).addClass("jFormComponentDateSelectorToday");
-      
+
                 $("td.jFormComponentDateSelectorSelectedDay", this.tbody).mouseover(function() {
                     $(this).addClass("hover")
                 });
@@ -151,27 +151,27 @@ DateInput = (function($) {
                     $(this).removeClass("hover")
                 });
             };
-    
+
             $('.jFormComponentDateSelectorSelected', this.tbody).removeClass("jFormComponentDateSelectorSelected");
             $('td[date="' + this.selectedDateString + '"]', this.tbody).addClass("jFormComponentDateSelectorSelected");
         },
-  
+
         selectDate: function(date) {
             if (typeof(date) == "undefined") {
                 date = this.stringToDate(this.input.val());
             };
             if (!date) date = new Date();
-    
+
             this.selectedDate = date;
             this.selectedDateString = this.dateToString(this.selectedDate);
             this.selectMonth(this.selectedDate);
         },
-  
+
         changeInput: function(dateString) {
             this.input.val(dateString).change();
             this.hide();
         },
-  
+
         show: function() {
             this.rootLayers.css("display", "block");
             this.button.unbind("click", this.show);
@@ -180,7 +180,7 @@ DateInput = (function($) {
             $([window, document.body]).click(this.hideIfClickOutside);
             this.setPosition();
         },
-  
+
         hide: function() {
             this.rootLayers.css("display", "none");
             $([window, document.body]).unbind("click", this.hideIfClickOutside);
@@ -188,25 +188,25 @@ DateInput = (function($) {
             this.input.focus(this.show);
             $(document.body).unbind("keydown", this.keydownHandler);
         },
-  
+
         hideIfClickOutside: function(event) {
             if (event.target != this.input[0] && event.target != this.button[0] && !this.insideSelector(event)) {
                 this.hide();
             };
         },
-  
+
         insideSelector: function(event) {
             var offset = this.dateSelector.offset();
             offset.right = offset.left + this.dateSelector.outerWidth();
             offset.bottom = offset.top + this.dateSelector.outerHeight();
 
-    
+
             return event.pageY < offset.bottom &&
             event.pageY > offset.top &&
             event.pageX < offset.right &&
             event.pageX > offset.left;
         },
-  
+
         keydownHandler: function(event) {
             switch (event.keyCode)
             {
@@ -241,7 +241,7 @@ DateInput = (function($) {
             }
             event.preventDefault();
         },
-  
+
         stringToDate: function(string) {
             string = string.replace(/[^\d]/g, '/');
             if (string.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4,4})$/)) {
@@ -250,7 +250,7 @@ DateInput = (function($) {
                 return null;
             };
         },
-  
+
         dateToString: function(date) {
             return padString(date.getMonth()+1) +'/'+ padString(date.getDate()) +"/"+ date.getFullYear();
 
@@ -262,7 +262,7 @@ DateInput = (function($) {
                 return number;
             }
         },
-  
+
         setPosition: function() {
             var offset = this.button.position();
             this.rootLayers.css({
@@ -290,88 +290,88 @@ DateInput = (function($) {
                 });
             }
         },
-  
+
         moveDateBy: function(amount) {
             var newDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth(), this.selectedDate.getDate() + amount);
             this.selectDate(newDate);
         },
-  
+
         moveDateMonthBy: function(amount) {
             var newDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() + amount, this.selectedDate.getDate());
             if (newDate.getMonth() == this.selectedDate.getMonth() + amount + 1) {
-      
+
                 newDate.setDate(0);
             };
             this.selectDate(newDate);
         },
-  
+
         moveMonthBy: function(amount) {
             var newMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + amount, this.currentMonth.getDate());
             this.selectMonth(newMonth);
         },
-  
+
         monthName: function(date) {
             return this.jFormComponentDateSelectorMonthNames[date.getMonth()];
         },
-  
+
         bindToObj: function(fn) {
             var self = this;
             return function() {
                 return fn.apply(self, arguments)
             };
         },
-  
+
         bindMethodsToObj: function() {
             for (var i = 0; i < arguments.length; i++) {
                 this[arguments[i]] = this.bindToObj(this[arguments[i]]);
             };
         },
-  
+
         indexFor: function(array, value) {
             for (var i = 0; i < array.length; i++) {
                 if (value == array[i]) return i;
             };
         },
-  
+
         monthNum: function(jFormComponentDateSelectorMonthName) {
             return this.indexFor(this.jFormComponentDateSelectorMonthNames, jFormComponentDateSelectorMonthName);
         },
-  
+
         shortMonthNum: function(jFormComponentDateSelectorMonthName) {
             return this.indexFor(this.short_jFormComponentDateSelectorMonthNames, jFormComponentDateSelectorMonthName);
         },
-  
+
         shortDayNum: function(day_name) {
             return this.indexFor(this.short_day_names, day_name);
         },
-  
+
         daysBetween: function(start, end) {
             start = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
             end = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
             return (end - start) / 86400000;
         },
-  
+
         changeDayTo: function(dayOfWeek, date, direction) {
             var difference = direction * (Math.abs(date.getDay() - dayOfWeek - (direction * 7)) % 7);
             return new Date(date.getFullYear(), date.getMonth(), date.getDate() + difference);
         },
-  
+
         rangeStart: function(date) {
             return this.changeDayTo(this.start_of_week, new Date(date.getFullYear(), date.getMonth()), -1);
         },
-  
+
         rangeEnd: function(date) {
             return this.changeDayTo((this.start_of_week - 1) % 7, new Date(date.getFullYear(), date.getMonth() + 1, 0), 1);
         },
-  
+
         isFirstDayOfWeek: function(date) {
             return date.getDay() == this.start_of_week;
         },
-  
+
         isLastDayOfWeek: function(date) {
             return date.getDay() == (this.start_of_week - 1) % 7;
         },
-  
+
         adjustDays: function(days) {
             var newDays = [];
             for (var i = 0; i < days.length; i++) {
@@ -393,4 +393,4 @@ DateInput = (function($) {
     };
 
     return DateInput;
-})(jQuery); 
+})(jQuery);

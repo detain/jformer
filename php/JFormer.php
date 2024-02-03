@@ -39,7 +39,7 @@ class JFormer {
 	public $action;
 	public $form_type = 'horizontal';
 	public $style;
-	public $jFormPageArray = array();
+	public $jFormPageArray = [];
 	public $jFormerId;
 	public $onSubmitFunctionServerSide = 'onSubmit';
 	public $disableAnalytics = false;
@@ -65,19 +65,19 @@ class JFormer {
 	public $useIframeTarget = true; // use hidden iframe for form processing, normal form post if false
 	// Page navigator
 	public $pageNavigatorEnabled = false;
-	public $pageNavigator = array();
+	public $pageNavigator = [];
 	// Splash page
 	public $splashPageEnabled = false;
-	public $splashPage = array();
+	public $splashPage = [];
 	// Animations
 	public $animationOptions = null;
 	// Custom script execution before form submission
 	public $onSubmitStartClientSide = '';
 	public $onSubmitFinishClientSide = '';
 	// Essential class variables
-	public $status = array('status' => 'processing', 'response' => 'Form initialized.');
+	public $status = ['status' => 'processing', 'response' => 'Form initialized.'];
 	// Validation
-	public $validationResponse = array();
+	public $validationResponse = [];
 	public $validationPassed = null;
 	// Required Text
 	public $requiredText = ' *';
@@ -85,7 +85,7 @@ class JFormer {
 	/**
 	 * Constructor
 	 */
-	function __construct($id, $optionArray = array(), $jFormPageArray = array()) {
+	public function __construct($id, $optionArray = [], $jFormPageArray = []) {
 		// Set the id
 		$this->id = $id;
 
@@ -104,9 +104,9 @@ class JFormer {
 		if (!empty($this->pageNavigator)) {
 			$this->pageNavigatorEnabled = true;
 		} else if ($this->pageNavigator == true) {
-			$this->pageNavigator = array(
+			$this->pageNavigator = [
 				'position' => 'top'
-			);
+			];
 		}
 
 		// Set defaults for the splash page
@@ -120,13 +120,13 @@ class JFormer {
 		return $this;
 	}
 
-	function addJFormPage($jFormPage) {
+	public function addJFormPage($jFormPage) {
 		$jFormPage->jFormer = $this;
 		$this->jFormPageArray[$jFormPage->id] = $jFormPage;
 		return $this;
 	}
 
-	function addJFormPages($jFormPages) {
+	public function addJFormPages($jFormPages) {
 		if (is_array($jFormPages)) {
 			foreach ($jFormPages as $jFormPage) {
 				$jFormPage->jFormer = $this;
@@ -139,10 +139,10 @@ class JFormer {
 	}
 
 	// Convenience method, no need to create a page or section to get components on the form
-	function addJFormComponent($jFormComponent) {
+	public function addJFormComponent($jFormComponent) {
 		// Create an anonymous page if necessary
 		if (empty($this->jFormPageArray))
-			$this->addJFormPage(new JFormPage($this->id . '_page1', array('anonymous' => true)));
+			$this->addJFormPage(new JFormPage($this->id . '_page1', ['anonymous' => true]));
 
 		// Get the first page in the jFormPageArray
 		$currentJFormPage = current($this->jFormPageArray);
@@ -156,7 +156,7 @@ class JFormer {
 		// If the last section in the page does not exist or is not anonymous, add a new anonymous section and add the component to it
 		else {
 			// Create an anonymous section
-			$anonymousSection = new JFormSection($currentJFormPage->id . '_section' . (sizeof($currentJFormPage->jFormSectionArray) + 1), array('anonymous' => true));
+			$anonymousSection = new JFormSection($currentJFormPage->id . '_section' . (sizeof($currentJFormPage->jFormSectionArray) + 1), ['anonymous' => true]);
 
 			// Add the anonymous section to the page
 			$currentJFormPage->addJFormSection($anonymousSection->addJFormComponent($jFormComponent));
@@ -165,17 +165,17 @@ class JFormer {
 		return $this;
 	}
 
-	function addJFormComponentArray($jFormComponentArray) {
+	public function addJFormComponentArray($jFormComponentArray) {
 		foreach ($jFormComponentArray as $jFormComponent)
 			$this->addJFormComponent($jFormComponent);
 		return $this;
 	}
 
 	// Convenience method, no need to create a to get a section on the form
-	function addJFormSection($jFormSection) {
+	public function addJFormSection($jFormSection) {
 		// Create an anonymous page if necessary
 		if (empty($this->jFormPageArray))
-			$this->addJFormPage(new JFormPage($this->id . '_page1', array('anonymous' => true)));
+			$this->addJFormPage(new JFormPage($this->id . '_page1', ['anonymous' => true]));
 
 		// Get the first page in the jFormPageArray
 		$currentJFormPage = current($this->jFormPageArray);
@@ -186,26 +186,26 @@ class JFormer {
 		return $this;
 	}
 
-	function setStatus($status, $response) {
-		$this->status = array('status' => $status, 'response' => $response);
+	public function setStatus($status, $response) {
+		$this->status = ['status' => $status, 'response' => $response];
 		return $this->status;
 	}
 
-	function resetStatus() {
-		$this->status = array('status' => 'processing', 'response' => 'Form status reset.');
+	public function resetStatus() {
+		$this->status = ['status' => 'processing', 'response' => 'Form status reset.'];
 		return $this->status;
 	}
 
-	function getStatus() {
+	public function getStatus() {
 		return $this->status;
 	}
 
-	function validate() {
+	public function validate() {
 		// Update the form status
 		$this->setStatus('processing', 'Validating component values.');
 
 		// Clear the validation response
-		$this->validationResponse = array();
+		$this->validationResponse = [];
 
 		// Validate each page
 		foreach ($this->jFormPageArray as $jFormPage)
@@ -258,8 +258,8 @@ class JFormer {
 		return $this->validationResponse;
 	}
 
-	function getData() {
-		$this->data = array();
+	public function getData() {
+		$this->data = [];
 
 		foreach ($this->jFormPageArray as $jFormPageKey => $jFormPage) {
 			if (!$jFormPage->anonymous) {
@@ -281,13 +281,13 @@ class JFormer {
 		return json_decode(json_encode($this->data));
 	}
 
-	function updateRequiredText($requiredText) {
+	public function updateRequiredText($requiredText) {
 		foreach($this->jFormPageArray as $jFormPage) {
 			$jFormPage->updateRequiredText($requiredText);
 		}
 	}
 
-	function setInitialValues($formValues) {
+	public function setInitialValues($formValues) {
 		// Make sure we are always working with an object
 		if (!is_object($formValues)) {
 			$formValues = json_decode(urldecode($formValues));
@@ -300,7 +300,7 @@ class JFormer {
 			$this->formPageArray[$formPageKey]->setInitialValues($formPageData);
 	}
 
-	function setData($data, $fileArray = array()) {
+	public function setData($data, $fileArray = []) {
 		// Get the form data as an object, handle apache auto-add slashes on post requests
 		$jFormerData = json_decode(urldecode($data));
 		if (!is_object($jFormerData))
@@ -375,13 +375,13 @@ class JFormer {
 		return $this;
 	}
 
-	function clearData() {
+	public function clearData() {
 		foreach ($this->jFormPageArray as $jFormPage)
 			$jFormPage->clearData();
 		$this->data = null;
 	}
 
-	function clearAllComponentValues() {
+	public function clearAllComponentValues() {
 		// Clear all of the components in the form
 		foreach ($this->jFormPageArray as $jFormPage) {
 			foreach ($jFormPage->jFormSectionArray as $jFormSection) {
@@ -391,7 +391,7 @@ class JFormer {
 		}
 	}
 
-	function select($id) {
+	public function select($id) {
 		foreach ($this->jFormPageArray as $jFormPageId => &$jFormPage) {
 			if ($id === $jFormPageId)
 				return $jFormPage;
@@ -413,7 +413,7 @@ class JFormer {
 		return false;
 	}
 
-	function remove($id) {
+	public function remove($id) {
 		foreach ($this->jFormPageArray as $jFormPageId => &$jFormPage) {
 			if ($id === $jFormPageId) {
 				$this->jFormPageArray[$jFormPageId] = null;
@@ -438,10 +438,10 @@ class JFormer {
 		return false;
 	}
 
-	function processRequest($silent = false) {
+	public function processRequest($silent = false) {
 		// Are they trying to post a file that is too large?
 		if (isset($_SERVER['CONTENT_LENGTH']) && empty($_POST)) {
-			$this->setStatus('success', array('failureNoticeHtml' => 'Your request (' . round($_SERVER['CONTENT_LENGTH'] / 1024 / 1024, 1) . 'M) was too large for the server to handle. ' . ini_get('post_max_size') . ' is the maximum request size.'));
+			$this->setStatus('success', ['failureNoticeHtml' => 'Your request (' . round($_SERVER['CONTENT_LENGTH'] / 1024 / 1024, 1) . 'M) was too large for the server to handle. ' . ini_get('post_max_size') . ' is the maximum request size.']);
 			echo '
 				<script type="text/javascript" language="javascript">
 					parent.' . $this->id . 'Object.handleFormSubmissionResponse(' . json_encode($this->getStatus()) . ');
@@ -455,7 +455,7 @@ class JFormer {
 			// Process the form, get the form state, or display the form
 			if (isset($_POST['jFormer'])) {
 				//echo json_encode($_POST);
-				$onSubmitErrorMessageArray = array();
+				$onSubmitErrorMessageArray = [];
 
 				// Set the form components and validate the form
 				$this->setData($_POST['jFormer'], $_FILES);
@@ -464,7 +464,7 @@ class JFormer {
 				// Run validation
 				$this->validate();
 				if (!$this->validationPassed) {
-					$this->setStatus('failure', array('validationFailed' => $this->validationResponse));
+					$this->setStatus('failure', ['validationFailed' => $this->validationResponse]);
 				} else {
 					try {
 						$onSubmitResponse = call_user_func($this->onSubmitFunctionServerSide, $this->getData());
@@ -480,7 +480,7 @@ class JFormer {
 					if (empty($onSubmitErrorMessageArray)) {
 						$this->setStatus('success', $onSubmitResponse);
 					} else {
-						$this->setStatus('failure', array('failureHtml' => $onSubmitErrorMessageArray));
+						$this->setStatus('failure', ['failureHtml' => $onSubmitErrorMessageArray]);
 					}
 				}
 				if($this->useIframeTarget){
@@ -508,10 +508,10 @@ class JFormer {
 		}
 	}
 
-	function getOptions() {
-		$options = array();
-		$options['options'] = array();
-		$options['jFormPages'] = array();
+	public function getOptions() {
+		$options = [];
+		$options['options'] = [];
+		$options['jFormPages'] = [];
 
 		// Get all of the pages
 		foreach ($this->jFormPageArray as $jFormPage)
@@ -551,27 +551,27 @@ class JFormer {
 		return $options;
 	}
 
-	function outputHtml() {
+	public function outputHtml() {
 		echo $this->getHtml();
 	}
 
-	function __toString() {
+	public function __toString() {
 		$element = $this->getHtml();
 		return $element->__toString();
 	}
 
-	function getHtml() {
+	public function getHtml() {
 		$this->updateRequiredText($this->requiredText);
 		// Create the form
 		$target = $this->useIframeTarget ? $this->id . '-iframe' : '';
-		$jFormElement = new JFormElement('form', array(
+		$jFormElement = new JFormElement('form', [
 					'id' => $this->id,
 					'target' => $target,
 					'enctype' => 'multipart/form-data',
 					'method' => 'post',
 					'class' => $this->class . ' form-'.$this->form_type,
 					'action' => $this->action,
-				));
+				]);
 		if (!empty($this->onMouseOver))
 			$formJFormElement->attr('onmouseover', $this->onMouseOver);
 
@@ -584,13 +584,13 @@ class JFormer {
 
 		// Global messages
 		if ($this->alertsEnabled) {
-			$jFormerAlertWrapperDiv = new JFormElement('div', array(
+			$jFormerAlertWrapperDiv = new JFormElement('div', [
 						'class' => 'jFormerAlertWrapper',
 						'style' => 'display: none;',
-					));
-			$alertDiv = new JFormElement('div', array(
+					]);
+			$alertDiv = new JFormElement('div', [
 						'class' => 'jFormerAlert',
-					));
+					]);
 			$jFormerAlertWrapperDiv->insert($alertDiv);
 			$jFormElement->insert($jFormerAlertWrapperDiv);
 		}
@@ -598,10 +598,10 @@ class JFormer {
 		// If a splash is enabled
 		if ($this->splashPageEnabled) {
 			// Create a splash page div
-			$splashPageDiv = new JFormElement('div', array(
+			$splashPageDiv = new JFormElement('div', [
 						'id' => $this->id . '-splash-page',
 						'class' => 'jFormerSplashPage jFormPage',
-					));
+					]);
 
 			// Set defaults if they aren't set
 			if (!isset($this->splashPage['content']))
@@ -613,8 +613,8 @@ class JFormer {
 
 			// Create a splash button if there is no custom button ID
 			if (!isset($this->splashPage['customButtonId'])) {
-				$splashLi = new JFormElement('li', array('class' => 'splashLi'));
-				$splashButton = new JFormElement('button', array('class' => 'splashButton'));
+				$splashLi = new JFormElement('li', ['class' => 'splashLi']);
+				$splashButton = new JFormElement('button', ['class' => 'splashButton']);
 				$splashButton->update($this->splashPage['splashButtonText']);
 				$splashLi->insert($splashButton);
 			}
@@ -622,44 +622,44 @@ class JFormer {
 
 		// Add a title to the form
 		if (!empty($this->title)) {
-			$title = new JFormElement('div', array(
+			$title = new JFormElement('div', [
 						'class' => $this->titleClass
-					));
+					]);
 			$title->update($this->title);
 			$jFormElement->insert($title);
 		}
 
 		// Add a description to the form
 		if (!empty($this->description)) {
-			$description = new JFormElement('div', array(
+			$description = new JFormElement('div', [
 						'class' => $this->descriptionClass
-					));
+					]);
 			$description->update($this->description);
 			$jFormElement->insert($description);
 		}
 
 		// Add the page navigator if enabled
 		if ($this->pageNavigatorEnabled) {
-			$pageNavigatorDiv = new JFormElement('div', array(
+			$pageNavigatorDiv = new JFormElement('div', [
 						'class' => 'jFormPageNavigator',
-					));
+					]);
 			if (isset($this->pageNavigator['position']) && $this->pageNavigator['position'] == 'right') {
 				$pageNavigatorDiv->addToAttribute('class', ' jFormPageNavigatorRight');
 			} else {
 				$pageNavigatorDiv->addToAttribute('class', ' jFormPageNavigatorTop');
 			}
 
-			$pageNavigatorUl = new JFormElement('ul', array(
-					));
+			$pageNavigatorUl = new JFormElement('ul', [
+					]);
 
 			$jFormPageArrayCount = 0;
 			foreach ($this->jFormPageArray as $jFormPageKey => $jFormPage) {
 				$jFormPageArrayCount++;
 
-				$pageNavigatorLabel = new JFormElement('li', array(
+				$pageNavigatorLabel = new JFormElement('li', [
 							'id' => 'navigatePage' . $jFormPageArrayCount,
 							'class' => 'jFormPageNavigatorLink',
-						));
+						]);
 
 				// If the label is numeric
 				if (isset($this->pageNavigator['label']) && $this->pageNavigator['label'] == 'numeric') {
@@ -690,15 +690,15 @@ class JFormer {
 		}
 
 		// Add the jFormerControl UL
-		$jFormerControlUl = new JFormElement('ul', array(
-					'class' => 'jFormerControl col-xs-offset-4 col-xs-8',
+		$jFormerControlUl = new JFormElement('ul', [
+					'class' => 'jFormerControl offset-sm-4 col-sm-8',
 			'style' => 'list-style-type: none;',
-				));
+				]);
 
 		// Create the cancel button
 		if ($this->cancelButton) {
-			$cancelButtonLi = new JFormElement('li', array('class' => 'cancelLi'));
-			$cancelButton = new JFormElement('button', array('class' => $this->cancelButtonClass));
+			$cancelButtonLi = new JFormElement('li', ['class' => 'cancelLi']);
+			$cancelButton = new JFormElement('button', ['class' => $this->cancelButtonClass]);
 			$cancelButton->update($this->cancelButtonText);
 
 			if (!empty($this->cancelButtonOnClick))
@@ -708,14 +708,14 @@ class JFormer {
 		}
 
 		// Create the previous button
-		$previousButtonLi = new JFormElement('li', array('class' => 'previousLi', 'style' => 'display: none;'));
-		$previousButton = new JFormElement('button', array('class' => 'previousButton'));
+		$previousButtonLi = new JFormElement('li', ['class' => 'previousLi', 'style' => 'display: none;']);
+		$previousButton = new JFormElement('button', ['class' => 'previousButton']);
 		$previousButton->update('Previous');
 		$previousButtonLi->insert($previousButton);
 
 		// Create the next button
-		$nextButtonLi = new JFormElement('li', array('class' => 'nextLi'));
-		$nextButton = new JFormElement('button', array('class' => 'btn btn-primary nextButton'));
+		$nextButtonLi = new JFormElement('li', ['class' => 'nextLi']);
+		$nextButton = new JFormElement('button', ['class' => 'btn btn-secondary nextButton']);
 		$nextButton->update($this->submitButtonText);
 		// Don't show the next button
 		if ($this->splashPageEnabled)
@@ -742,8 +742,8 @@ class JFormer {
 		}
 
 		// Create the page wrapper and scrollers
-		$jFormPageWrapper = new JFormElement('div', array('class' => 'jFormPageWrapper'));
-		$jFormPageScroller = new JFormElement('div', array('class' => 'jFormPageScroller'));
+		$jFormPageWrapper = new JFormElement('div', ['class' => 'jFormPageWrapper']);
+		$jFormPageScroller = new JFormElement('div', ['class' => 'jFormPageScroller']);
 
 		// Add a splash page if it exists
 		if (isset($splashPageDiv))
@@ -761,23 +761,23 @@ class JFormer {
 		}
 
 		// Page wrapper wrapper
-		$pageWrapperContainer = new JFormElement('div', array('class' => 'jFormWrapperContainer'));
+		$pageWrapperContainer = new JFormElement('div', ['class' => 'jFormWrapperContainer']);
 
 		// Insert the page wrapper and the jFormerControl UL to the form
 		$jFormElement->insert($pageWrapperContainer->insert($jFormPageWrapper->insert($jFormPageScroller) . '<div class="form-group" style="padding-top: 10px;">'.$jFormerControlUl.'</div>'));
 
 		// Create a script tag to initialize jFormer JavaScript
-		$script = new JFormElement('script', array(
+		$script = new JFormElement('script', [
 					'type' => 'text/javascript',
 					'language' => 'javascript'
-				));
+				]);
 
 		// Update the script tag
 		$script->update('$(document).ready(function () { ' . $this->id . 'Object = new JFormer(\'' . $this->id . '\', ' . json_encode($this->getOptions()) . '); });');
 		$jFormElement->insert($script);
 
 		// Add a hidden iframe to handle the form posts
-		$iframe = new JFormElement('iframe', array(
+		$iframe = new JFormElement('iframe', [
 					'id' => $this->id . '-iframe',
 					'name' => $this->id . '-iframe',
 					'class' => 'jFormerIFrame',
@@ -786,7 +786,7 @@ class JFormer {
 					'src' => (defined('URLDIR') ? URLDIR : '') . '/js/jformer-detain-git/php/JFormer.php?iframe=true',
 					//'src' => '/empty.html',
 						//'src' => str_replace($_SERVER['DOCUMENT_ROOT'], '', __FILE__).'?iframe=true',
-				));
+				]);
 
 		if ($this->debugMode)
 			$iframe->addToAttribute('style', 'display:block;');
@@ -796,7 +796,7 @@ class JFormer {
 
 		// After control
 		if (!empty($this->afterControl)) {
-			$subSubmitInstructions = new JFormElement('div', array('class' => 'jFormerAfterControl'));
+			$subSubmitInstructions = new JFormElement('div', ['class' => 'jFormerAfterControl']);
 			$subSubmitInstructions->update($this->afterControl);
 			$jFormElement->insert($subSubmitInstructions);
 		}

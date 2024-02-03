@@ -38,7 +38,7 @@ JFormComponentSingleLineText = JFormComponent.extend({
             },
             'custom_regexp': function(options) {
                 var errorMessageArray = [options.custom_regexp.custom_message];
-                var sm = options.custom_regexp.regexp.substring(1,sm.length-1);						
+                var sm = options.custom_regexp.regexp.substring(1,sm.length-1);
                 var regular_expression = RegExp(sm);
                 return options.value.match(regular_expression) ? 'success' : errorMessageArray;
             },

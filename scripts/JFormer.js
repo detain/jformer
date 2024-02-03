@@ -110,7 +110,7 @@ JFormer = Class.extend({
 		if(this.options.setupPageScroller) {
 			this.setupPageScroller();
 		}
-		
+
 		// Hide all inactive pages
 		this.hideInactivePages();
 
@@ -145,11 +145,11 @@ JFormer = Class.extend({
 		var self = this
 		var each = $.each;
 		var dependencies = {};
-		
+
 		each(jFormPages, function(jFormPageKey, jFormPageValue) {
 			var jFormPage = new JFormPage(self, jFormPageKey, jFormPageValue.options);
 			jFormPage.show();
-			
+
 			// Handle page level dependencies
 			if(jFormPage.options.dependencyOptions !== null) {
 				$.each(jFormPage.options.dependencyOptions.dependentOn, function(index, componentId) {
@@ -226,7 +226,7 @@ JFormer = Class.extend({
 		// Add listeners for all of the components that are being dependent on
 		// We group the component event listeners to prevent them from constantly being called
 		$.each(dependencies, function(componentId, dependentTypes) {
-			
+
 			$('#'+componentId+':text, textarea#'+componentId).bind('keyup', function(event) {
 				$.each(dependentTypes.pages, function(index, object) {
 					self.jFormPages[object.jFormPageId].checkDependencies();
@@ -354,7 +354,7 @@ JFormer = Class.extend({
 
 		// Set the width of each page
 		pages.css('width', this.form.find('.jFormWrapperContainer').width());
-		
+
 		// Mark the splash page as inactive
 		self.options.splashPage.jFormPage.active = false;
 
@@ -433,7 +433,7 @@ updatePageNavigator: function() {
 				}
 
 				self.currentJFormPageIdArrayIndex = pageIndex;
-					
+
 			});
 		}
 	}
@@ -451,7 +451,7 @@ renumberPageNavigator: function() {
 		}
 	});
 },
-	
+
 addJFormPage: function(jFormPage) {
 	this.jFormPageIdArray.push(jFormPage.id);
 	this.jFormPages[jFormPage.id] = jFormPage;
@@ -575,7 +575,7 @@ setupPageScroller: function(options) {
 		activePageOuterHeight : self.getActivePage().page.outerHeight()
 	};
 	options = $.extend(defaultOptions, options);
-		
+
 	// Find all of the pages
 	var pages = this.form.find('.jFormPage');
 
@@ -665,7 +665,7 @@ setupControl: function() {
 			self.scrollToPage(self.jFormPageIdArray[self.currentJFormPageIdArrayIndex]);
 		}
 	});
-	   
+
 	// First page with more pages after, or splash page
 	if(this.currentJFormPageIdArrayIndex === 0 && this.currentJFormPageIdArrayIndex != this.jFormPageIdArray.length - 1 && this.lastEnabledPage === false) {
 		this.controlNextButton.html('Next');
@@ -739,7 +739,7 @@ setupControl: function() {
 		});
 	}
 },
-	
+
 scrollToPage: function(jFormPageId, options) {
 	//console.log('JFormer('+this.id+'):scrollToPage', jFormPageId, options);
 
@@ -771,7 +771,7 @@ scrollToPage: function(jFormPageId, options) {
 			} else {
 				self.control.append('<li class="jformerScrollToNotification">'+this.jFormPages[jFormPageId].options.onScrollTo.notificationHtml+'<li>');
 			}
-				
+
 		}
 		this.jFormPages[jFormPageId].options.onScrollTo.onBefore();
 	}
@@ -814,7 +814,7 @@ scrollToPage: function(jFormPageId, options) {
 
 	// Scroll the document the top of the form
 	this.scrollToTop();
-		
+
 	// PageWrapper is like a viewport - this scrolls to the top of the new page, but the document needs to be scrolled too
 	var initializing = this.initializing;
 	this.jFormPageWrapper.scrollTo(
@@ -1078,7 +1078,7 @@ submitForm: function(event) {
 			$(fileInput).appendTo(formClone);
 		}
 	});
-		
+
 	// Submit the form
 	formClone.submit();
 	formClone.remove(); // Ninja vanish!
@@ -1097,7 +1097,7 @@ submitForm: function(event) {
 
 handleFormSubmissionResponse: function(json) {
 	var self = this;
-		
+
 	// Remove the processing li from the form control
 	this.control.find('.processingLi').remove();
 

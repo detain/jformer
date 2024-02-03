@@ -44,7 +44,7 @@ JFormComponentLikertStatement = JFormComponent.extend({
     getValue: function() {
         if(this.disabledByDependency || this.parentJFormSection.disabledByDependency){
             return null;
-        }      
+        }
         var value = this.component.find('input:checked');
         if(value.length > 0){
             value = value.val()
