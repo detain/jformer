@@ -1,6 +1,7 @@
 <?php
 
-class JFormComponentLikert extends JFormComponent {
+class JFormComponentLikert extends JFormComponent
+{
     public $choiceArray = [];
     public $statementArray = [];
     public $showTableHeading = true;
@@ -9,7 +10,8 @@ class JFormComponentLikert extends JFormComponent {
     /**
      * Constructor
      */
-    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
+    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray)
+    {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -23,18 +25,19 @@ class JFormComponentLikert extends JFormComponent {
         $this->initialize($optionsArray);
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         $options = parent::getOptions();
 
         $statementArray = [];
-        foreach($this->statementArray as $statement) {
+        foreach ($this->statementArray as $statement) {
             $statementArray[$statement['name']] = [];
 
-            if(!empty($statement['validationOptions'])) {
+            if (!empty($statement['validationOptions'])) {
                 $statementArray[$statement['name']]['validationOptions'] = $statement['validationOptions'];
             }
 
-            if(!empty($statement['triggerFunction'])) {
+            if (!empty($statement['triggerFunction'])) {
                 $statementArray[$statement['name']]['triggerFunction'] = $statement['triggerFunction'];
             }
         }
@@ -42,7 +45,7 @@ class JFormComponentLikert extends JFormComponent {
         $options['options']['statementArray'] = $statementArray;
 
         // Make sure you have an options array to manipulate
-        if(!isset($options['options'])) {
+        if (!isset($options['options'])) {
             $options['options']  = [];
         }
 
@@ -53,7 +56,8 @@ class JFormComponentLikert extends JFormComponent {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         // Generate the component div
         $componentDiv = parent::generateComponentDiv(!$this->collapseLabelIntoTableHeading);
 
@@ -61,20 +65,20 @@ class JFormComponentLikert extends JFormComponent {
         $table = new JFormElement('table', ['class' => 'jFormComponentLikertTable']);
 
         // Generate the first row
-        if($this->showTableHeading) {
+        if ($this->showTableHeading) {
             $tableHeadingRow = new JFormElement('tr', ['class' => 'jFormComponentLikertTableHeading']);
 
             $tableHeading = new JFormElement('th', [
                 'class' => 'jFormComponentLikertStatementColumn',
             ]);
             // Collapse the label into the heading if the option is set
-            if($this->collapseLabelIntoTableHeading) {
+            if ($this->collapseLabelIntoTableHeading) {
                 $tableHeadingLabel = new JFormElement('label', [
                     'class' => 'jFormComponentLikertStatementLabel',
                 ]);
                 $tableHeadingLabel->update($this->label);
                 // Add the required star to the label
-                if(in_array('required', $this->validationOptions)) {
+                if (in_array('required', $this->validationOptions)) {
                     $labelRequiredStarSpan = new JFormElement('span', [
                         'class' => $this->labelRequiredStarClass
                     ]);
@@ -85,7 +89,7 @@ class JFormComponentLikert extends JFormComponent {
             }
             $tableHeadingRow->insert($tableHeading);
 
-            foreach($this->choiceArray as $choice) {
+            foreach ($this->choiceArray as $choice) {
                 $tableHeadingRow->insert('<th>'.$choice['label'].'</th>');
             }
             $table->insert($tableHeadingRow);
@@ -93,12 +97,11 @@ class JFormComponentLikert extends JFormComponent {
 
         // Insert each of the statements
         $statementCount = 0;
-        foreach($this->statementArray as $statement) {
+        foreach ($this->statementArray as $statement) {
             // Set the row style
-            if($statementCount % 2 == 0) {
+            if ($statementCount % 2 == 0) {
                 $statementRowClass = 'jFormComponentLikertTableRowEven';
-            }
-            else {
+            } else {
                 $statementRowClass = 'jFormComponentLikertTableRowOdd';
             }
 
@@ -112,7 +115,7 @@ class JFormComponentLikert extends JFormComponent {
             $statementColumn->insert($statementLabel->insert($statement['statement']));
 
             // Set the statement description (optional)
-            if(!empty($statement['description'])) {
+            if (!empty($statement['description'])) {
                 $statementDescription = new JFormElement('div', [
                     'class' => 'jFormComponentLikertStatementDescription',
                 ]);
@@ -120,7 +123,7 @@ class JFormComponentLikert extends JFormComponent {
             }
 
             // Insert a tip (optional)
-            if(!empty($statement['tip'])) {
+            if (!empty($statement['tip'])) {
                 $statementTip = new JFormElement('div', [
                     'class' => 'jFormComponentLikertStatementTip',
                     'style' => 'display: none;',
@@ -131,7 +134,7 @@ class JFormComponentLikert extends JFormComponent {
             $statementRow->insert($statementColumn);
 
             $choiceCount = 1;
-            foreach($this->choiceArray as $choice) {
+            foreach ($this->choiceArray as $choice) {
                 $choiceColumn = new JFormElement('td');
 
                 $choiceInput = new JFormElement('input', [
@@ -141,15 +144,15 @@ class JFormComponentLikert extends JFormComponent {
                     'name' => $statement['name'],
                 ]);
                 // Set a selected value if defined
-                if(!empty($statement['selected'])) {
-                    if($statement['selected'] == $choice['value']) {
+                if (!empty($statement['selected'])) {
+                    if ($statement['selected'] == $choice['value']) {
                         $choiceInput->setAttribute('checked', 'checked');
                     }
                 }
                 $choiceColumn->insert($choiceInput);
 
                 // Choice sub labels
-                if(!empty($choice['sublabel'])) {
+                if (!empty($choice['sublabel'])) {
                     $choiceSublabel = new JFormElement('label', [
                         'class' => 'jFormComponentLikertSublabel',
                         'for' => $statement['name'].'-choice'.$choiceCount,
@@ -178,10 +181,11 @@ class JFormComponentLikert extends JFormComponent {
     }
 
     // Validation
-    public function required($options) {
+    public function required($options)
+    {
         $errorMessageArray = [];
-        foreach($options['value'] as $key => $statement) {
-            if(empty($statement)) {
+        foreach ($options['value'] as $key => $statement) {
+            if (empty($statement)) {
                 //print_r($key);
                 //print_r($statement);
                 array_push($errorMessageArray, [$key => 'Required.']);
@@ -192,11 +196,13 @@ class JFormComponentLikert extends JFormComponent {
     }
 }
 
-class JFormComponentLikertStatement extends JFormComponent {
+class JFormComponentLikertStatement extends JFormComponent
+{
     /**
      * Constructor
      */
-    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray) {
+    public function __construct($id, $label, $choiceArray, $statementArray, $optionsArray)
+    {
         // General settings
         $this->id = $id;
         $this->name = $this->id;
@@ -206,9 +212,8 @@ class JFormComponentLikertStatement extends JFormComponent {
         $this->initialize($optionsArray);
     }
 
-    public function  __toString() {
+    public function __toString()
+    {
         return;
     }
 }
-
-?>

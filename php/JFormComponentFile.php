@@ -1,9 +1,11 @@
 <?php
-class JFormComponentFile extends JFormComponent {
+class JFormComponentFile extends JFormComponent
+{
     /*
      * Constructor
      */
-    public function __construct($id, $label, $optionArray = []) {
+    public function __construct($id, $label, $optionArray = [])
+    {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -24,14 +26,16 @@ class JFormComponentFile extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    public function hasInstanceValues() {
+    public function hasInstanceValues()
+    {
         return isset($this->value[0]);
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         $options = parent::getOptions();
 
-        if($this->customStyle) {
+        if ($this->customStyle) {
             $options['options']['customStyle'] = true;
         }
 
@@ -42,7 +46,8 @@ class JFormComponentFile extends JFormComponent {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         // Generate the component div
         $div = $this->generateComponentDiv();
 
@@ -72,16 +77,16 @@ class JFormComponentFile extends JFormComponent {
             'class' => $this->inputClass,
             'size'=> 15,
         ]);
-        if(!empty($this->styleWidth)) {
+        if (!empty($this->styleWidth)) {
             $input->setAttribute('style', 'width: '.$this->styleWidth.';');
         }
-        if(!empty($this->maxLength)) {
+        if (!empty($this->maxLength)) {
             $input->setAttribute('maxlength', $this->maxLength);
         }
-        if($this->disabled) {
+        if ($this->disabled) {
             $input->setAttribute('disabled', 'disabled');
         }
-        if($this->customStyle){
+        if ($this->customStyle) {
             $input->addClassName('hidden');
             $div->insert($pseudoFileWrapper);
         }
@@ -95,25 +100,27 @@ class JFormComponentFile extends JFormComponent {
 
         return $div->__toString();
     }
-    public function required($options) {
+    public function required($options)
+    {
         $messageArray = ['Required.'];
         return !empty($options['value']) ? 'success' : $messageArray;
     }
 
-    public function extension($options) {
+    public function extension($options)
+    {
         $messageArray = ['Must have the .'.$options->extension.' extension.'];
         $extensionRegex = '/\.'.options.extension.'$/';
         return $options['value']['name'] == '' || preg_match($extensionRegex , $options['value']['name']) ? 'success' : $messageArray;
     }
 
-    public function extensionType($options) {
+    public function extensionType($options)
+    {
         $extensionType;
         $messageArray = ['Incorrect file type.'];
 
-        if(is_array($options['extensionType'])) {
+        if (is_array($options['extensionType'])) {
             $extensionType = '/\.('.implode('|', $options['extensionType']).')/';
-        }
-        else {
+        } else {
             $extensionObject = new stdClass();
             $extensionObject->image = '/\.(bmp|gif|jpg|png|psd|psp|thm|tif)$/i';
             $extensionObject->document = '/\.(doc|docx|log|msg|pages|rtf|txt|wpd|wps)$/i';
@@ -125,60 +132,60 @@ class JFormComponentFile extends JFormComponent {
         }
         return empty($options['value']) || preg_match($extensionType , $options['value']['name']) ? 'success' : $messageArray;
     }
-    public function size($options) {
-        if(empty($options['value'])){
+    public function size($options)
+    {
+        if (empty($options['value'])) {
             return 'success';
         }
         // they will give filesize in kb
         $fileSizeInKb = $this->value['size'] / 1024;
         return $fileSizeInKb <= $options['size'] ? 'success' : ['File must be smaller then ' . $options['size'].'kb. File is '.round($fileSizeInKb, 2). 'kb.'];
     }
-    public function imageDimensions($options) {
-        if(empty($options['value'])){
+    public function imageDimensions($options)
+    {
+        if (empty($options['value'])) {
             return 'success';
         }
         $imageInfo = getimagesize($this->value['tmp_name']);
 
         // Check to see if the file is an image
-        if(!$imageInfo) {
+        if (!$imageInfo) {
             return ["File is not a valid image file."];
         } else {
             $errorMessageArray = [];
             $width = $imageInfo[0];
             $height = $imageInfo[1];
-            if($width > $options['width']) {
+            if ($width > $options['width']) {
                 $errorMessageArray[] = ['The image must be less then '.$options['width'].'px wide. File is '.$width. 'px.'];
             }
-            if($height > $options['height']) {
+            if ($height > $options['height']) {
                 $errorMessageArray[] = ['The image must be less then '.$options['height'].'px tall. File is '.$height. 'px.'];
             }
         }
         return empty($errorMessageArray) ? 'success' : $errorMessageArray;
     }
 
-    public function minImageDimensions($options) {
-        if(empty($options['value'])){
+    public function minImageDimensions($options)
+    {
+        if (empty($options['value'])) {
             return 'success';
         }
         $imageInfo = getimagesize($this->value['tmp_name']);
 
         // Check to see if the file is an image
-        if(!$imageInfo) {
+        if (!$imageInfo) {
             return ["File is not a valid image file."];
-        }
-        else {
+        } else {
             $errorMessageArray = [];
             $width = $imageInfo[0];
             $height = $imageInfo[1];
-            if($width < $options['width']) {
+            if ($width < $options['width']) {
                 $errorMessageArray[] = ['The image must at least then '.$options['width'].'px wide. File is '.$width. 'px.'];
             }
-            if($height < $options['height']) {
+            if ($height < $options['height']) {
                 $errorMessageArray[] = ['The image must at least then '.$options['height'].'px tall. File is '.$height. 'px.'];
             }
         }
         return empty($errorMessageArray) ? 'success' : $errorMessageArray;
     }
 }
-
-?>

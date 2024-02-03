@@ -1,30 +1,36 @@
 <?php
-class JFormComponentHtml extends JFormComponent {
+class JFormComponentHtml extends JFormComponent
+{
     public $html;
 
-    public function __construct($html) {
+    public function __construct($html)
+    {
         $this->id = uniqid();
         $this->html = $html;
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         return null;
     }
 
-    public function clearValue() {
+    public function clearValue()
+    {
         return null;
     }
 
-    public function validate() {
+    public function validate()
+    {
         return null;
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return null;
     }
 
-    public function  __toString() {
+    public function __toString()
+    {
         return $this->html;
     }
 }
-?>

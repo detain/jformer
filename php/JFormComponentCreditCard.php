@@ -1,6 +1,7 @@
 <?php
 
-class JFormComponentCreditCard extends JFormComponent {
+class JFormComponentCreditCard extends JFormComponent
+{
     public $emptyValues = null; // cardNumber, securityCode
     public $showSublabels = true;
     public $showCardType = true;
@@ -12,7 +13,8 @@ class JFormComponentCreditCard extends JFormComponent {
     /*
      * Constructor
      */
-    public function __construct($id, $label, $optionArray = []) {
+    public function __construct($id, $label, $optionArray = [])
+    {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -23,34 +25,36 @@ class JFormComponentCreditCard extends JFormComponent {
         $this->initialize($optionArray);
 
         // Set the empty values with a boolean
-        if($this->emptyValues === true) {
+        if ($this->emptyValues === true) {
             $this->emptyValues = ['cardNumber' => 'Card Number', 'securityCode' => 'CSC/CVV'];
         }
     }
 
-    public function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled) {
+    public function getOption($optionValue, $optionLabel, $optionSelected, $optionDisabled)
+    {
         $option = new JFormElement('option', ['value' => $optionValue]);
         $option->update($optionLabel);
 
-        if($optionSelected) {
+        if ($optionSelected) {
             $option->setAttribute('selected', 'selected');
         }
 
-        if($optionDisabled) {
+        if ($optionDisabled) {
             $option->setAttribute('disabled', 'disabled');
         }
 
         return $option;
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         $options = parent::getOptions();
 
-        if(!empty($this->emptyValues)) {
+        if (!empty($this->emptyValues)) {
             $options['options']['emptyValues'] = $this->emptyValues;
         }
 
-        if(empty($options['options'])) {
+        if (empty($options['options'])) {
             unset($options['options']);
         }
 
@@ -61,12 +65,13 @@ class JFormComponentCreditCard extends JFormComponent {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         // Generate the component div
         $componentDiv = $this->generateComponentDiv();
 
-         // Add the card type select tag
-        if($this->showCardType) {
+        // Add the card type select tag
+        if ($this->showCardType) {
             $cardTypeDiv = new JFormElement('div', [
                 'class' => 'cardTypeDiv',
             ]);
@@ -76,11 +81,11 @@ class JFormComponentCreditCard extends JFormComponent {
                 'class' => 'cardType',
             ]);
             // Have a default value the drop down list if there isn't a sublabel
-            if($this->showSublabels == false){
+            if ($this->showSublabels == false) {
                 $cardType->insert($this->getOption('', 'Card Type', true, true));
             }
             // Add the card types
-            foreach($this->creditCardProviders as $key => $value) {
+            foreach ($this->creditCardProviders as $key => $value) {
                 $cardType->insert($this->getOption($key, $value, false, false));
             }
             $cardTypeDiv->insert($cardType);
@@ -109,22 +114,21 @@ class JFormComponentCreditCard extends JFormComponent {
             'class' => 'expirationMonth',
         ]);
         // Have a default value the drop down list if there isn't a sublabel
-        if($this->showSublabels == false){
+        if ($this->showSublabels == false) {
             $expirationMonth->insert($this->getOption('', 'Month', true, true));
         }
         // Add the months
-        foreach(JFormComponentDropDown::getMonthArray() as $dropDownOption) {
+        foreach (JFormComponentDropDown::getMonthArray() as $dropDownOption) {
             $optionValue = $dropDownOption['value'] ?? '';
             $optionLabel = $dropDownOption['label'] ?? '';
             $optionSelected = $dropDownOption['selected'] ?? false;
             $optionDisabled = $dropDownOption['disabled'] ?? false;
             $optionOptGroup = $dropDownOption['optGroup'] ?? '';
 
-            if($this->showMonthName) {
+            if ($this->showMonthName) {
                 $expirationMonth->insert($this->getOption($optionValue, $optionValue.' - '.$optionLabel, $optionSelected, $optionDisabled));
                 $expirationMonth->addClassName('long');
-            }
-            else {
+            } else {
                 $expirationMonth->insert($this->getOption($optionValue, $optionValue, $optionSelected, $optionDisabled));
             }
         }
@@ -136,20 +140,19 @@ class JFormComponentCreditCard extends JFormComponent {
             'class' => 'expirationYear',
         ]);
         // Add years
-        if($this->showLongYear) {
+        if ($this->showLongYear) {
             $startYear = Date('Y');
             $expirationYear->addClassName('long');
-        }
-        else {
+        } else {
             $startYear = Date('y');
-            if(!$this->showMonthName) {
+            if (!$this->showMonthName) {
                 $expirationDateDiv->insert('<span class="expirationDateSeparator">/</span>');
             }
         }
-        if($this->showSublabels == false){
+        if ($this->showSublabels == false) {
             $expirationYear->insert($this->getOption('', 'Year', true, true));
         }
-        foreach(range($startYear, $startYear+11) as $year) {
+        foreach (range($startYear, $startYear+11) as $year) {
             $expirationYear->insert($this->getOption($year, $year, false, false));
         }
         $expirationDateDiv->insert($expirationYear);
@@ -168,13 +171,13 @@ class JFormComponentCreditCard extends JFormComponent {
         $securityCodeDiv->insert($securityCode);
 
         // Set the empty values if they are enabled
-        if(!empty($this->emptyValues)) {
-            foreach($this->emptyValues as $emptyValueKey => $emptyValue) {
-                if($emptyValueKey == 'cardNumber') {
+        if (!empty($this->emptyValues)) {
+            foreach ($this->emptyValues as $emptyValueKey => $emptyValue) {
+                if ($emptyValueKey == 'cardNumber') {
                     $cardNumber->setAttribute('value', $emptyValue);
                     $cardNumber->addClassName('defaultValue');
                 }
-                if($emptyValueKey == 'securityCode') {
+                if ($emptyValueKey == 'securityCode') {
                     $securityCode->setAttribute('value', $emptyValue);
                     $securityCode->addClassName('defaultValue');
                 }
@@ -182,24 +185,24 @@ class JFormComponentCreditCard extends JFormComponent {
         }
 
         // Put the sublabels in if the option allows for it
-        if($this->showSublabels) {
-            if($this->showCardType) {
+        if ($this->showSublabels) {
+            if ($this->showCardType) {
                 $cardTypeDiv->insert('<div class="jFormComponentSublabel"><p>Card Type</p></div>');
             }
             $cardNumberDiv->insert('<div class="jFormComponentSublabel"><p>Card Number</p></div>');
             $expirationDateDiv->insert('<div class="jFormComponentSublabel"><p>Expiration Date</p></div>');
-            if($this->showSecurityCode) {
+            if ($this->showSecurityCode) {
                 $securityCodeDiv->insert('<div class="jFormComponentSublabel"><p>Security Code</p></div>');
             }
         }
 
         // Insert the components
-        if($this->showCardType) {
+        if ($this->showCardType) {
             $componentDiv->insert($cardTypeDiv);
         }
         $componentDiv->insert($cardNumberDiv);
         $componentDiv->insert($expirationDateDiv);
-        if($this->showSecurityCode) {
+        if ($this->showSecurityCode) {
             $componentDiv->insert($securityCodeDiv);
         }
 
@@ -213,41 +216,38 @@ class JFormComponentCreditCard extends JFormComponent {
     }
 
     // Credit card validations
-    public function required($options) {
+    public function required($options)
+    {
         $errorMessageArray = [];
-        if($this->showCardType && empty($options['value']->cardType)) {
+        if ($this->showCardType && empty($options['value']->cardType)) {
             array_push($errorMessageArray, ['Card type is required.']);
         }
-        if(empty($options['value']->cardNumber)) {
+        if (empty($options['value']->cardNumber)) {
             array_push($errorMessageArray, ['Card number is required.']);
-        }
-        else {
-            if(preg_match('/[^\d]/', $options['value']->cardNumber)) {
+        } else {
+            if (preg_match('/[^\d]/', $options['value']->cardNumber)) {
                 array_push($errorMessageArray, ['Card number may only contain numbers.']);
             }
-            if(mb_strlen($options['value']->cardNumber) > 16 || mb_strlen($options['value']->cardNumber) < 13) {
+            if (mb_strlen($options['value']->cardNumber) > 16 || mb_strlen($options['value']->cardNumber) < 13) {
                 array_push($errorMessageArray, ['Card number must contain 13 to 16 digits.']);
             }
         }
-        if(empty($options['value']->expirationMonth)) {
+        if (empty($options['value']->expirationMonth)) {
             array_push($errorMessageArray, ['Expiration month is required.']);
         }
-        if(empty($options['value']->expirationYear)) {
+        if (empty($options['value']->expirationYear)) {
             array_push($errorMessageArray, ['Expiration year is required.']);
         }
-        if($this->showSecurityCode && empty($options['value']->securityCode)) {
+        if ($this->showSecurityCode && empty($options['value']->securityCode)) {
             array_push($errorMessageArray, ['Security code is required.']);
-        }
-        else if($this->showSecurityCode) {
-            if(preg_match('/[^\d]/', $options['value']->securityCode)) {
+        } elseif ($this->showSecurityCode) {
+            if (preg_match('/[^\d]/', $options['value']->securityCode)) {
                 array_push($errorMessageArray, ['Security code may only contain numbers.']);
             }
-            if(mb_strlen($options['value']->securityCode) > 4 || mb_strlen($options['value']->securityCode) < 3) {
+            if (mb_strlen($options['value']->securityCode) > 4 || mb_strlen($options['value']->securityCode) < 3) {
                 array_push($errorMessageArray, ['Security code must contain 3 or 4 digits.']);
             }
         }
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
 }
-
-?>

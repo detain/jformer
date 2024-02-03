@@ -3,7 +3,8 @@
 /**
  * A FormSection object contains FormComponent objects and belongs to a FormPage object
  */
-class JFormSection {
+class JFormSection
+{
 
     // General settings
     public $id;
@@ -30,13 +31,14 @@ class JFormSection {
     /*
      * Constructor
      */
-    public function __construct($id, $optionArray = [], $jFormComponentArray = []) {
+    public function __construct($id, $optionArray = [], $jFormComponentArray = [])
+    {
         // Set the id
         $this->id = $id;
 
         // Use the options hash to update object variables
-        if(is_array($optionArray)) {
-            foreach($optionArray as $option => $value) {
+        if (is_array($optionArray)) {
+            foreach ($optionArray as $option => $value) {
                 $this->{$option} = $value;
             }
         }
@@ -47,14 +49,16 @@ class JFormSection {
         return $this;
     }
 
-    public function addJFormComponent($jFormComponent) {
+    public function addJFormComponent($jFormComponent)
+    {
         $jFormComponent->parentJFormSection = $this;
         $this->jFormComponentArray[$jFormComponent->id] = $jFormComponent;
 
         return $this;
     }
 
-    public function addJFormComponents($jFormComponents) {
+    public function addJFormComponents($jFormComponents)
+    {
         if (is_array($jFormComponents)) {
             foreach ($jFormComponentArray as $jFormComponent) {
                 $jFormComponent->parentJFormSection = $this;
@@ -67,21 +71,23 @@ class JFormSection {
         return $this;
     }
 
-    public function addJFormComponentArray($jFormComponentArray) {
-        foreach($jFormComponentArray as $jFormComponent) {
+    public function addJFormComponentArray($jFormComponentArray)
+    {
+        foreach ($jFormComponentArray as $jFormComponent) {
             $this->addJFormComponent($jFormComponent);
         }
         return $this;
     }
 
-    public function getData() {
+    public function getData()
+    {
         $this->data = [];
 
         // Check to see if jFormComponent array contains instances
-        if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
-            foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
-                foreach($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
-                    if(get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
+        if (array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
+            foreach ($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
+                foreach ($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
+                    if (get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
                         $this->data[$jFormComponentArrayInstanceIndex][$jFormComponentKey] = $jFormComponent->getValue();
                     }
                 }
@@ -89,8 +95,8 @@ class JFormSection {
         }
         // If the section does not have instances
         else {
-            foreach($this->jFormComponentArray as $jFormComponentKey => $jFormComponent) {
-                if(get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
+            foreach ($this->jFormComponentArray as $jFormComponentKey => $jFormComponent) {
+                if (get_class($jFormComponent) != 'JFormComponentHtml') { // Don't include HTML components
                     $this->data[$jFormComponentKey] = $jFormComponent->getValue();
                 }
             }
@@ -99,18 +105,19 @@ class JFormSection {
         return $this->data;
     }
 
-    public function setData($jFormSectionData) {
+    public function setData($jFormSectionData)
+    {
         // Handle multiple instances
-        if(is_array($jFormSectionData)) {
+        if (is_array($jFormSectionData)) {
             $newJFormComponentArray = [];
 
             // Go through each section instance
-            foreach($jFormSectionData as $jFormSectionIndex => $jFormSection) {
+            foreach ($jFormSectionData as $jFormSectionIndex => $jFormSection) {
                 // Create a clone of the jFormComponentArray
                 $newJFormComponentArray[$jFormSectionIndex] = unserialize(serialize($this->jFormComponentArray));
 
                 // Go through each component in the instanced section
-                foreach($jFormSection as $jFormComponentKey => $jFormComponentValue) {
+                foreach ($jFormSection as $jFormComponentKey => $jFormComponentValue) {
                     // Set the value of the clone
                     $newJFormComponentArray[$jFormSectionIndex][$jFormComponentKey]->setValue($jFormComponentValue);
                 }
@@ -120,7 +127,7 @@ class JFormSection {
         // Single instance
         else {
             // Go through each component
-            foreach($jFormSectionData as $jFormComponentKey => $jFormComponentValue) {
+            foreach ($jFormSectionData as $jFormComponentKey => $jFormComponentValue) {
                 if (!is_null($this->jFormComponentArray[$jFormComponentKey])) {
                     $this->jFormComponentArray[$jFormComponentKey]->setValue($jFormComponentValue);
                 }
@@ -128,39 +135,41 @@ class JFormSection {
         }
     }
 
-    public function clearData() {
+    public function clearData()
+    {
         // Check to see if jFormComponent array contains instances
-        if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
-            foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
-                foreach($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
+        if (array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
+            foreach ($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
+                foreach ($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
                     $jFormComponent->clearValue();
                 }
             }
         }
         // If the section does not have instances
         else {
-            foreach($this->jFormComponentArray as $jFormComponent) {
+            foreach ($this->jFormComponentArray as $jFormComponent) {
                 $jFormComponent->clearValue();
             }
         }
         $this->data = null;
     }
 
-    public function validate() {
+    public function validate()
+    {
         // Clear the error message array
         $this->errorMessageArray = [];
 
         // If we have instances, return an array
-        if(array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
-            foreach($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
-                foreach($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
+        if (array_key_exists(0, $this->jFormComponentArray) && is_array($this->jFormComponentArray[0])) {
+            foreach ($this->jFormComponentArray as $jFormComponentArrayInstanceIndex => $jFormComponentArrayInstance) {
+                foreach ($jFormComponentArrayInstance as $jFormComponentKey => $jFormComponent) {
                     $this->errorMessageArray[$jFormComponentArrayInstanceIndex][$jFormComponent->id] = $jFormComponent->validate();
                 }
             }
         }
         // If the section does not have instances, return an single dimension array
         else {
-            foreach($this->jFormComponentArray as $jFormComponent) {
+            foreach ($this->jFormComponentArray as $jFormComponent) {
                 $this->errorMessageArray[$jFormComponent->id] = $jFormComponent->validate();
             }
         }
@@ -168,46 +177,48 @@ class JFormSection {
         return $this->errorMessageArray;
     }
 
-    public function updateRequiredText($requiredText) {
-        foreach($this->jFormComponentArray as $jFormComponent) {
+    public function updateRequiredText($requiredText)
+    {
+        foreach ($this->jFormComponentArray as $jFormComponent) {
             $jFormComponent->updateRequiredText($requiredText);
         }
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         $options = [];
         $options['options'] = [];
         $options['jFormComponents'] = [];
 
         // Instances
-        if(!empty($this->instanceOptions)) {
+        if (!empty($this->instanceOptions)) {
             $options['options']['instanceOptions'] = $this->instanceOptions;
-            if(!isset($options['options']['instanceOptions']['addButtonText'])) {
+            if (!isset($options['options']['instanceOptions']['addButtonText'])) {
                 $options['options']['instanceOptions']['addButtonText'] = 'Add Another';
             }
-            if(!isset($options['options']['instanceOptions']['removeButtonText'])) {
+            if (!isset($options['options']['instanceOptions']['removeButtonText'])) {
                 $options['options']['instanceOptions']['removeButtonText'] = 'Remove';
             }
         }
 
         // Dependencies
-        if(!empty($this->dependencyOptions)) {
+        if (!empty($this->dependencyOptions)) {
             // Make sure the dependentOn key is tied to an array
-            if(isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
+            if (isset($this->dependencyOptions['dependentOn']) && !is_array($this->dependencyOptions['dependentOn'])) {
                 $this->dependencyOptions['dependentOn'] = [$this->dependencyOptions['dependentOn']];
             }
             $options['options']['dependencyOptions'] = $this->dependencyOptions;
         }
 
         // Get options for each of the jFormComponents
-        foreach($this->jFormComponentArray as $jFormComponent) {
+        foreach ($this->jFormComponentArray as $jFormComponent) {
             // Don't get options for JFormComponentHtml objects
-            if(get_class($jFormComponent) != 'JFormComponentHtml') {
+            if (get_class($jFormComponent) != 'JFormComponentHtml') {
                 $options['jFormComponents'][$jFormComponent->id] = $jFormComponent->getOptions();
             }
         }
 
-        if(empty($options['options'])) {
+        if (empty($options['options'])) {
             unset($options['options']);
         }
 
@@ -218,7 +229,8 @@ class JFormSection {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         // Section fieldset
         $jFormSectionDiv = new JFormElement('div', [
             'id' => $this->id,
@@ -232,12 +244,12 @@ class JFormSection {
         //}
 
         // Set the style
-        if(!empty($this->style)) {
+        if (!empty($this->style)) {
             $jFormSectionDiv->addToAttribute('style', $this->style);
         }
 
         // Add a title to the page
-        if(!empty($this->title)) {
+        if (!empty($this->title)) {
             $title = new JFormElement('div', [
                 'class' => $this->titleClass
             ]);
@@ -246,7 +258,7 @@ class JFormSection {
         }
 
         // Add a description to the page
-        if(!empty($this->description)) {
+        if (!empty($this->description)) {
             $description = new JFormElement('div', [
                 'class' => $this->descriptionClass
             ]);
@@ -255,11 +267,10 @@ class JFormSection {
         }
 
         // Add the form sections to the page
-        foreach($this->jFormComponentArray as $jFormComponentArray) {
+        foreach ($this->jFormComponentArray as $jFormComponentArray) {
             $jFormSectionDiv->insert($jFormComponentArray);
         }
 
         return $jFormSectionDiv->__toString();
     }
 }
-?>

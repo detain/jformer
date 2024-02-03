@@ -1,9 +1,8 @@
 <?php
 // Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
+if (file_exists('../php/JFormer.php')) {
     require_once('../php/JFormer.php');
-}
-else if(file_exists('../../php/JFormer.php')) {
+} elseif (file_exists('../../php/JFormer.php')) {
     require_once('../../php/JFormer.php');
 }
 
@@ -20,11 +19,11 @@ $hiddenComponentForm->addJFormComponentArray([
 ]);
 
 // Set the function for a successful form submission
-function onSubmit($formValues) {
+function onSubmit($formValues)
+{
     // Return a simple debug response
     return ['failureNoticeHtml' => json_encode($formValues)];
 }
 
 // Process any request to the form
 $hiddenComponentForm->processRequest();
-?>

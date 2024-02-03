@@ -1,9 +1,8 @@
 <?php
 // Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
+if (file_exists('../php/JFormer.php')) {
     require_once('../php/JFormer.php');
-}
-else if(file_exists('../../php/JFormer.php')) {
+} elseif (file_exists('../../php/JFormer.php')) {
     require_once('../../php/JFormer.php');
 }
 
@@ -37,17 +36,18 @@ $loginForm->addJFormComponentArray([
 ]);
 
 // Set the function for a successful form submission
-function onSubmit($formValues) {
+function onSubmit($formValues)
+{
     // Server side checks go here
-    if($formValues->username == 'admin' && $formValues->password == '12345') {
+    if ($formValues->username == 'admin' && $formValues->password == '12345') {
         // If they want to be remembered
-        if(!empty($formValues->rememberMe)) {
+        if (!empty($formValues->rememberMe)) {
             // Let them know they successfully logged in
             $response = ['successPageHtml' => '
                 <h2>Login Successful</h2>
                 <p>We will keep you logged in on this computer.</p>
             '];
-            // Alternatively, you could also do a redirect
+        // Alternatively, you could also do a redirect
             //return array('redirect' => 'http://www.jformer.com');
         }
         // If they do not want to be remembered
@@ -71,4 +71,3 @@ function onSubmit($formValues) {
 
 // Process any request to the form
 $loginForm->processRequest();
-?>

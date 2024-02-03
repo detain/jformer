@@ -1,9 +1,8 @@
 <?php
 // Include the jFormer PHP (use an good path in your code)
-if(file_exists('../php/JFormer.php')) {
+if (file_exists('../php/JFormer.php')) {
     require_once('../php/JFormer.php');
-}
-else if(file_exists('../../php/JFormer.php')) {
+} elseif (file_exists('../../php/JFormer.php')) {
     require_once('../../php/JFormer.php');
 }
 
@@ -31,13 +30,13 @@ $contactForm->addJFormComponentArray([
 ]);
 
 // Set the function for a successful form submission
-function onSubmit($formValues) {
+function onSubmit($formValues)
+{
 
     // Concatenate the name
-    if(!empty($formValues->name->middleInitial)) {
+    if (!empty($formValues->name->middleInitial)) {
         $name = $formValues->name->firstName . ' ' . $formValues->name->middleInitial . ' ' . $formValues->name->lastName;
-    }
-    else {
+    } else {
         $name = $formValues->name->firstName . ' ' . $formValues->name->lastName;
     }
 
@@ -52,13 +51,12 @@ function onSubmit($formValues) {
     $mail = mail($toAddress, $subject, $message, 'From: '.$fromAddress."\r\n".'Reply-To: '.$fromAddress."\r\n".'X-Mailer: PHP/'.phpversion());
 
     // Send the message
-    if($mail) {
+    if ($mail) {
         $response['successPageHtml'] = '
             <h1>Thanks for Contacting Us</h1>
             <p>Your message has been successfully sent.</p>
         ';
-    }
-    else {
+    } else {
         $response['failureNoticeHtml'] = '
             There was a problem sending your message.
         ';
@@ -69,4 +67,3 @@ function onSubmit($formValues) {
 
 // Process any request to the form
 $contactForm->processRequest();
-?>

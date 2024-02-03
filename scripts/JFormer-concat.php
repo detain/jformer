@@ -21,5 +21,3 @@ include('JFormComponentMultipleChoice.js');
 include('JFormComponentName.js');
 include('JFormComponentSingleLineText.js');
 include('JFormComponentTextArea.js');
-
-?>

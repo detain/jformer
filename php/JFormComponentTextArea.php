@@ -1,10 +1,12 @@
 <?php
 
-class JFormComponentTextArea extends JFormComponent {
+class JFormComponentTextArea extends JFormComponent
+{
     /*
      * Constructor
      */
-    public function __construct($id, $label, $optionArray = []) {
+    public function __construct($id, $label, $optionArray = [])
+    {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -30,25 +32,27 @@ class JFormComponentTextArea extends JFormComponent {
         $this->initialize($optionArray);
     }
 
-    public function hasInstanceValues() {
+    public function hasInstanceValues()
+    {
         return is_array($this->value);
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         $options = parent::getOptions();
 
         // Tabbing
-        if($this->allowTabbing) {
+        if ($this->allowTabbing) {
             $options['options']['allowTabbing'] = true;
         }
 
         // Empty value
-        if(!empty($this->emptyValue)) {
+        if (!empty($this->emptyValue)) {
             $options['options']['emptyValue'] = $this->emptyValue;
         }
 
         // Auto grow
-        if($this->autoGrow) {
+        if ($this->autoGrow) {
             $options['options']['autoGrow'] = $this->autoGrow;
         }
 
@@ -59,7 +63,8 @@ class JFormComponentTextArea extends JFormComponent {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         // Generate the component div
         $div = $this->generateComponentDiv();
 
@@ -69,35 +74,33 @@ class JFormComponentTextArea extends JFormComponent {
             'name' => $this->name,
             'class' => $this->inputClass,
         ]);
-        if(!empty($this->width)) {
-            if(array_key_exists($this->width, $this->widthArray)) {
+        if (!empty($this->width)) {
+            if (array_key_exists($this->width, $this->widthArray)) {
                 $textArea->setAttribute('style', 'width: '.$this->widthArray[$this->width].';');
-            }
-            else {
+            } else {
                 $textArea->setAttribute('style', 'width: '.$this->width.';');
             }
         }
-        if(!empty($this->height)) {
-            if(array_key_exists($this->height, $this->heightArray)) {
+        if (!empty($this->height)) {
+            if (array_key_exists($this->height, $this->heightArray)) {
                 $textArea->addToAttribute('style', 'height: '.$this->heightArray[$this->height].';');
-            }
-            else {
+            } else {
                 $textArea->addToAttribute('style', 'height: '.$this->height.';');
             }
         }
-        if(!empty($this->style)) {
+        if (!empty($this->style)) {
             $textArea->addToAttribute('style', $this->style);
         }
-        if($this->disabled) {
+        if ($this->disabled) {
             $textArea->setAttribute('disabled', 'disabled');
         }
-        if($this->readOnly) {
+        if ($this->readOnly) {
             $textArea->setAttribute('readonly', 'readonly');
         }
-        if($this->wrap) {
+        if ($this->wrap) {
             $textArea->setAttribute('wrap', $this->wrap);
         }
-        if(isset($this->initialValue)) {
+        if (isset($this->initialValue)) {
             $textArea->update($this->initialValue);
         }
         $div->insert($textArea);
@@ -111,5 +114,3 @@ class JFormComponentTextArea extends JFormComponent {
         return $div->__toString();
     }
 }
-
-?>

@@ -1,6 +1,7 @@
 <?php
 
-class JFormElement {
+class JFormElement
+{
     private $type;
     private $unaryTagArray = ['input', 'img', 'hr', 'br', 'meta', 'link'];
     private $attributeArray;
@@ -13,10 +14,11 @@ class JFormElement {
      * @param <type> $attributeArray
      * @param <type> $unaryTagArray
      */
-    public function __construct($type, $attributeArray = []) {
+    public function __construct($type, $attributeArray = [])
+    {
         $this->type = strtolower($type);
 
-        foreach($attributeArray as $attribute => $value) {
+        foreach ($attributeArray as $attribute => $value) {
             $this->setAttribute($attribute, $value);
         }
 
@@ -30,27 +32,28 @@ class JFormElement {
      * @param <type> $value
      */
 
-    public function getAttribute($attribute) {
+    public function getAttribute($attribute)
+    {
         return $this->attributeArray[$attribute];
     }
 
 
-    public function setAttribute($attribute, $value = '') {
-        if(!is_array($attribute)) {
+    public function setAttribute($attribute, $value = '')
+    {
+        if (!is_array($attribute)) {
             $this->attributeArray[$attribute] = $value;
-        }
-        else {
+        } else {
             $this->attributeArray = array_merge($this->attributeArray, $attribute);
         }
 
         return $this;
     }
 
-    public function addToAttribute($attribute, $value = '') {
-        if(isset($this->attributeArray[$attribute])) {
+    public function addToAttribute($attribute, $value = '')
+    {
+        if (isset($this->attributeArray[$attribute])) {
             $currentValue = $this->attributeArray[$attribute];
-        }
-        else {
+        } else {
             $currentValue = '';
         }
         $this->attributeArray[$attribute] = $currentValue.$value;
@@ -58,11 +61,12 @@ class JFormElement {
         return $this;
     }
 
-    public function addClassName($className) {
+    public function addClassName($className)
+    {
         $currentClasses = $this->getAttribute('class');
 
         // Check to see if the class is already added
-        if(!strstr($currentClasses, $className)) {
+        if (!strstr($currentClasses, $className)) {
             $newClasses = $currentClasses.' '.$className;
             $this->setAttribute('class', $newClasses);
         }
@@ -73,11 +77,11 @@ class JFormElement {
      *
      * @param <type> $object
      */
-    public function insert($object) {
-        if(@get_class($object) == __class__) {
+    public function insert($object)
+    {
+        if (@get_class($object) == __class__) {
             $this->innerHtml .= $object->build();
-        }
-        else {
+        } else {
             $this->innerHtml .= $object;
         }
 
@@ -90,7 +94,8 @@ class JFormElement {
      * @param <type> $object
      * @return <type>
      */
-    public function update($object) {
+    public function update($object)
+    {
         $this->innerHtml = $object;
 
         return $this;
@@ -101,22 +106,22 @@ class JFormElement {
      *
      * @return <type>
      */
-    public function build() {
+    public function build()
+    {
         // Start the tag
         $element = '<'.$this->type;
 
         // Add attributes
-        if(count($this->attributeArray)) {
-            foreach($this->attributeArray as $key => $value) {
+        if (count($this->attributeArray)) {
+            foreach ($this->attributeArray as $key => $value) {
                 $element .= ' '.$key.'="'.$value.'"';
             }
         }
 
         // Close the element
-        if(!in_array($this->type, $this->unaryTagArray)) {
+        if (!in_array($this->type, $this->unaryTagArray)) {
             $element.= '>'.$this->innerHtml.'</'.$this->type.'>';
-        }
-        else {
+        } else {
             $element.= ' >';
         }
 
@@ -130,9 +135,8 @@ class JFormElement {
      *
      * @return <type>
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->build();
     }
 }
-
-?>

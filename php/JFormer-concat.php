@@ -24,5 +24,3 @@ $php = str_ireplace('?>', '', $php);
 $php = str_ireplace('<?php', '', $php);
 
 echo '<?php'.$php.'?>';
-
-?>

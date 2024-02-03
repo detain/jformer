@@ -1,10 +1,12 @@
 <?php
 
-class JFormComponentHidden extends JFormComponent {
+class JFormComponentHidden extends JFormComponent
+{
     /*
      * Constructor
      */
-    public function __construct($id, $value, $optionArray = []) {
+    public function __construct($id, $value, $optionArray = [])
+    {
         // Class variables
         $this->id = $id;
         $this->name = $this->id;
@@ -21,7 +23,8 @@ class JFormComponentHidden extends JFormComponent {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         // Generate the component div without a label
         $div = $this->generateComponentDiv(false);
         $div->addToAttribute('style', 'display: none;');
@@ -38,5 +41,3 @@ class JFormComponentHidden extends JFormComponent {
         return $div->__toString();
     }
 }
-
-?>
