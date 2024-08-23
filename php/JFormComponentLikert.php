@@ -214,8 +214,8 @@ class JFormComponentLikertStatement extends JFormComponent
 
     public function __toString()
     {
-        $componentDiv = $this->generateComponentDiv();
-        return $componentDiv->__toString();
-        //return '';
+	return '';
+        //$componentDiv = $this->generateComponentDiv();
+        //return $componentDiv->__toString();
     }
 }
