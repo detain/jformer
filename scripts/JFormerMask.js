@@ -5,7 +5,7 @@
 	Version: 1.2.2 (03/09/2009 22:39:06)
 */
 (function($) {
-	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
+	var pasteEventName = (typeof $.browser != "undefined" && $.browser.msie ? 'paste' : 'input') + ".mask";
 	var iPhone = (window.orientation != undefined);
 
 	$.mask = {

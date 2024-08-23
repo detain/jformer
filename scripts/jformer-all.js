@@ -345,7 +345,7 @@ DateInput = (function($) {
 
             this.dateSelector = this.rootLayers = $('<div class="jFormComponentDateSelector"></div>').append(nav, tableShell).insertAfter(this.input);
 
-            if ($.browser.msie && $.browser.version < 7) {
+            if (typeof $.browser != "undefined" && $.browser.msie && $.browser.version < 7) {
 
                 this.ieframe = $('<iframe class="jFormComponentDateSelectorIEFrame" frameborder="0" src="#"></iframe>').insertBefore(this.dateSelector);
                 this.rootLayers = this.rootLayers.add(this.ieframe);
@@ -659,7 +659,7 @@ DateInput = (function($) {
 	Version: 1.2.2 (03/09/2009 22:39:06)
 */
 (function($) {
-	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
+	var pasteEventName = (typeof $.browser != "undefined" && $.browser.msie ? 'paste' : 'input') + ".mask";
 	var iPhone = (window.orientation != undefined);
 
 	$.mask = {
