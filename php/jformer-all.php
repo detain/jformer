@@ -142,8 +142,6 @@ class JFormElement
 }
 
 
-
-
 require_once('JFormElement.php');
 require_once('JFormPage.php');
 require_once('JFormSection.php');
@@ -1024,7 +1022,6 @@ if (isset($_GET['iframe'])) {
 }
 
 
-
 /**
  * A FormPage object contains FormSection objects and belongs to a Form object
  */
@@ -1535,7 +1532,6 @@ class JFormSection
     }
 }
 
-
 /**
  * An abstract FormComponent object, cannot be instantiated
  */
@@ -1875,7 +1871,6 @@ abstract class JFormComponent
 }
 
 
-
 class JFormComponentAddress extends JFormComponent
 {
     public $selectedCountry = null;
@@ -2187,8 +2182,6 @@ class JFormComponentAddress extends JFormComponent
 }
 
 
-
-
 class JFormComponentCreditCard extends JFormComponent
 {
     public $emptyValues = null; // cardNumber, securityCode
@@ -2442,8 +2435,6 @@ class JFormComponentCreditCard extends JFormComponent
 }
 
 
-
-
 class JFormComponentDate extends JFormComponentSingleLineText
 {
     /*
@@ -2595,8 +2586,6 @@ class JFormComponentDate extends JFormComponentSingleLineText
         return sizeof($errorMessageArray) < 1 ? 'success' : $errorMessageArray;
     }
 }
-
-
 
 class JFormComponentDropDown extends JFormComponent
 {
@@ -2777,9 +2766,6 @@ class JFormComponentDropDown extends JFormComponent
         return $div->__toString();
     }
 }
-
-
-
 
 class JFormComponentFile extends JFormComponent
 {
@@ -2973,8 +2959,6 @@ class JFormComponentFile extends JFormComponent
 }
 
 
-
-
 class JFormComponentHidden extends JFormComponent
 {
     /*
@@ -3017,8 +3001,6 @@ class JFormComponentHidden extends JFormComponent
     }
 }
 
-
-
 class JFormComponentHtml extends JFormComponent
 {
     public $html;
@@ -3054,7 +3036,6 @@ class JFormComponentHtml extends JFormComponent
         return $this->html;
     }
 }
-
 
 
 class JFormComponentLikert extends JFormComponent
@@ -3271,11 +3252,11 @@ class JFormComponentLikertStatement extends JFormComponent
 
     public function __toString()
     {
-        return;
+	return '';
+        //$componentDiv = $this->generateComponentDiv();
+        //return $componentDiv->__toString();
     }
 }
-
-
 
 
 class JFormComponentMultipleChoice extends JFormComponent
@@ -3474,8 +3455,6 @@ class JFormComponentMultipleChoice extends JFormComponent
 }
 
 
-
-
 class JFormComponentName extends JFormComponent
 {
     public $middleInitialHidden = false;
@@ -3633,8 +3612,6 @@ class JFormComponentName extends JFormComponent
         return sizeof($errorMessageArray) == 0 ? 'success' : $errorMessageArray;
     }
 }
-
-
 
 
 class JFormComponentSingleLineText extends JFormComponent
@@ -4132,7 +4109,6 @@ class JFormComponentSingleLineText extends JFormComponent
 }
 
 
-
 class JFormComponentTextArea extends JFormComponent
 {
     /*
@@ -4247,3 +4223,4 @@ class JFormComponentTextArea extends JFormComponent
         return $div->__toString();
     }
 }
+?>
